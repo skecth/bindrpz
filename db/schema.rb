@@ -37,14 +37,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_07_040338) do
     t.index ["source_id"], name: "index_domains_on_source_id"
   end
 
-  create_table "rules", force: :cascade do |t|
-    t.string "path"
-    t.string "content"
-    t.string "text_rule"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "sources", force: :cascade do |t|
     t.string "name"
     t.text "description"
