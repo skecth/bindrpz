@@ -1,0 +1,19 @@
+= simple_form_for(@domain) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+  
+    = f.file_field :file, class:"form-control"
+    br/
+    h1 OR
+    = f.input :link, input_html: {placeholder: "Text File only"}
+    = f.input :search
+    -if @domain.content.present?
+      = f.input :content
+    = f.collection_select(:source_id, Source.all, :id, :name, prompt: "Select a source") 
+    = f.collection_select(:category_id, Category.all, :id, :nama, prompt: "Select a category") 
+
+
+  .form-actions
+    = f.button :submit, class:"btn btn-warning"

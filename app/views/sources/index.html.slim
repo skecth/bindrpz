@@ -1,0 +1,11 @@
+p style="color: green" = notice
+
+h1 Sources
+
+#sources
+  - @sources.each do |source|
+    == render source
+    p
+      = link_to "Show this source", source
+
+= link_to "New source", new_source_path
