@@ -3,17 +3,21 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-  
-    = f.file_field :file, class:"form-control"
+    = f.text_field :URL, list: 'url-datalist', class: 'form-control', placeholder: 'URL only', autocomplete: :off
+    datalist(id="url-datalist")
+      - Domain.order(:URL).pluck(:URL).uniq.each do |url| # Define 'url' as a local variable
+        option(value=url) 
+
     br/
-    h1 OR
-    = f.input :link, input_html: {placeholder: "Text File only"}
-    = f.input :search
-    -if @domain.content.present?
-      = f.input :content
-    = f.collection_select(:source_id, Source.all, :id, :name, prompt: "Select a source") 
-    = f.collection_select(:category_id, Category.all, :id, :nama, prompt: "Select a category") 
-
-
+    = f.text_field :category, list: 'category-datalist', class: 'form-control', placeholder: 'Category', autocomplete: :off
+    datalist(id="category-datalist")
+      -Domain.order(:category).pluck(:category).uniq.each do |category|
+       option(value=category)
+    br/
+    = f.text_field :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
+    datalist(id="source-datalist")
+      -Domain.order(:source).pluck(:source).uniq.each do |source|
+       option(value=source)                          
+    br/
   .form-actions
-    = f.button :submit, class:"btn btn-warning"
+    = f.button :submit, class: "btn btn-warning"

@@ -1,132 +1,144 @@
+require "httparty"
+require "nokogiri"
 class DomainsController < ApplicationController
   before_action :set_domain, only: %i[ show edit update destroy ]
 
   # GET /domains or /domains.json
   def index
-    @domains = Domain.all
+    @domains = Domain.all.order(id: :asc) #make sure the list start from smaller id
+    # @domains.each do |domain|
+    #   @c =domain.list_domain
+    # end
+
+    @sources = @domains.pluck(:source).uniq
+    @categories = @domains.pluck(:category).uniq
+    if params[:category].present?
+      @domains = Domain.where(category: params[:category])
+    end
+    if params[:source].present?
+      @domains = Domain.where(source: params[:source])
+    end
   end
+
 
   # GET /domains/1 or /domains/1.json
   def show
     id = Domain.find(params[:id])
-    #split into the array content
-    @content = id.content.split("\n")
+    #get the list_domain
+    list = id.list_domain
+    #remove unwanted symbol
+    str = list.gsub(/[\[\]"]/, '') #remove sqaure bracket and
+    list_domain = str.split(', ') #split based on ,
+    @num = list_domain.count
+    @content = list_domain
+
   end
 
   # GET /domains/new
   def new
     @domain = Domain.new
+    @source_id = params[:source_id]
+    @source_url = params[:URL]
+    @domains = Domain.all
+    @category = @domains.pluck(:category) #.pluck to get all in the params
   end
+ 
 
-  def search
-    @id = Domain.find(params[:id])
-    keyword = params[:search]
-    puts "keyword: #{keyword}"
+  def create
+    link = params[:domain][:URL] # Get the link from the form
+    cat = params[:domain][:category]
+    respond_to do |format|
+      if link.present?
+        response = HTTParty.get(link)
+        if response.code == 200
+          documents = Nokogiri::HTML(response.body)
+          lines = documents.text.split("\n")
+          # Initialize an empty array to store the lines
+          lines_to_save = []
   
-    # Split the content into a list of items using "\r\n" as the delimiter
-    content_items = @id.content.split("\r\n")
-    puts "content_item #{content_items}"
-    # Initialize an array to store matching items
-    @results = []
-  
-    # Iterate through each item and check if the keyword is present
-    content_items.each do |item|
-      puts "item: #{item}"
-      if item.include?(keyword)
-        @results << item
-      end
-    end
-  
-    puts "Matching items: #{@results}"
-  end
-  
-  
-  
-  #testing
-  def write
-    file_path = params[:link]
-    # content = "nama saya azimmabrsdfsdffssfso"
-    
-    begin
-      File.open(file_path, 'w') do |file|
-        file.write(content)
-      end
-      
-      puts "File was successfully written."
-      redirect_to root_path, notice: "File was successfully written."
-    rescue => e
-      puts "Failed to write the file: #{e.message}"
-      flash[:error] = "Failed to write the file: #{e.message}"
-      redirect_to domains_path
-    end
-  end
-  
-
-  # GET /domains/1/edit
-  def edit
-    id = Domain.find(params[:id])
-    @content = id.content
-  end
-
-  # POST /domains or /domains.json
-def create
-  require "httparty"
-  require "nokogiri"
-  # Get the input github
-  @domain = Domain.new(domain_params)
-  link = params[:domain][:link]
-  
-  respond_to do |format|
-    if link.present?
-      response = HTTParty.get(link)
-      if response.code == 200
-        documents = Nokogiri::HTML(response.body)
-        lines = documents.text.split("\n")
-        
-        lines.each do |line|
-          next if line.strip.start_with?("#") #remove all the line start with #
-          # Create a new category for each line
-          domain = Domain.new(domain_params) # Create a new category for each line
-          domain.content = line.strip
-          if domain.save
-            puts "Save"
-          else
-            flash[:alert] = "Failed to save a category for line: #{line}"
+          lines.each do |line|
+            next if line.strip.start_with?("#")
+            clean_line = line.strip.gsub(/\b0\.0\.0\.0\b/, '').gsub(/\bwww.\b/, '')
+            # Add each line to the array
+            lines_to_save << clean_line
           end
-        end
 
-        format.html { redirect_to domains_url, notice: "Categories were successfully created." }
-        format.json { render :index, status: :created }
+          # Create a new Domain record with the array of lines
+          @domain = Domain.new(domain_params)
+          #@domain.list_domain = lines_to_save[1..-2]  # Assuming 'lines' is an attribute in your Domain model
+          @domain.category = cat.capitalize()
+  
+          if @domain.save
+            #DomainUpdateJob.perform_async(link) # Enqueue the job here
+  
+            format.html { redirect_to domains_url, notice: "Categories were successfully created." }
+            format.json { render :index, status: :created }
+          else
+            flash[:alert] = "Failed to save the domain with lines."
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: {}, status: :unprocessable_entity }
+          end
+        else
+          flash[:notice] ="Errro"
+          redirect_to new_domain_path
+          format.json { render json: {}, status: :unprocessable_entity }
+        end   
       else
-        flash[:alert] = "Failed to fetch data from GitHub. HTTP Status: #{response.code}"
+        flash[:alert] = "URL link is missing."
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: {}, status: :unprocessable_entity }
-      end   
-    else
-      flash[:alert] = "GitHub or Url link is missing."
-      format.html { render :new, status: :unprocessable_entity }
-      format.json { render json: {}, status: :unprocessable_entity }
+      end
     end
-  end # Add this 'end' to close the 'respond_to' block
-end
+  end
+
+  def add_job
+    DomainAddJob.perform_async
+  end
+
 
   # PATCH/PUT /domains/1 or /domains/1.json
   def update
+    link = params[:domain][:URL]
     id = Domain.find(params[:id])
-    domain_list = id.content.split("\n")
-    puts "Domain List: #{domain_list}"
-    update_text = params[:content]   
-    puts "update: #{update_text}"
       respond_to do |format|
-        if @domain.update(domain_params)
-          format.html { redirect_to domain_url(@domain), notice: "Domain was successfully updated." }
-          format.json { render :show, status: :ok, location: @domain }
+        if link.present?
+          response = HTTParty.get(link)
+          if response.code == 200
+            documents = Nokogiri::HTML(response.body)
+            lines = documents.text.split("\n")
+            # Initialize an empty array to store the lines
+            lines_to_save = []
+    
+            lines.each do |line|
+              next if line.strip.start_with?("#")
+              
+              # Add each line to the array
+              lines_to_save << line.strip
+            end
+    
+            # Create a new Domain record with the array of lines
+            id.list_domain = lines_to_save  # Assuming 'lines' is an attribute in your Domain m
+            if @domain.update(domain_params)
+              
+              format.html { redirect_to domain_url(@domain), notice: "Domain was successfully updated." }
+              format.json { render :show, status: :ok, location: @domain }
+            else
+              format.html { render :edit, status: :unprocessable_entity }
+              format.json { render json: @domain.errors, status: :unprocessable_entity }
+            end
+          else
+            flash[:alert] = "Failed to fetch data from the URL. HTTP Status: #{response.code}"
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: {}, status: :unprocessable_entity }
+          end   
         else
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @domain.errors, status: :unprocessable_entity }
+          flash[:alert] = "URL link is missing."
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: {}, status: :unprocessable_entity }
         end
       end
   end
+  
   
 
   # DELETE /domains/1 or /domains/1.json
@@ -147,6 +159,6 @@ end
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :link, :content, :search, :source_id, :category_id)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category)
     end
 end

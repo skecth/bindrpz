@@ -1,10 +1,13 @@
 p style="color: green" = notice
 
+= link_to domains_path do 
+  i.bi.bi-arrow-left
+
+
 == render @domain
 
 div
-  = link_to "Edit this domain", edit_domain_path(@domain), class:"btn btn-info custom-button"
-
-  = link_to "Back to domains", domains_path,class:"btn btn-warning distance_button"
-  br/
-  = button_to "Destroy this domain", @domain, method: :delete,class:"btn btn-danger distance_button"
+.row 
+  .col
+    = link_to "Edit this domain", edit_domain_path(@domain), class:"btn btn-info custom-button"
+br/

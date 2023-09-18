@@ -51,6 +51,8 @@ gem 'simple_form'
 gem 'carrierwave', '~> 3.0', '>= 3.0.3'
 gem 'nokogiri'
 gem 'httparty'
+gem 'sidekiq'
+gem 'sidekiq-cron'
 #new gem -end
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

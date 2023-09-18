@@ -1,0 +1,14 @@
+domain_update_job:
+  cron: "1 * * * * " #short
+  name: "Update Job"
+  #cron: "0 1 * * *" #long
+  class: "DomainUpdateJob"
+  queue: default
+
+domain_add_job:
+  cron: "*/30 * * * * *" #short
+  name: "Update Job"
+  #cron: "0 5 * * *" #long
+  class: "DomainAddJob"
+  queue: default
+

@@ -1,3 +1,3 @@
 class Source < ApplicationRecord
-   has_many :domain
+   #validates :URL, presence: true, uniqueness: true
 end

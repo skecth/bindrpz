@@ -25,7 +25,8 @@ class SourcesController < ApplicationController
 
     respond_to do |format|
       if @source.save
-        format.html { redirect_to source_url(@source), notice: "Source was successfully created." }
+        #if save is succes, redirect to create domain
+        format.html { redirect_to new_domain_path(source_id: @source.id, URL: @source.URL), notice: "Source was successfully created." }
         format.json { render :show, status: :created, location: @source }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -65,6 +66,6 @@ class SourcesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def source_params
-      params.require(:source).permit(:name, :description)
+      params.require(:source).permit(:name, :description, :URL)
     end
 end
