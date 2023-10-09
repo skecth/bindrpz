@@ -1,8 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  resources :categories
-  resources :sources
+  resources :tests
   resources :domains
   get 'home/index'
   mount Sidekiq::Web =>'/sidekiq'
@@ -11,6 +10,5 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root 'domains#index'
   get "/search", to: 'domains#search', as: :search
-  get "test", to: 'domains#write', as: :test
   get "domain/bulk", to: "domains#update_bulk",as: :update_bulk
 end

@@ -1,0 +1,11 @@
+p style="color: green" = notice
+
+h1 Tests
+
+#tests
+  - @tests.each do |test|
+    == render test
+    p
+      = link_to "Show this test", test
+
+= link_to "New test", new_test_path

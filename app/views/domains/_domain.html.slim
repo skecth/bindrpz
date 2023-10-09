@@ -8,22 +8,30 @@ div id="#{dom_id domain}"
         td =domain.id
       tr
         th(scope="row") URL 
-        td =domain.URL
+        td 
+         a(href=domain.URL) =domain.URL
       tr
         th(scope="row") Source
         td =domain.source
       tr
         th(scope="row") Category 
         td =domain.category
+         
       tr 
         th(scope="row") Number of domain 
         td =@num
-      tr 
-        th(scope="row") Blacklist Domain 
-        td 
-          ul 
-            -@content.each do |info|
-              li =info
+      tr
+        th(scope="row") Blacklist Domain
+        td
+          - if @content.present?
+            ul
+              - @content.each do |info|
+                li = info
+          - else
+            h3 Uploading data ...
+
+
+  ==pagy_bootstrap_nav(@pagy)
 
 
       

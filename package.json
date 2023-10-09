@@ -8,6 +8,8 @@
     "autoprefixer": "^10.4.15",
     "bootstrap": "^5.3.1",
     "bootstrap-icons": "^1.10.5",
+    "datatables.net-bs5": "^1.13.6",
+    "datatables.net-dt": "^1.13.6",
     "esbuild": "^0.19.2",
     "nodemon": "^3.0.1",
     "postcss": "^8.4.29",
@@ -23,5 +25,9 @@
   },
   "browserslist": [
     "defaults"
-  ]
+  ],
+  "devDependencies": {
+    "datatables.net-buttons-dt": "^2.4.2",
+    "datatables.net-responsive-dt": "^2.5.0"
+  }
 }

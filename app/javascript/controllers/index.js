@@ -4,8 +4,11 @@
 
 import { application } from "./application"
 
-import AutocompleteController from "./autocomplete_controller"
-application.register("autocomplete", AutocompleteController)
+import DatatablesController from "./datatables_controller"
+application.register("datatables", DatatablesController)
+
+import DomainTableController from "./domain_table_controller"
+application.register("domain-table", DomainTableController)
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)

@@ -7,11 +7,14 @@ html
     = csp_meta_tag
     = stylesheet_link_tag "application", "data-turbo-track": "reload"
     = javascript_include_tag "application", "data-turbo-track": "reload", defer: true
-    = javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js' 
+    = javascript_include_tag 'https://code.jquery.com/jquery-3.6.0.min.js'
+    
+
+
+    / script src="https://cdn.datatables.net/1.10.8/js/jquery.dataTables.min.js" type="text/javascript"
+ 
 
   body
-   
-   -if notice 
-    =render 'layouts/alerts'
-  .container.mt-5
-    = yield
+    - if notice
+      = render 'layouts/alerts'
+    =render 'home/navbar'

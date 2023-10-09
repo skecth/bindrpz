@@ -2,7 +2,7 @@ require "httparty"
 require "nokogiri"
 class DomainsController < ApplicationController
   before_action :set_domain, only: %i[ show edit update destroy ]
-
+  include Pagy::Backend
   # GET /domains or /domains.json
   def index
     @domains = Domain.all.order(id: :asc) #make sure the list start from smaller id
@@ -27,13 +27,18 @@ class DomainsController < ApplicationController
     #get the list_domain
     list = id.list_domain
     #remove unwanted symbol
-    str = list.gsub(/[\[\]"]/, '') #remove sqaure bracket and
-    list_domain = str.split(', ') #split based on ,
-    @num = list_domain.count
-    @content = list_domain
+    if list.present?
+      str = list.gsub(/[\[\]"]/, '') #remove sqaure bracket
+      list_domain = str.split(', ') #split based on ,
+      @num = list_domain.count
+      @content = list_domain
+      @pagy,@content = pagy_array(@content.to_a,items: 100)
+    else
+      puts "No domain list"
+    end
 
+  
   end
-
   # GET /domains/new
   def new
     @domain = Domain.new

@@ -6,3 +6,6 @@ import * as bootstrap from "bootstrap"
 //= require jquery3
 //= require jquery_ujs
 //= require_tree .
+//= require turbolinks
+//= require jquery
+//= require datatables

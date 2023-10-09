@@ -1,0 +1,39 @@
+
+.dataTables_filter input{ 
+    background-color: transparent;
+    color: inherit;
+    width: 300px; 
+}
+input[type=search]{
+    margin: 10px;
+}
+.paginate_button{
+    color: #1d76c4;
+    font-size: 15px;
+    text-decoration: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    float: left;
+}
+
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: none;
+    background-color: rgb(40, 105, 255)!important;
+    cursor: pointer;
+}
+.paginate_button.current{
+    background-color: aquamarine !important;
+}
+//new one
+
+// .dataTables_wrapper .dataTables_length{
+//     float: right !important;
+//     text-align: center;
+    
+// }
+
+// .dataTables_wrapper .dataTables_length input{
+//     background-color: transparent;
+//     color: inherit;
+    
+// }

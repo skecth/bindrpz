@@ -1,5 +1,5 @@
 domain_update_job:
-  cron: "1 * * * * " #short
+  cron: "5 * * * * *" #short
   name: "Update Job"
   #cron: "0 1 * * *" #long
   class: "DomainUpdateJob"
