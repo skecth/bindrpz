@@ -15,6 +15,7 @@ html
  
 
   body
-    - if notice
-      = render 'layouts/alerts'
-    =render 'home/navbar'
+    .container-custom
+      - if notice
+        = render 'layouts/alerts'
+      =render 'home/navbar'

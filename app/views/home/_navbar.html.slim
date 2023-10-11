@@ -1,19 +1,22 @@
-.offcanvas.offcanvas-start.w-25[tabindex="-1" id="offcanvas" data-bs-keyboard="false" data-bs-backdrop="false"]
-  .offcanvas-header
-    h6.offcanvas-title.d-none.d-sm-block#offcanvas Menu
-    button.btn-close.text-reset[data-bs-dismiss="offcanvas" aria-label="Close"]
-  .offcanvas-body.px-0
-    ul.nav.nav-pills.flex-column.mb-sm-auto.mb-0.align-items-start#menu
-      li.dropdown
-        a.nav-link.dropdown-toggle.text-truncate[id="dropdown" data-bs-toggle="dropdown" aria-expanded="false"]
-          span.ms-1.d-none.d-sm-inline Domain
-        ul.dropdown-menu.text-small.shadow[aria-labelledby="dropdown"]
-          li.nav-item
-            =link_to "New Domain", new_domain_path,class: "dropdown-item"
-          li.nav-item 
-            =link_to "All Domain", domains_path, class:"dropdown-item"
-            
-.container-fluid
-  button.btn.float-end[data-bs-toggle="offcanvas" data-bs-target="#offcanvas" role="button"]
-    i.bi.bi-arrow-right-square-fill.fs-3[data-bs-toggle="offcanvas" data-bs-target="#offcanvas"] Navbar
-  =yield
+nav.navbar.navbar-expand-lg.navbar-light.nav-custom
+  .container-fluid
+    a.navbar-brand href="#" Navbar
+    button.navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+      span.navbar-toggler-icon
+    .collapse.navbar-collapse#navbarSupportedContent
+      ul.navbar-nav.me-auto.mb-2.mb-lg-0
+        li.nav-item.dropdown
+          a.nav-link.dropdown-toggle(href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false") RPZ Zone
+          ul.dropdown-menu
+            li
+              a.dropdown-item(href="#") Action
+            li
+              a.dropdown-item(href="#") Another action
+            li
+              hr.dropdown-divider
+            li
+              =link_to "RPZ Zone", new_feed_path,method: :post, class: 'nav-link'
+        li.nav-item
+          =link_to "New Domain", new_domain_path,method: :post, class: 'nav-link'
+       
+=yield
