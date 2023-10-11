@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_09_091930) do
     t.text "list_domain"
     t.string "source"
     t.string "category"
+    t.string "action"
     t.integer "status", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false

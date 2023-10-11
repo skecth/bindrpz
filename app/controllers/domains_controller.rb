@@ -164,6 +164,6 @@ class DomainsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action)
     end
 end

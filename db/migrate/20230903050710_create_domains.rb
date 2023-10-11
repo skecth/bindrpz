@@ -5,6 +5,7 @@ class CreateDomains < ActiveRecord::Migration[7.0]
       t.text :list_domain
       t.string :source
       t.string :category
+      t.string :action
       t.integer :status, default: 0
 
       t.timestamps
