@@ -21,16 +21,15 @@ class TestsController < ApplicationController
 
   # POST /tests or /tests.json
   def create
-    url = params[:test][:link]
-    
-    @test = Test.new(test_params)
+    @rpzdata = Rpzdata.new(darjah_params)
+
     respond_to do |format|
-      if @test.save
-        format.html { redirect_to test_url(@test), notice: "Test was successfully created." }
-        format.json { render :show, status: :created, location: @test }
+      if @darjah.save
+        format.html { redirect_to darjah_url(@darjah), notice: "Darjah was successfully created." }
+        format.json { render :show, status: :created, location: @darjah }
       else
         format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @test.errors, status: :unprocessable_entity }
+        format.json { render json: @darjah.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -60,12 +59,12 @@ class TestsController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_test
+    def set_rpzdata
       @test = Test.find(params[:id])
     end
 
     # Only allow a list of trusted parameters through.
-    def test_params
+    def _params
       params.require(:test).permit(:link, :file)
     end
 end

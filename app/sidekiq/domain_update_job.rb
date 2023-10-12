@@ -7,10 +7,11 @@ class DomainUpdateJob
 
   def perform
     puts "Domain Update Job"
-    puts "Time start: #{Time.now}"
+
     domains = Domain.all
-    links = domains.pluck(:id,:URL,:category,:source) #get the id, url, category, source
-    links.each do |id, url, cat, source| #loop to get individual domain
+   
+    links = domains.pluck(:id,:URL,:category,:source, :list_domain) #get the id, url, category, source
+    links.each do |id, url, cat, source,list_domain| #loop to get individual domain
       domain=Domain.find(id)
       response = HTTParty.get(url)
       if response.code == 200
@@ -43,7 +44,11 @@ class DomainUpdateJob
       else
         puts "Not updates: #{domain.URL}"
       end
+
+      ##
     end
+
+
   end
 end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_09_26_083425) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_11_074215) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -19,7 +19,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_083425) do
     t.text "list_domain"
     t.string "source"
     t.string "category"
+    t.string "action"
     t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "feed_id", null: false
+    t.index ["feed_id"], name: "index_domains_on_feed_id"
+  end
+
+  create_table "feeds", force: :cascade do |t|
+    t.string "host"
+    t.string "domain"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -30,6 +40,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_083425) do
     t.string "action"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "domain_id"
+    t.index ["domain_id"], name: "index_rpzdata_on_domain_id"
   end
 
   create_table "tests", force: :cascade do |t|
@@ -39,4 +51,5 @@ ActiveRecord::Schema[7.0].define(version: 2023_09_26_083425) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "domains", "feeds"
 end

@@ -18,6 +18,7 @@ class DomainsController < ApplicationController
     if params[:source].present?
       @domains = Domain.where(source: params[:source])
     end
+
   end
 
 
@@ -42,6 +43,8 @@ class DomainsController < ApplicationController
   # GET /domains/new
   def new
     @domain = Domain.new
+    @feed = Feed.all
+    @feed = Feed.find(params[:id])
     @source_id = params[:source_id]
     @source_url = params[:URL]
     @domains = Domain.all
@@ -50,44 +53,41 @@ class DomainsController < ApplicationController
  
 
   def create
-    link = params[:domain][:URL] # Get the link from the form
+    link = params[:domain][:URL]
     cat = params[:domain][:category]
+    limit = 10
     respond_to do |format|
       if link.present?
         response = HTTParty.get(link)
         if response.code == 200
           documents = Nokogiri::HTML(response.body)
           lines = documents.text.split("\n")
-          # Initialize an empty array to store the lines
-          lines_to_save = []
-  
+          count =0
           lines.each do |line|
             next if line.strip.start_with?("#")
             clean_line = line.strip.gsub(/\b0\.0\.0\.0\b/, '').gsub(/\bwww.\b/, '')
-            # Add each line to the array
-            lines_to_save << clean_line
-          end
+            domain = Domain.new(domain_params)
+            domain.category = cat.capitalize()
+            domain.list_domain = clean_line
+            
+  
+            if domain.save
+              count += 1
+              break if count >= limit
 
-          # Create a new Domain record with the array of lines
-          @domain = Domain.new(domain_params)
-          #@domain.list_domain = lines_to_save[1..-2]  # Assuming 'lines' is an attribute in your Domain model
-          @domain.category = cat.capitalize()
-  
-          if @domain.save
-            #DomainUpdateJob.perform_async(link) # Enqueue the job here
-  
-            format.html { redirect_to domains_url, notice: "Categories were successfully created." }
-            format.json { render :index, status: :created }
-          else
-            flash[:alert] = "Failed to save the domain with lines."
-            format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: {}, status: :unprocessable_entity }
+              format.html { redirect_to domains_url, notice: "Categories were successfully created." }
+              format.json { render :index, status: :created }
+            else
+              flash[:alert] = "Failed to save the domain with lines."
+              format.html { render :new, status: :unprocessable_entity }
+              format.json { render json: {}, status: :unprocessable_entity }
+            end
           end
         else
-          flash[:notice] ="Errro"
-          redirect_to new_domain_path
+          flash[:notice] = "Error"
+          format.html { redirect_to new_domain_path }
           format.json { render json: {}, status: :unprocessable_entity }
-        end   
+        end
       else
         flash[:alert] = "URL link is missing."
         format.html { render :new, status: :unprocessable_entity }
@@ -95,6 +95,7 @@ class DomainsController < ApplicationController
       end
     end
   end
+  
 
   def add_job
     DomainAddJob.perform_async
@@ -164,6 +165,6 @@ class DomainsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id)
     end
 end
