@@ -13,11 +13,10 @@ nav.navbar.navbar-expand-lg.navbar-light.nav-custom
             li
               a.dropdown-item(href="#") Another action
             li
-              hr.dropdown-divider
+              = link_to "RPZ Zone", feeds_path,class: "nav-link"
             li
-              = link_to "RPZ Zone", new_feed_path, method: :post, class: 'nav-link'
+              = link_to "New RPZ Zone", new_feed_path, method: :post, class: 'nav-link'
         li.nav-item
           = link_to "New Domain", new_domain_path, method: :post, class: 'nav-link'
-        - feed.each do |f|
-          = f.domain
+       
 =yield
