@@ -3,8 +3,8 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-    = f.input :action
-    = f.select :domain, options_for_select(["Electronics", "Clothing", "Books", "Toys"]), {}, class: "form-control"
+    = f.input :host
+    = f.input :domain
     
   .form-actions
     = f.button :submit

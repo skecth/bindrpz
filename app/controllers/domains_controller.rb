@@ -18,6 +18,7 @@ class DomainsController < ApplicationController
     if params[:source].present?
       @domains = Domain.where(source: params[:source])
     end
+
   end
 
 
@@ -42,6 +43,7 @@ class DomainsController < ApplicationController
   # GET /domains/new
   def new
     @domain = Domain.new
+    @feed = Feed.all
     @source_id = params[:source_id]
     @source_url = params[:URL]
     @domains = Domain.all
@@ -164,6 +166,6 @@ class DomainsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id)
     end
 end
