@@ -20,7 +20,7 @@
        option(value=source)    
     br/
     = f.select(:action, options_for_select([['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME.'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME*'], ['TCP','CNAME rpz-tcp-only']]), class: 'form-control')
-
+    = f.input :feed_id, input_html: { value: @feed.id }
     br/
   .form-actions
     = f.button :submit, class: "btn btn-warning"
