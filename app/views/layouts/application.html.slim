@@ -18,4 +18,4 @@ html
     .container-custom
       - if notice
         = render 'layouts/alerts'
-      =render 'home/navbar'
+      =render 'layouts/navbar',local: {feed: @feeds}

@@ -1,7 +1,7 @@
 nav.navbar.navbar-expand-lg.navbar-light.nav-custom
   .container-fluid
-    a.navbar-brand href="#" Navbar
-    button.navbar-toggler type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"
+    a.navbar-brand(href="#") Navbar
+    button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
       span.navbar-toggler-icon
     .collapse.navbar-collapse#navbarSupportedContent
       ul.navbar-nav.me-auto.mb-2.mb-lg-0
@@ -15,8 +15,9 @@ nav.navbar.navbar-expand-lg.navbar-light.nav-custom
             li
               hr.dropdown-divider
             li
-              =link_to "RPZ Zone", new_feed_path,method: :post, class: 'nav-link'
+              = link_to "RPZ Zone", new_feed_path, method: :post, class: 'nav-link'
         li.nav-item
-          =link_to "New Domain", new_domain_path,method: :post, class: 'nav-link'
-       
+          = link_to "New Domain", new_domain_path, method: :post, class: 'nav-link'
+        - feed.each do |f|
+          = f.domain
 =yield
