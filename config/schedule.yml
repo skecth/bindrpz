@@ -12,3 +12,8 @@ domain_update_job:
 #   class: "DomainAddJob"
 #   queue: default
 
+generate_rpz_zone_file:
+  cron: "*/2 * * * *"
+  name: "Generate RPZ Zone File"
+  class: "GenerateRpzJob"
+  queue: default
