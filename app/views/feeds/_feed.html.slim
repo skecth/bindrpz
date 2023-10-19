@@ -1,7 +1,35 @@
-div id="#{dom_id feed}"
-  p
-    strong Action:
-    = feed.host
-  p
-    strong Domain:
-    = feed.domain
+/css=>show_feed.scss
+/ div id="#{dom_id feed}"
+
+
+/ .d-flex.flex-row-reverse
+/   .dropdown
+/     button.btn.btn-secondary.dropdown-toggle-partial(type="button" data-bs-toggle="dropdown" aria-expanded="false") 
+/       | Domain Update
+/       i.bi.bi-plus-square
+/     ul.dropdown-menu
+/       li
+/         =link_to "Bulk Add Blacklist", new_domain_path(id: feed.id),class: "dropdown-item"
+/       li
+/         a.dropdown-item(href="#") Another action
+/       li
+/         a.dropdown-item(href="#") Something else here
+
+/ div[data-controller="datatables"]
+/ table.table#dttb
+/   thead.table-dark
+/     tr 
+/       th(scope="col") URL
+/       th(scope="col") Source
+/       th(scope="col") Category
+/       / th(scope="col") Blacklist Domain
+/       / th(scope="col") URL
+/       / th(scope="col") 
+/       / th(scope="col") 
+/       / th(scope="col") 
+/   tbody
+/     - feed.domains.each do |d|
+/       tr
+/         td = d.URL
+/         td = d.source 
+/         td = d.category

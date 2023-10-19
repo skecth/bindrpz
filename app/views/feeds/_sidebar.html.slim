@@ -1,0 +1,13 @@
+div.d-flex.flex-column.flex-shrink-0.p-3.text-black.bg-light style="width: 280px;"
+  .btn-group
+    .dropdown 
+      button.btn.btn-secondary.dropdown-toggle-show(type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false")
+        i.bi.bi-plus-circle
+      ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
+        li
+         = link_to "Generated RPZ Zones", rpz_new_path, class: "dropdown-item"
+  hr
+  ul.nav.nav-pills.flex-column.mb-auto
+    - @feeds.each do |feed|
+      li.nav-item
+        = link_to "#{feed.host}.#{feed.domain}", rpz_zones_path(feed), class: "nav-link link-dark"

@@ -1,12 +1,122 @@
-p style="color: green" = notice
+/ /css=>domain_index.scss
 
-== render @feed
+hr.hr
+.container-fluid
+  .row.flex-nowrap
+    =render "feeds/sidebar"
+    .col.py-3
+      .container
+        .d-flex.flex-row-reverse
+          .dropdown
+            button.btn.btn-secondary.dropdown-toggle-partial(type="button" data-bs-toggle="dropdown" aria-expanded="false") 
+              | Domain Update
+              i.bi.bi-plus-square
+            ul.dropdown-menu
+              li
+                =link_to "Bulk Add Blacklist", new_domain_path(status: 'bulk',id: @feed.id),class: "dropdown-item"
+              li
+                =link_to "Create Blacklist", new_domain_path(status: 'blacklist', id: @feed.id),class: "dropdown-item"
+        .row-fluid
+          .span12
+            .container-feed-delete
+              .button-delete align="right"
+                button.button.btn.btn-secondary Hai
+        div[data-controller="datatables"]
+        table.table#dttb
+          thead.table-dark
+            tr 
+              th(scope="col") Source
+              th(scope="col") Blacklist Domain
+              th(scope="col") Destination
+              th(scope="col") Status 
+              th(scope="col") Created at
+              th(scope="col") 
+        
 
-div
-  = link_to "Edit this feed", edit_feed_path(@feed)
-  br/
-  = link_to "Add Blacklist Data", new_domain_path(id: @feed.id)
-  br/
-  = link_to "Back to feeds", feeds_path
-  br/
-  = button_to "Destroy this feed", @feed, method: :delete
+              
+              / th(scope="col") URL
+              / th(scope="col") 
+              / th(scope="col") 
+              / th(scope="col") 
+          tbody
+             - @feed.domains.each do |d|
+               tr
+                td = d.id
+                td
+                  -if d.list_domain.present?
+                    ol 
+                      -limit = 10
+                      -initial =0
+                      - d.list_domain.split("\n").each do |l|
+                        li = l
+                        -initial = initial+1
+                        - if initial >=limit 
+                          -break
+                td = d.action
+                td = d.status
+                td = d.category
+                td 
+                  .dropdown 
+                    button.btn.btn-secondary.dropdown-toggle(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
+                    ul.dropdown-menu 
+                      li =  link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
+                      li =  button_to "Destroy", d,method: :delete, class: "dropdown-item"
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/ p style="color: green" = notice
+
+/ hr.hr
+/   .container-top  
+/     .container-fluid.feeder
+/       .row.flex-nowrap
+/         div.d-flex.flex-column.flex-shrink-0.p-3.text-black.bg-light style="width: 280px;"
+/           .btn-group
+/             .dropdown 
+/               button.btn.btn-secondary.dropdown-toggle-show(type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false")
+/                 i.bi.bi-plus-circle
+/               ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
+/                 li
+/                   / = link_to "Generated RPZ Zones", rpz_new_path(id: @feed.id), class: "dropdown-item"
+/           hr
+/           ul.nav.nav-pills.flex-column.mb-auto
+/             - @feeds.each do |feed|
+/               li.nav-item
+/                 = link_to "#{feed.host}.#{feed.domain}", feed, class: "nav-link link-dark"
+/           hr
+/         .col.py-3
+/           .container
+/             ==render @feed
+
+

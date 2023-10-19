@@ -10,9 +10,15 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Defines the root path route ("/")
-  root 'domains#index'
+  root 'home#index'
   get "/search", to: 'domains#search', as: :search
   get "domain/bulk", to: "domains#update_bulk",as: :update_bulk
   get 'new', to: "rpzdata#create", as: :create
   get 'rpzdata', to: "rpzdata#show", as: :show
+  get 'rpz_zones/:id', to: "feeds#show", as: :rpz_zones
+  get 'feeds/new', to: "feeds#new", as: :rpz_new
+  get 'feed/bulk_update', to: "domains#new", as: :bulk_update
+  get 'feed/:id/blacklist', to: "domains#ne" ,as: :add_blacklist
+  post 'feed/:id/blacklist', to: "domains#cf"
+  
 end

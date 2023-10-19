@@ -1,11 +1,10 @@
+/css=>domain_index.scss
 p style="color: green" = notice
 
-h1 Feeds
+hr.hr
+.container-fluid
+  .row.flex-nowrap
+    =render "feeds/sidebar"
+    .col.py-3
+      
 
-#feeds
-  - @feeds.each do |feed|
-    == render feed
-    p
-      = link_to "Show this feed", feed
-
-= link_to "New feed", new_feed_path
