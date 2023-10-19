@@ -3,12 +3,16 @@ class FeedsController < ApplicationController
 
   # GET /feeds or /feeds.json
   def index
-    @feeds = Feed.all
+      @feeds = Feed.all
+      @feed = Feed.where(id: params[:id])
   end
 
   # GET /feeds/1 or /feeds/1.json
   def show
-    @feed = Feed.find(params[:id])
+     @feed = Feed.find(params[:id])
+    # @feeds = Feed.where(id: params[:id])
+    @feeds =Feed.all    
+    domain = Domain.all
   end
 
   # GET /feeds/new
@@ -18,6 +22,11 @@ class FeedsController < ApplicationController
 
   # GET /feeds/1/edit
   def edit
+  end
+  
+  def sidebar
+    @feed = Feed.all
+    @domain = Domain.all
   end
 
   # POST /feeds or /feeds.json
@@ -46,6 +55,9 @@ class FeedsController < ApplicationController
         format.json { render json: @feed.errors, status: :unprocessable_entity }
       end
     end
+  end
+
+  def create_feed
   end
 
   # DELETE /feeds/1 or /feeds/1.json

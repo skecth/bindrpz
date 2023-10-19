@@ -27,7 +27,7 @@ div id="#{dom_id domain}"
         td
           - if @content.present?
             ul
-              - @content.each do |info|
+              - domain.list_domain.split("\n").each do |info|
                 li = info
           - else
             h3 Uploading data ...

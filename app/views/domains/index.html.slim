@@ -1,31 +1,27 @@
-p style="color: green" = notice
 div[data-controller="datatables"]
-  table.table#dttb
-    thead.table-dark
-      tr 
-        th(scope="col") No
-        th(scope="col") ID
-        th(scope="col") Source
-        th(scope="col") Category
-        th(scope="col") URL
-        th(scope="col") 
-        th(scope="col") 
-        th(scope="col") 
-    tbody
-      - @domains.each_with_index do |domain,index|
-        tr
-          td = index+1
-          td = domain.id
-          td = domain.source 
-          td = domain.category
-          td
-            a(href=domain.URL) =domain.URL
-          td = link_to domain_path(domain), title: 'View', 'data-toggle' => 'tooltip', 'data-placement' => 'right'  do 
-                i.bi.bi-view-list 
-          td = link_to domain,data: {turbo_method: :delete}, title: 'Delete', 'data-toggle' => 'tooltip', 'data-placement' => 'right' do 
-                i.bi.bi-trash
-          td = link_to edit_domain_path(domain), title: 'Edit', 'data-toggle' => 'tooltip', 'data-placement' => 'right' do 
-                i.bi.bi-pencil-square
-
-
-
+table.table#dttb
+  thead.table-dark
+    tr 
+      th(scope="col") No
+      th(scope="col") ID
+      th(scope="col") Source
+      th(scope="col") Blacklist Domain
+      th(scope="col") URL
+      th(scope="col") 
+      th(scope="col") 
+      th(scope="col") 
+  tbody
+    - @domains.each_with_index do |domain, index|
+      tr
+        td = index+1
+        td = domain.id
+        td = domain.source 
+        td = domain.list_domain
+        td
+          a[href=domain.URL] = domain.URL
+        td = link_to domain_path(domain), title: 'View', 'data-toggle' => 'tooltip', 'data-placement' => 'right' do 
+              i.bi.bi-view-list 
+        td = link_to domain, data: {turbo_method: :delete}, title: 'Delete', 'data-toggle' => 'tooltip', 'data-placement' => 'right' do 
+              i.bi.bi-trash
+        td = link_to edit_domain_path(domain), title: 'Edit', 'data-toggle' => 'tooltip', 'data-placement' => 'right' do 
+              i.bi.bi-pencil-square
