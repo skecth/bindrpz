@@ -2,13 +2,14 @@ class HomeController < ApplicationController
 
   
 
-def index
-    @feeds = Feed.all
+def show
+    @feed = Feed.pluck(:id).first
+    puts @feed
 end
 
-def show
-    # Fetch a specific feed by its ID
-    @feed = Feed.find(params[:id])
+def index
+    @feeds = Feed.all
+    puts @feed
 end
 
 end

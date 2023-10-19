@@ -1,13 +1,13 @@
 class ApplicationController < ActionController::Base
 
     
-def index
-    @feeds = Feed.all
+
+
+def application
+    @id = Feed.first.id
+    puts "id#{@id}"
 end
 
-def show
-    # Fetch a specific feed by its ID
-    @feed = Feed.find(params[:id])
-end
+
 
 end

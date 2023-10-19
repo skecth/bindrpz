@@ -1,0 +1,26 @@
+= simple_form_for(@domain) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    = f.text_field :URL, list: 'url-datalist', class: 'form-control', placeholder: 'URL only', autocomplete: :off
+    datalist(id="url-datalist")
+      - Domain.order(:URL).pluck(:URL).uniq.each do |url| # Define 'url' as a local variable
+        option(value=url) 
+
+    br/
+    = f.text_field :category, list: 'category-datalist', class: 'form-control', placeholder: 'Category', autocomplete: :off
+    datalist(id="category-datalist")
+      -Domain.order(:category).pluck(:category).uniq.each do |category|
+       option(value=category)
+    br/
+    = f.text_field :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
+    datalist(id="source-datalist")
+      -Domain.order(:source).pluck(:source).uniq.each do |source|
+       option(value=source)    
+    br/
+    = f.select(:action, options_for_select([['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME.'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME*'], ['TCP','CNAME rpz-tcp-only']]), class: 'form-control')
+    = f.hidden_field :feed_id, input_html: { value: @feed.id }
+    br/
+  .form-actions
+    = f.button :submit, class: "btn btn-warning"

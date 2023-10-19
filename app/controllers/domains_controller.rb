@@ -9,7 +9,7 @@ class DomainsController < ApplicationController
     # @domains.each do |domain|
     #   @c =domain.list_domain
     # end
-
+    @feed =Feed.all
     @sources = @domains.pluck(:source).uniq
     @categories = @domains.pluck(:category).uniq
     if params[:category].present?
@@ -20,7 +20,6 @@ class DomainsController < ApplicationController
     end
 
   end
-
 
   # GET /domains/1 or /domains/1.json
   def show
@@ -42,65 +41,113 @@ class DomainsController < ApplicationController
   end
   # GET /domains/new
   def new
-    @domain = Domain.new
-    @feed = Feed.all
+    @domain = Domain.new(status: params[:status])
     @feed = Feed.find(params[:id])
     @source_id = params[:source_id]
     @source_url = params[:URL]
     @domains = Domain.all
     @category = @domains.pluck(:category) #.pluck to get all in the params
+
   end
- 
+
 
   def create
-    link = params[:domain][:URL]
+    # Create a new Domain record with the array of lines
+    @domain = Domain.new(domain_params)
+   
+    link = params[:domain][:URL] # Get the link from the form
     cat = params[:domain][:category]
-    limit = 10
+    puts "STatus: #{params[:status]}"
     respond_to do |format|
       if link.present?
+        @domain.status = 'bulk'
         response = HTTParty.get(link)
         if response.code == 200
           documents = Nokogiri::HTML(response.body)
           lines = documents.text.split("\n")
-          count =0
+          # Initialize an empty array to store the lines
+          lines_to_save = []
+  
           lines.each do |line|
             next if line.strip.start_with?("#")
             clean_line = line.strip.gsub(/\b0\.0\.0\.0\b/, '').gsub(/\bwww.\b/, '')
-            domain = Domain.new(domain_params)
-            domain.category = cat.capitalize()
-            domain.list_domain = clean_line
-            
-  
-            if domain.save
-              count += 1
-              break if count >= limit
-
-              format.html { redirect_to domains_url, notice: "Categories were successfully created." }
-              format.json { render :index, status: :created }
-            else
-              flash[:alert] = "Failed to save the domain with lines."
-              format.html { render :new, status: :unprocessable_entity }
-              format.json { render json: {}, status: :unprocessable_entity }
-            end
-          end
+            # Add each line to the array
+            lines_to_save << clean_line
+          end          
+          #@domain.list_domain = lines_to_save[1..-2]  # Assuming 'lines' is an attribute in your Domain model
+          @domain.category = cat.capitalize()
         else
-          flash[:notice] = "Error"
-          format.html { redirect_to new_domain_path }
+          flash[:notice] ="Errro"
+          redirect_to new_domain_path
           format.json { render json: {}, status: :unprocessable_entity }
-        end
+        end   
+        #if link is not present
+      end
+      if @domain.save
+        #DomainUpdateJob.perform_async(link) # Enqueue the job here
+
+        format.html { redirect_to root_path, notice: "Categories were successfully created." }
+        format.json { render :index, status: :created }
       else
-        flash[:alert] = "URL link is missing."
+        flash[:alert] = "Failed to save the domain with lines."
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: {}, status: :unprocessable_entity }
       end
+      
     end
   end
-  
 
-  def add_job
-    DomainAddJob.perform_async
+  def edit 
+    @feed = Feed.find(params[:feed_id])
+    @domain = Domain.find(params[:id])
+
   end
+ 
 
+  # def create
+  #   link = params[:domain][:URL]
+  #   cat = params[:domain][:category]
+  #   limit = 10
+  #   respond_to do |format|
+  #     if link.present?
+  #       response = HTTParty.get(link)
+  #       if response.code == 200
+  #         documents = Nokogiri::HTML(response.body)
+  #         lines = documents.text.split("\n")
+  #         count =0
+  #         lines.each do |line|
+  #           next if line.strip.start_with?("#")
+  #           clean_line = line.strip.gsub(/\b0\.0\.0\.0\b/, '').gsub(/\bwww.\b/, '')
+  #           domain = Domain.new(domain_params)
+  #           domain.category = cat.capitalize()
+  #           domain.list_domain = clean_line
+            
+  
+  #           if domain.save
+  #             count += 1
+  #             break if count >= limit
+
+  #             format.html { redirect_to domains_url, notice: "Categories were successfully created." }
+  #             format.json { render :index, status: :created }
+  #           else
+  #             flash[:alert] = "Failed to save the domain with lines."
+  #             format.html { render :new, status: :unprocessable_entity }
+  #             format.json { render json: {}, status: :unprocessable_entity }
+  #           end
+  #         end
+  #       else
+  #         flash[:notice] = "Error"
+  #         format.html { redirect_to new_domain_path }
+  #         format.json { render json: {}, status: :unprocessable_entity }
+  #       end
+  #     else
+  #       flash[:alert] = "URL link is missing."
+  #       format.html { render :new, status: :unprocessable_entity }
+  #       format.json { render json: {}, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
+  
 
   # PATCH/PUT /domains/1 or /domains/1.json
   def update
@@ -150,9 +197,9 @@ class DomainsController < ApplicationController
   # DELETE /domains/1 or /domains/1.json
   def destroy
     @domain.destroy
-
+    @feed = Feed.find(params[:id])
     respond_to do |format|
-      format.html { redirect_to domains_url, notice: "Domain was successfully destroyed." }
+      format.html { redirect_to feed_url(@feed), notice: "Domain was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -165,6 +212,6 @@ class DomainsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id, :status)
     end
 end

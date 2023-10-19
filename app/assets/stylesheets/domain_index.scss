@@ -1,0 +1,39 @@
+.container-top{
+    margin-top: 20px;
+}
+.feeder{
+    border: none;
+    
+}
+.dropdown-toggle-show {
+    width: 80px;
+}
+
+.dropdown-toggle-show::after {
+    display: none;
+}
+i.bi.bi-plus-circle {
+    font-size: 30px; /* Set your desired icon size here */
+}
+.btn-group{
+    width: 80px;
+    background-color: #1D97C3;
+}
+.nav-link.active{
+    margin: 2px;
+    background-color: #efefef;
+    border-bottom: solid;
+}
+
+.container-feed-delete{
+    border: 1px black;
+    border-style: solid;
+    height: 70px;
+    border-radius: 10px 10px 0px 0px;
+    background-color: #333333;
+}
+.button-delete{
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+}
