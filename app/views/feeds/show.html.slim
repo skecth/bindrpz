@@ -25,22 +25,15 @@ hr.hr
         table.table#dttb
           thead.table-dark
             tr 
-              th(scope="col") Source
-              th(scope="col") Blacklist Domain
-              th(scope="col") Destination
-              th(scope="col") Status 
-              th(scope="col") Created at
-              th(scope="col") 
-        
-
-              
-              / th(scope="col") URL
-              / th(scope="col") 
-              / th(scope="col") 
-              / th(scope="col") 
+              th Source
+              th Blacklist Domain
+              th Destination
+              th Status 
+              th Created at
+              th 
           tbody
-             - @feed.domains.each do |d|
-               tr
+            - @feed.domains.each do |d|
+              tr
                 td = d.id
                 td
                   -if d.list_domain.present?
@@ -59,8 +52,9 @@ hr.hr
                   .dropdown 
                     button.btn.btn-secondary.dropdown-toggle(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
                     ul.dropdown-menu 
-                      li =  link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
-                      li =  button_to "Destroy", d,method: :delete, class: "dropdown-item"
+                      li = button_to "Update", instant_update_path(d, feed_id: @feed.id), class: "dropdown-item"
+                      li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
+                      li = button_to "Destroy", d,method: :delete, class: "dropdown-item"
           
 
 
