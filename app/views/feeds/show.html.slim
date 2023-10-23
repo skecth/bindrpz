@@ -51,7 +51,7 @@ hr.hr
                           li = l
                           -initial = initial+1
                           - if initial >=limit
-                            = link_to "View More Blacklist Data", domain_path(d, feed_id: @feed.id), class: "nav-link", style: "color: blue;"
+                            = link_to "View More Blacklist Data", domain_path(d), class: "nav-link", style: "color: blue;"
                             -break
                   td = d.action
                   td = d.created_at

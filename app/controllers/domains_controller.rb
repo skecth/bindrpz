@@ -32,7 +32,7 @@ class DomainsController < ApplicationController
   def show
     @feeds = Feed.all
     id = Domain.find(params[:id])
-    @feed = Feed.find(params[:id])
+    
     #get the list_domain
     list = id.list_domain
     #remove unwanted symbol
