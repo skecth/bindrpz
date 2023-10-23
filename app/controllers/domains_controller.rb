@@ -1,15 +1,17 @@
 require "httparty"
 require "nokogiri"
+require "uri"
 class DomainsController < ApplicationController
   before_action :set_domain, only: %i[ show edit update destroy ]
   include Pagy::Backend
   # GET /domains or /domains.json
   def index
+    @feeds = Feed.all
     @domains = Domain.all.order(id: :asc) #make sure the list start from smaller id
     # @domains.each do |domain|
     #   @c =domain.list_domain
     # end
-    @feed =Feed.all
+
     @sources = @domains.pluck(:source).uniq
     @categories = @domains.pluck(:category).uniq
     if params[:category].present?
@@ -20,9 +22,15 @@ class DomainsController < ApplicationController
     end
 
   end
+  
+  def edit
+    @feeds = Feed.all
+    @feed = Feed.find(params[:feed_id])
+  end
 
   # GET /domains/1 or /domains/1.json
   def show
+    @feeds = Feed.all
     id = Domain.find(params[:id])
     @feed = Feed.find(params[:id])
     #get the list_domain
@@ -40,25 +48,25 @@ class DomainsController < ApplicationController
   end
   # GET /domains/new
   def new
+    @feeds = Feed.all
     @domain = Domain.new(status: params[:status])
+    @feed = Feed.all
     @feed = Feed.find(params[:id])
     @source_id = params[:source_id]
     @source_url = params[:URL]
     @domains = Domain.all
     @category = @domains.pluck(:category) #.pluck to get all in the params
-
+    @status = params[:status]
   end
 
   def create
-    # Create a new Domain record with the array of lines
     @domain = Domain.new(domain_params)
-   
     link = params[:domain][:URL] # Get the link from the form
     cat = params[:domain][:category]
-    puts "STatus: #{params[:status]}"
     respond_to do |format|
-      if link.present?
-        @domain.status = 'bulk'
+      #hv two path => blacklist@bulk, this is for bulk add
+      if link.present? 
+        @domain.status = 'bulk' #save status as bulk
         response = HTTParty.get(link)
         if response.code == 200
           documents = Nokogiri::HTML(response.body)
@@ -81,6 +89,7 @@ class DomainsController < ApplicationController
         end   
         #if link is not present
       else
+        #if the link is not present the status will be saved as blacklist
         @domain.status = 'blacklist'
       end
       if @domain.save
@@ -88,16 +97,24 @@ class DomainsController < ApplicationController
 
         format.html { redirect_to root_path, notice: "Categories were successfully created." }
         format.json { render :index, status: :created }
+    # if URL exist, then it will not be saved
+    if @domain.URL.present?
+      if Domain.exists?(URL: @domain.URL)
+        redirect_to new_domain_path, alert: "URL already exist"
+        puts "URL already exist"
+
       else
-        flash[:alert] = "Failed to save the domain with lines."
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: {}, status: :unprocessable_entity }
-      end
-      
-    end
-  end
+        # Check if the domain URL is valid or not using uri
+        uri = URI.parse(@domain.URL)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true if uri.scheme == 'https' 
+        request = Net::HTTP::Get.new(uri.request_uri)
+        response = http.request(request)
+        if response.code.to_i == 200
+
 
   def edit 
+    #the original version do not have edit def
     @feed = Feed.find(params[:feed_id])
     @domain = Domain.find(params[:id])
   end
@@ -111,6 +128,37 @@ class DomainsController < ApplicationController
     respond_to do |format|
       if @domain.update(domain_params)
         format.html { redirect_to feed_url(@feed), notice: "Domain was successfully updated." }
+          @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != ''}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
+          # @domain.list_domain = Net::HTTP.get(uri).gsub(/[\[\]"]/, '').split("\n").reject { |line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/ }
+          @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\b|127.0.0.1)/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
+
+
+          @lines = @domain.list_domain.split("\n").map(&:strip)
+          # puts "Hey Yo: #{@lines}"
+          respond_to do |format|
+            if @domain.save
+              format.html { redirect_to domain_url(@domain), notice: "Domain was successfully created." }
+              format.json { render :show, status: :created, location: @domain }
+            else
+              format.html { render :new, status: :unprocessable_entity }
+              format.json { render json: @domain.errors, status: :unprocessable_entity }
+            end
+          end
+        else
+          puts "URL is not valid"
+          redirect_to new_domain_path, notice: "URL is not valid"
+        end
+      end
+    end
+  end 
+
+
+  # PATCH/PUT /domains/1 or /domains/1.json
+  def update
+    respond_to do |format|
+      if @domain.update(domain_params)
+        format.html { redirect_to domain_url(@domain), notice: "Domain was successfully updated." }
+
         format.json { render :show, status: :ok, location: @domain }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -118,7 +166,16 @@ class DomainsController < ApplicationController
       end
     end
   end
-  
+        
+  def instant_update
+    @domain = Domain.find(params[:id])
+    if @domain.URL.present?  
+      DomainInstantUpdateJob.perform_async(@domain.id)
+    else
+      puts "no URL"
+    end
+  end
+
   
 
   # DELETE /domains/1 or /domains/1.json
@@ -130,6 +187,7 @@ class DomainsController < ApplicationController
       format.json { head :no_content }
     end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -143,48 +201,3 @@ class DomainsController < ApplicationController
     end
 end
 
-
-  # def create
-  #   link = params[:domain][:URL]
-  #   cat = params[:domain][:category]
-  #   limit = 10
-  #   respond_to do |format|
-  #     if link.present?
-  #       response = HTTParty.get(link)
-  #       if response.code == 200
-  #         documents = Nokogiri::HTML(response.body)
-  #         lines = documents.text.split("\n")
-  #         count =0
-  #         lines.each do |line|
-  #           next if line.strip.start_with?("#")
-  #           clean_line = line.strip.gsub(/\b0\.0\.0\.0\b/, '').gsub(/\bwww.\b/, '')
-  #           domain = Domain.new(domain_params)
-  #           domain.category = cat.capitalize()
-  #           domain.list_domain = clean_line
-            
-  
-  #           if domain.save
-  #             count += 1
-  #             break if count >= limit
-
-  #             format.html { redirect_to domains_url, notice: "Categories were successfully created." }
-  #             format.json { render :index, status: :created }
-  #           else
-  #             flash[:alert] = "Failed to save the domain with lines."
-  #             format.html { render :new, status: :unprocessable_entity }
-  #             format.json { render json: {}, status: :unprocessable_entity }
-  #           end
-  #         end
-  #       else
-  #         flash[:notice] = "Error"
-  #         format.html { redirect_to new_domain_path }
-  #         format.json { render json: {}, status: :unprocessable_entity }
-  #       end
-  #     else
-  #       flash[:alert] = "URL link is missing."
-  #       format.html { render :new, status: :unprocessable_entity }
-  #       format.json { render json: {}, status: :unprocessable_entity }
-  #     end
-  #   end
-  # end
-  

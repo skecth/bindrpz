@@ -65,6 +65,46 @@ hr.hr
 
             
 
+          thead.table-dark
+            tr 
+              th Source
+              th Blacklist Domain
+              th Destination
+              th Status 
+              th Created at
+              th 
+          tbody
+            - @feed.domains.each do |d|
+              tr
+                td = d.id
+                td
+                  -if d.list_domain.present?
+                    ol 
+                      -limit = 10
+                      -initial =0
+                      - d.list_domain.split("\n").each do |l|
+                        li = l
+                        -initial = initial+1
+                        - if initial >=limit 
+                          -break
+                td = d.action
+                td = d.status
+                td = d.category
+                td 
+                  .dropdown 
+                    button.btn.btn-secondary.dropdown-toggle(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
+                    ul.dropdown-menu 
+                      li = button_to "Update", instant_update_path(d, feed_id: @feed.id), class: "dropdown-item"
+                      li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
+                      li = button_to "Destroy", d,method: :delete, class: "dropdown-item"
+          
+
+
+
+
+
+
+
 
 
 

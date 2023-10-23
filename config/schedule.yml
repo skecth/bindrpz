@@ -1,14 +1,12 @@
 domain_update_job:
-  cron: "5 * * * * *" #short
+  cron: "*/10 * * * * " 
   name: "Update Job"
-  #cron: "0 1 * * *" #long
   class: "DomainUpdateJob"
   queue: default
 
-# domain_add_job:
-#   cron: "*/30 * * * * *" #short
-#   name: "Update Job"
-#   #cron: "0 5 * * *" #long
-#   class: "DomainAddJob"
-#   queue: default
 
+generate_rpz_zone_file:
+  cron: "*/2 * * * *"
+  name: "Generate RPZ Zone File"
+  class: "GenerateRpzJob"
+  queue: default
