@@ -20,5 +20,5 @@ Rails.application.routes.draw do
   get 'feed/bulk_update', to: "domains#new", as: :bulk_update
   get 'feed/:id/blacklist', to: "domains#ne" ,as: :add_blacklist
   post 'feed/:id/blacklist', to: "domains#cf"
-  
+  get '/feed/admin', to: "feeds#admin", as: :admin_feed
 end

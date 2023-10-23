@@ -24,11 +24,12 @@ class DomainsController < ApplicationController
   # GET /domains/1 or /domains/1.json
   def show
     id = Domain.find(params[:id])
+    @feed = Feed.find(params[:id])
     #get the list_domain
     list = id.list_domain
     #remove unwanted symbol
     if list.present?
-      str = list.gsub(/[\[\]"]/, '') #remove sqaure bracket
+      str = list.gsub(/[\[\]"]/, '') #re  move sqaure bracket
       list_domain = str.split(', ') #split based on ,
       @num = list_domain.count
       @content = list_domain
@@ -36,8 +37,6 @@ class DomainsController < ApplicationController
     else
       puts "No domain list"
     end
-
-  
   end
   # GET /domains/new
   def new
@@ -49,7 +48,6 @@ class DomainsController < ApplicationController
     @category = @domains.pluck(:category) #.pluck to get all in the params
 
   end
-
 
   def create
     # Create a new Domain record with the array of lines
@@ -82,6 +80,8 @@ class DomainsController < ApplicationController
           format.json { render json: {}, status: :unprocessable_entity }
         end   
         #if link is not present
+      else
+        @domain.status = 'blacklist'
       end
       if @domain.save
         #DomainUpdateJob.perform_async(link) # Enqueue the job here
@@ -100,9 +100,49 @@ class DomainsController < ApplicationController
   def edit 
     @feed = Feed.find(params[:feed_id])
     @domain = Domain.find(params[:id])
-
   end
  
+
+
+
+  # PATCH/PUT /domains/1 or /domains/1.json
+  def update
+    @feed = Feed.find(params[:id])
+    respond_to do |format|
+      if @domain.update(domain_params)
+        format.html { redirect_to feed_url(@feed), notice: "Domain was successfully updated." }
+        format.json { render :show, status: :ok, location: @domain }
+      else
+        format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @domain.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+  
+  
+
+  # DELETE /domains/1 or /domains/1.json
+  def destroy
+    @domain.destroy
+    @feed = Feed.find(params[:id])
+    respond_to do |format|
+      format.html { redirect_to feed_url(@feed), notice: "Domain was successfully destroyed." }
+      format.json { head :no_content }
+    end
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_domain
+      @domain = Domain.find(params[:id])
+    end
+
+    # Only allow a list of trusted parameters through.
+    def domain_params
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id, :status)
+    end
+end
+
 
   # def create
   #   link = params[:domain][:URL]
@@ -148,70 +188,3 @@ class DomainsController < ApplicationController
   #   end
   # end
   
-
-  # PATCH/PUT /domains/1 or /domains/1.json
-  def update
-    link = params[:domain][:URL]
-    id = Domain.find(params[:id])
-      respond_to do |format|
-        if link.present?
-          response = HTTParty.get(link)
-          if response.code == 200
-            documents = Nokogiri::HTML(response.body)
-            lines = documents.text.split("\n")
-            # Initialize an empty array to store the lines
-            lines_to_save = []
-    
-            lines.each do |line|
-              next if line.strip.start_with?("#")
-              
-              # Add each line to the array
-              lines_to_save << line.strip
-            end
-    
-            # Create a new Domain record with the array of lines
-            id.list_domain = lines_to_save  # Assuming 'lines' is an attribute in your Domain m
-            if @domain.update(domain_params)
-              
-              format.html { redirect_to domain_url(@domain), notice: "Domain was successfully updated." }
-              format.json { render :show, status: :ok, location: @domain }
-            else
-              format.html { render :edit, status: :unprocessable_entity }
-              format.json { render json: @domain.errors, status: :unprocessable_entity }
-            end
-          else
-            flash[:alert] = "Failed to fetch data from the URL. HTTP Status: #{response.code}"
-            format.html { render :new, status: :unprocessable_entity }
-            format.json { render json: {}, status: :unprocessable_entity }
-          end   
-        else
-          flash[:alert] = "URL link is missing."
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: {}, status: :unprocessable_entity }
-        end
-      end
-  end
-  
-  
-
-  # DELETE /domains/1 or /domains/1.json
-  def destroy
-    @domain.destroy
-    @feed = Feed.find(params[:id])
-    respond_to do |format|
-      format.html { redirect_to feed_url(@feed), notice: "Domain was successfully destroyed." }
-      format.json { head :no_content }
-    end
-  end
-
-  private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_domain
-      @domain = Domain.find(params[:id])
-    end
-
-    # Only allow a list of trusted parameters through.
-    def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id, :status)
-    end
-end
