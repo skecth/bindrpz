@@ -76,14 +76,11 @@ class DomainsController < ApplicationController
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
         if response.code.to_i == 200
-
           @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != ''}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
-          # @domain.list_domain = Net::HTTP.get(uri).gsub(/[\[\]"]/, '').split("\n").reject { |line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/ }
           @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\b|127.0.0.1)/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
-
-
           @lines = @domain.list_domain.split("\n").map(&:strip)
           # puts "Hey Yo: #{@lines}"
+          @domain.status = "bulk"
           respond_to do |format|
             if @domain.save
               format.html { redirect_to domain_url(@domain), notice: "Domain was successfully created." }
@@ -96,6 +93,17 @@ class DomainsController < ApplicationController
         else
           puts "URL is not valid"
           redirect_to new_domain_path, notice: "URL is not valid"
+        end
+      end
+    else
+      @domain.status = "blacklist"
+      respond_to do |format|
+        if @domain.save
+          format.html { redirect_to domain_url(@domain), notice: "Domain was successfully created." }
+          format.json { render :show, status: :created, location: @domain }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @domain.errors, status: :unprocessable_entity }
         end
       end
     end
