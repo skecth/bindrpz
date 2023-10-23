@@ -19,6 +19,10 @@
       -Domain.order(:source).pluck(:source).uniq.each do |source|
        option(value=source)    
   -else
+
+    = f.text_field :list_domain, class: "form-control",placeholder: "IP Addresss/Domain "
+    br/
+    = f.text_field :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
     = f.input :list_domain, class: "form-control",placeholder: "List Domain"
     = f.input :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
     datalist(id="source-datalist")

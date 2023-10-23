@@ -1,0 +1,20 @@
+//css =>domaain_index.scss
+.main-content
+    .container-feed-title
+      .category-title
+        h2 Total Category: #{@cat_count}
+
+
+table.table
+  .d-flex.flex-row-reverse
+    thead.table-dark
+      tr.column-data
+        th(scope="col") Category
+
+    tbody
+      - @feeds.each do |f|
+        -f.domains.each do |d|
+            tr.column-data
+            td = d.category
+
+        
