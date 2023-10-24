@@ -28,12 +28,47 @@ i.bi.bi-plus-circle {
 .container-feed-delete{
     border: 1px black;
     border-style: solid;
-    height: 70px;
+    height: 60px;
     border-radius: 10px 10px 0px 0px;
     background-color: #333333;
 }
-.button-delete{
-    margin: auto;
-    width: 50%;
+.delete{
+    padding: 10px; //
+}
+.container-filter{
+    border: 1px black;
+    border-style: solid;
+}
+.delete{
+    padding: 10px;
+}
+.ft{
+    font-size: 14px;
+}
+.th{
+    font-weight: 300;
+    font-size: 12px;
+}
+.feed-name{
+    font-size: 24px;
+    color: white;
+    padding: 10px;
+}
+.column-data{
+    font-size: 12px;
+}
+
+.container-feed-title{
+    border: 1px black;
+    border-style: solid;
+    height: 60px;
+    border-radius: 10px 10px 0px 0px;
+    background-color: #333333;  
+    margin-top: 20px;
+}
+
+.category-title {
+    font-size: 30px;
+    color: white;
     padding: 10px;
 }

@@ -1,6 +1,7 @@
 require "httparty"
 require "nokogiri"
 require "uri"
+
 class DomainsController < ApplicationController
   before_action :set_domain, only: %i[ show edit update destroy ]
   include Pagy::Backend
@@ -35,16 +36,13 @@ class DomainsController < ApplicationController
     list = id.list_domain
     #remove unwanted symbol
     if list.present?
-      str = list.gsub(/[\[\]"]/, '') #remove sqaure bracket
-      list_domain = str.split(', ') #split based on ,
-      @num = list_domain.count
-      @content = list_domain
-      @pagy,@content = pagy_array(@content.to_a,items: 100)
+      str = list.gsub(/[\[\]"]/, '') #re  move sqaure bracket
+      #list_domain = str.split(', ') #split based on ,
+      @content = str
+      @pagy,@content = pagy_array(@content,items: 100)
     else
       puts "No domain list"
     end
-
-  
   end
   # GET /domains/new
   def new
@@ -58,7 +56,6 @@ class DomainsController < ApplicationController
     @category = @domains.pluck(:category) #.pluck to get all in the params
     @status = params[:status]
   end
- 
 
   def create
     @domain = Domain.new(domain_params)
@@ -74,6 +71,7 @@ class DomainsController < ApplicationController
         http.use_ssl = true if uri.scheme == 'https' 
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
+
         if response.code.to_i == 200 && @domain.URL.include?(".txt")
           @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
           @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
@@ -110,11 +108,25 @@ class DomainsController < ApplicationController
   end 
 
 
+
+
+
+  def edit 
+    #the original version do not have edit def
+    @feed = Feed.find(params[:feed_id])
+    @domain = Domain.find(params[:id])
+  end
+ 
+
+
+
+
   # PATCH/PUT /domains/1 or /domains/1.json
   def update
     respond_to do |format|
       if @domain.update(domain_params)
-        format.html { redirect_to domain_url(@domain), notice: "Domain was successfully updated." }
+        format.html { redirect_to feeds_path, notice: "Domain was successfully updated." }
+
         format.json { render :show, status: :ok, location: @domain }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -122,7 +134,7 @@ class DomainsController < ApplicationController
       end
     end
   end
-
+        
   def instant_update
     @domain = Domain.find(params[:id])
     if @domain.URL.present?  
@@ -131,12 +143,13 @@ class DomainsController < ApplicationController
       puts "no URL"
     end
   end
-  
+
   # DELETE /domains/1 or /domains/1.json
   def destroy
     @domain.destroy
+    @feed = Feed.find(params[:id])
     respond_to do |format|
-      format.html { redirect_to domains_url, notice: "Domain was successfully destroyed." }
+      format.html { redirect_to feed_url(@feed), notice: "Domain was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -152,3 +165,4 @@ class DomainsController < ApplicationController
       params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id, :status)
     end
 end
+

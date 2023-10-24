@@ -7,5 +7,7 @@ nav.navbar.navbar-expand-lg.navbar-light.nav-custom
       ul.navbar-nav.me-auto.mb-2.mb-lg-0
         li.nav-item
         = link_to "App managment", feeds_path, method: :post, class: 'nav-link'
+        li.nav-item
+        = link_to "Admin", admin_feed_path,class: 'nav-link'
        
 =yield

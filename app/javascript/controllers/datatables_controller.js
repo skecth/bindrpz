@@ -7,10 +7,11 @@ export default class extends Controller {
     document.addEventListener("turbo:load", function () {
       if (!DataTable.isDataTable('#dttb')) {
         let table = new DataTable('#dttb', {
-          "iDisplayLength": 10,
+          // "iDisplayLength": 10, //limit how many entries
+          "bPaginate": false, //hide the entries
           "aaSorting": [1, 'asc'],
           language: {
-            searchPlaceholder: "Search"
+            searchPlaceholder: "Search By"
           },
         });
       }else{
