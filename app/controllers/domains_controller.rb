@@ -11,7 +11,6 @@ class DomainsController < ApplicationController
     # @domains.each do |domain|
     #   @c =domain.list_domain
     # end
-
     @sources = @domains.pluck(:source).uniq
     @categories = @domains.pluck(:category).uniq
     if params[:category].present?
@@ -63,9 +62,9 @@ class DomainsController < ApplicationController
 
   def create
     @domain = Domain.new(domain_params)
-    # if URL exist, then it will not be saved
+    # if URL exist
     if @domain.URL.present?
-      if Domain.exists?(URL: @domain.URL)
+      if Domain.exists?(URL: @domain.URL) 
         redirect_to new_domain_path, alert: "URL already exist"
         puts "URL already exist"
       else
@@ -75,12 +74,13 @@ class DomainsController < ApplicationController
         http.use_ssl = true if uri.scheme == 'https' 
         request = Net::HTTP::Get.new(uri.request_uri)
         response = http.request(request)
-        if response.code.to_i == 200
-          @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != ''}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
-          @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\b|127.0.0.1)/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
-          @lines = @domain.list_domain.split("\n").map(&:strip)
-          # puts "Hey Yo: #{@lines}"
+        if response.code.to_i == 200 && @domain.URL.include?(".txt")
+          @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
+          @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
+          @domain.list_domain = @domain.list_domain.split("\n").map(&:strip).uniq.join("\n") #remove duplicate   
+         
           @domain.status = "bulk"
+
           respond_to do |format|
             if @domain.save
               format.html { redirect_to domain_url(@domain), notice: "Domain was successfully created." }
@@ -132,8 +132,6 @@ class DomainsController < ApplicationController
     end
   end
   
-  
-
   # DELETE /domains/1 or /domains/1.json
   def destroy
     @domain.destroy
@@ -142,9 +140,6 @@ class DomainsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
-
-
 
   private
     # Use callbacks to share common setup or constraints between actions.
