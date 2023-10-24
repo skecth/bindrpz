@@ -97,7 +97,7 @@ class DomainsController < ApplicationController
       @domain.status = "blacklist"
       respond_to do |format|
         if @domain.save
-          format.html { redirect_to domain_url(@domain), notice: "Domain was successfully created." }
+          format.html { redirect_to feed_url(@domain.feed_id), notice: "Domain was successfully created." }
           format.json { render :show, status: :created, location: @domain }
         else
           format.html { render :new, status: :unprocessable_entity }
