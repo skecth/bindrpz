@@ -10,11 +10,10 @@ class FeedsController < ApplicationController
   # GET /feeds/1 or /feeds/1.json
   def show
 
-     @feed = Feed.find(params[:id])
-     @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
+    @feed = Feed.find(params[:id])
+    @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
     @feeds =Feed.all    
     domain = Domain.all
-
     @feeds = Feed.all
     @feed = Feed.find(params[:id])
     @domains = @feed.domains

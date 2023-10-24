@@ -5,9 +5,9 @@ div.d-flex.flex-column.flex-shrink-0.p-3.text-black.bg-light style="width: 280px
         i.bi.bi-plus-circle
       ul.dropdown-menu(aria-labelledby="dropdownMenuButton1")
         li
-         = link_to "Generated RPZ Zones", rpz_new_path, class: "dropdown-item"
+          = link_to "Generated RPZ Zones", rpz_new_path, class: "dropdown-item"
   hr
   ul.nav.nav-pills.flex-column.mb-auto
     - @feeds.each do |feed|
-      li.nav-item
+      li.nav-item class=(current_page?(rpz_zones_path(feed)) ? "active" : "")
         = link_to "#{feed.host}.#{feed.domain}", rpz_zones_path(feed), class: "nav-link link-dark"

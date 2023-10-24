@@ -11,6 +11,10 @@
         option(value=url) 
     = f.input :category, list: 'category-datalist', class: 'form-control', placeholder: 'Category', autocomplete: :off
     datalist(id="category-datalist")
+    = f.input :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
+    datalist(id="source-datalist")
+      -Domain.order(:source).pluck(:source).uniq.each do |source|
+       option(value=source)  
       -Domain.order(:category).pluck(:category).uniq.each do |category|
        option(value=category)
     = f.input :feed_id, input_html: { value: @feed.id }, as: :hidden
@@ -19,11 +23,8 @@
       -Domain.order(:source).pluck(:source).uniq.each do |source|
        option(value=source)    
   -else
-
     = f.text_field :list_domain, class: "form-control",placeholder: "IP Addresss/Domain "
     br/
-    = f.text_field :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
-    = f.input :list_domain, class: "form-control",placeholder: "List Domain"
     = f.input :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
     datalist(id="source-datalist")
       -Domain.order(:source).pluck(:source).uniq.each do |source|
