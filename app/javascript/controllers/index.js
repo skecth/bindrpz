@@ -12,3 +12,6 @@ application.register("domain-table", DomainTableController)
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import RemoteModalController from "./remote_modal_controller"
+application.register("remote-modal", RemoteModalController)

@@ -2,8 +2,9 @@
 .main-content
     .container-feed-title
       .category-title
-        h2 Total Category: #{@cat_count}
+        h2 Total Category: #{@category_count}
 
+= link_to 'Create Custom Category', new_category_path, data: { turbo_frame: "remote_modal" }
 
 table.table
   .d-flex.flex-row-reverse
@@ -12,9 +13,10 @@ table.table
         th(scope="col") Category
 
     tbody
-      - @feeds.each do |f|
-        -f.domains.each do |d|
-            tr.column-data
-            td = d.category
+      - @categories.each do |cat|
+          tr.column-data
+          td = cat.name
+
+
 
         

@@ -10,9 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_11_074215) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "categories", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "domains", force: :cascade do |t|
     t.string "URL"
@@ -24,6 +30,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_074215) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "feed_id", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_domains_on_category_id"
     t.index ["feed_id"], name: "index_domains_on_feed_id"
   end
 
@@ -51,5 +59,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_11_074215) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "domains", "categories"
   add_foreign_key "domains", "feeds"
 end
