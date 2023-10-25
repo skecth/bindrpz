@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :categories
   resources :feeds
  
   resources :tests
@@ -22,7 +23,6 @@ Rails.application.routes.draw do
   post 'feed/:id/blacklist', to: "domains#cf"
 
   get '/feed/admin', to: "feeds#admin", as: :admin_feed
-
   post 'instant_update/:id', to: "domains#instant_update", as: :instant_update
 
 end

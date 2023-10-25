@@ -10,7 +10,6 @@ class FeedsController < ApplicationController
   # GET /feeds/1 or /feeds/1.json
   def show
 
-    @feed = Feed.find(params[:id])
     @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
     @feeds =Feed.all    
     domain = Domain.all
@@ -44,10 +43,8 @@ class FeedsController < ApplicationController
   end
 
   def admin
-    @feeds = Feed.all
-    @category = Domain.pluck(:category).uniq
-    @cat_count = @category.count
-    puts @cat_count
+    @categories = Category.all
+    @category_count = @categories.count
   end
 
   # GET /feeds/1/edit

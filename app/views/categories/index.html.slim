@@ -1,0 +1,25 @@
+//css =>domaain_index.scss
+//Note:Use this part only for category
+.main-content
+    .container-feed-title
+      .category-title
+        .d-flex.mb-3 
+          .me-auto.p-2
+            h2 Total Category: #{@count}
+          .p-2
+            = link_to 'Create Custom Category', new_category_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary"
+
+
+table.table
+  .d-flex.mb-3
+    thead.table-dark
+      tr.column-data
+        th(scope="col") Category
+        
+        br/
+    tbody
+      - @categories.each do |cat|
+          tr.column-data
+          td = cat.name
+          
+

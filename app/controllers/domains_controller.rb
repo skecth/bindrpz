@@ -46,6 +46,7 @@ class DomainsController < ApplicationController
   end
   # GET /domains/new
   def new
+    @cat = Category.all
     @feeds = Feed.all
     @domain = Domain.new(status: params[:status])
     @feed = Feed.all
@@ -81,7 +82,7 @@ class DomainsController < ApplicationController
 
           respond_to do |format|
             if @domain.save
-              format.html { redirect_to domain_url(@domain), notice: "Domain was successfully created." }
+              format.html { redirect_to feeds_path, notice: "Domain was successfully created." }
               format.json { render :show, status: :created, location: @domain }
             else
               format.html { render :new, status: :unprocessable_entity }
@@ -107,14 +108,11 @@ class DomainsController < ApplicationController
     end
   end 
 
-
-
-
-
   def edit 
     #the original version do not have edit def
     @feed = Feed.find(params[:feed_id])
     @domain = Domain.find(params[:id])
+    
   end
  
 
@@ -162,7 +160,7 @@ class DomainsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category,:action,:feed_id, :status)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category_id,:action,:feed_id, :status, :name)
     end
 end
 

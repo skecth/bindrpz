@@ -23,7 +23,7 @@ hr.hr
                     li
                       = link_to "Create Blacklist", new_domain_path(status: 'blacklist', id: @feed.id), class: "dropdown-item", style: "font-size: 14px"
               .p-2
-                = button_to "Delete", @feed, method: :delete, class: "btn btn-danger"
+                = button_to "Delete", @feed, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete 
 
         div[data-controller="datatables"]
         table.table#dttb
@@ -49,7 +49,10 @@ hr.hr
                   -elsif d.list_domain.split("\n").count<=1
                     td = d.list_domain
                   td = d.action
-                  td = d.category
+                  -if d.category.present?
+                    td = d.category.name
+                  -else
+                    td = "No category"
                   td = d.created_at.strftime("%d %b %y")
                   td 
                     .dropdown 
@@ -58,10 +61,10 @@ hr.hr
                         - if d.status == "bulk"
                           li = button_to "Update List", instant_update_path(d, feed_id: @feed.id), class: "dropdown-item"
                           li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
-                          li = button_to "Destroy", d,method: :delete, class: "dropdown-item"
+                          li = button_to "Destroy", d,class: "dropdown-item" ,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
                         - else
                           li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
-                          li = button_to "Destroy", d,method: :delete, class: "dropdown-item"
+                          li = button_to "Destroy", d, class: "dropdown-item",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
             
 
 
