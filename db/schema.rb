@@ -27,6 +27,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
     t.string "category"
     t.string "action"
     t.integer "status", default: 0
+    t.integer "line_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "feed_id", null: false

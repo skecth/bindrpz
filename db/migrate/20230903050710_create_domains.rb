@@ -7,6 +7,7 @@ class CreateDomains < ActiveRecord::Migration[7.0]
       t.string :category
       t.string :action
       t.integer :status, default: 0
+      t.integer :line_count
 
       t.timestamps
     end

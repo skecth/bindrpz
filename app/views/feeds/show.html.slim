@@ -41,10 +41,7 @@ hr.hr
             tbody
               - @feed.domains.each do |d|
                 tr.column-data
-                  -if d.list_domain.present?
-                    td = d.list_domain.split("\n").count
-                  -else
-                    td = "0"
+                  td = d.line_count
                   -if d.URL.present?
                     td = link_to "#{d.URL}", d.URL
                   -elsif d.list_domain.split("\n").count<=1
