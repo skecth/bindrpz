@@ -15,11 +15,13 @@ table.table
     thead.table-dark
       tr.column-data
         th(scope="col") Category
-        
+        th(scope="col")
         br/
     tbody
       - @categories.each do |cat|
           tr.column-data
           td = cat.name
+          td = button_to "Destroy", cat, class: "btn btn-danger",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
+
           
 
