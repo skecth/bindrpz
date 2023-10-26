@@ -49,33 +49,37 @@ class GenerateRpzJob < ApplicationJob
     passthru_rules = ""
 
     domains.each do |domain|
-      list_domains = domain.list_domain.split("\n")
-      action = domain.action
+      if domain.list_domain.present?
+        list_domains = domain.list_domain.split("\n")
+        action = domain.action
 
-      list_domains.each do |list_domain|
-        # Clean up the domain name
-        domain_name = list_domain.to_s.chomp('.').strip
+        list_domains.each do |list_domain|
+          # Clean up the domain name
+          domain_name = list_domain.to_s.chomp('.').strip
 
-        # Remove the www. from the domain name
-        domain_name = domain_name[4..-1] if domain_name.start_with?('www.')
+          # Remove the www. from the domain name
+          domain_name = domain_name[4..-1] if domain_name.start_with?('www.')
 
-        # Append the rules to the action
-        domain_rule = "#{domain_name} #{action}\n"
+          # Append the rules to the action
+          domain_rule = "#{domain_name} #{action}\n"
 
-        # Append the rules to the rpz_rules
-        unless domain_name.empty?
-          if action == 'IN CNAME rpz-drop'
-            drop_rules << domain_rule
-          elsif action == 'CNAME rpz-tcp-only'
-            tcp_rules << domain_rule
-          elsif action == 'CNAME *.'
-            data_rules << domain_rule
-          elsif action == 'CNAME .'
-            nxdomain_rules << domain_rule
-          elsif action == 'IN CNAME rpz-passthru'
-            passthru_rules << domain_rule
+          # Append the rules to the rpz_rules
+          unless domain_name.empty?
+            if action == 'IN CNAME rpz-drop'
+              drop_rules << domain_rule
+            elsif action == 'CNAME rpz-tcp-only'
+              tcp_rules << domain_rule
+            elsif action == 'CNAME *.'
+              data_rules << domain_rule
+            elsif action == 'CNAME .'
+              nxdomain_rules << domain_rule
+            elsif action == 'IN CNAME rpz-passthru'
+              passthru_rules << domain_rule
+            end
           end
         end
+      else
+        puts "No list domain"
       end
     end
 
