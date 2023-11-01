@@ -5,6 +5,7 @@ class FeedsController < ApplicationController
   # GET /feeds or /feeds.json
   def index
     @feeds = Feed.all
+   
   end
 
   # GET /feeds/1 or /feeds/1.json
@@ -53,19 +54,52 @@ class FeedsController < ApplicationController
   end
 
   # POST /feeds or /feeds.json
+ 
+
   def create
     @feed = Feed.new(feed_params)
+    @feed.feed_name = "#{@feed.category.name}_#{@feed.source}"
+    file_name = @feed.feed_name
+    file_path = "#{@feed.feed_path}/#{file_name}.txt"
 
-    respond_to do |format|
-      if @feed.save
-        format.html { redirect_to feed_url(@feed), notice: "Feed was successfully created." }
-        format.json { render :show, status: :created, location: @feed }
+    # Make an HTTP GET request to the URL and write the content to the file
+    url = @feed.url
+    if url.present?
+      if Feed.exists?(url: url)
+        redirect_to new_feed_path
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @feed.errors, status: :unprocessable_entity }
+        uri = URI.parse(url)
+        http = Net::HTTP.new(uri.host, uri.port)
+        http.use_ssl = true if uri.scheme == 'https' 
+        request = Net::HTTP::Get.new(uri.request_uri)
+        response = http.request(request)
+
+        if response.code.to_i == 200 && url.include?(".txt")
+          File.open(file_path, 'w') do |file|
+             @list_domain = Net::HTTP.get(URI.parse(url)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
+             @list_domain = @list_domain.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
+             @list_domain = @list_domain.split("\n").map(&:strip).uniq.join("\n") #remove duplicate   
+             
+             file.write(@list_domain)
+          end
+          @feed.feed_path = file_path
+
+          respond_to do |format|
+            if @feed.save
+              format.html { redirect_to feeds_path, notice: "Feed was successfully created." }
+              format.json { render :show, status: :created, location: @feed }
+            else
+              format.html { redirect_to feeds_path }
+              format.json { render json: @feed.errors, status: :unprocessable_entity }
+            end
+          end
+        end
       end
+    else
+      redirect_to new_feed_path
     end
   end
+
 
   # PATCH/PUT /feeds/1 or /feeds/1.json
   def update
@@ -82,6 +116,7 @@ class FeedsController < ApplicationController
 
   # DELETE /feeds/1 or /feeds/1.json
   def destroy
+    File.delete(@feed.feed_path)
     @feed.destroy
     respond_to do |format|
       format.html { redirect_to feeds_url, notice: "Feed was successfully destroyed." }
@@ -99,6 +134,11 @@ class FeedsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def feed_params
-      params.require(:feed).permit(:host, :domain)
+      params.require(:feed).permit(:url, 
+                                   :source, 
+                                   :blacklist_type, 
+                                   :feed_name,
+                                   :feed_path,
+                                   :category_id)
     end
 end

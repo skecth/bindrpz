@@ -1,6 +1,7 @@
 h1 Editing feed
 
-== render "form", feed: @feed
+= render "remote_modal", title: "New item" do
+  = render "form", feed: @feed
 
 br
 

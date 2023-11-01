@@ -8,8 +8,7 @@ def show
 end
 
 def index
-    @feeds = Feed.all
-    puts @feed
+    @zone = Zone.first
 end
 
 end

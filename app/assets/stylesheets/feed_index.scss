@@ -1,0 +1,20 @@
+.container_title {
+    font-family: "Open Sans";
+    font-size: 32px;
+    font-weight: 700;
+}
+.container_desc{
+    font-family: "Open Sans";
+    font-size: 18px;
+}
+.container_button{
+    margin-top: 25px;
+}
+
+tbody:before {
+    /* This doesn't work because of border-collapse */
+    line-height:1em;
+    content:"_";
+    color:white;
+    display:block;
+}

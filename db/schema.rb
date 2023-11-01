@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_29_100733) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -31,16 +31,34 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "feed_id", null: false
-    t.bigint "category_id"
-    t.index ["category_id"], name: "index_domains_on_category_id"
     t.index ["feed_id"], name: "index_domains_on_feed_id"
   end
 
-  create_table "feeds", force: :cascade do |t|
-    t.string "host"
-    t.string "domain"
+  create_table "feed_zones", force: :cascade do |t|
+    t.bigint "feed_id"
+    t.bigint "zone_id", null: false
+    t.string "action"
+    t.string "destination"
+    t.string "file_path"
+    t.string "zone_name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_feed_zones_on_category_id"
+    t.index ["feed_id"], name: "index_feed_zones_on_feed_id"
+    t.index ["zone_id"], name: "index_feed_zones_on_zone_id"
+  end
+
+  create_table "feeds", force: :cascade do |t|
+    t.integer "blacklist_type"
+    t.string "source"
+    t.string "url"
+    t.string "feed_name"
+    t.string "feed_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_feeds_on_category_id"
   end
 
   create_table "rpzdata", force: :cascade do |t|
@@ -60,6 +78,17 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
     t.datetime "updated_at", null: false
   end
 
-  add_foreign_key "domains", "categories"
+  create_table "zones", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "zone_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   add_foreign_key "domains", "feeds"
+  add_foreign_key "feed_zones", "categories"
+  add_foreign_key "feed_zones", "feeds"
+  add_foreign_key "feed_zones", "zones"
+  add_foreign_key "feeds", "categories"
 end
