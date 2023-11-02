@@ -1,0 +1,31 @@
+= simple_form_for (@feed_zone) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    = f.input :action
+    = f.input :destination
+    = f.input :zone_id, input_html: { value: @zone.id }, as: :hidden
+
+    - @feeds.each do |feed|
+      = f.input :feed_id, as: :check_boxes, collection: [[feed.feed_name, feed.id]], input_html: { multiple: true }
+
+    = f.input :category_id, as: :select, collection: Category.all, label_method: :name, value_method: :id, include_blank: 'Select Feed'
+
+  .form-actions
+    = f.button :submit
+
+
+
+
+/ @rpz_zone = RpzZone.find(params[:rpz_zone_id])
+/     params[:feed_ids].each do |feed_id|
+/         puts "feed ID: #{feed_id}"  
+/         next unless Feed.exists?(id: feed_id)
+/         @category_id = Feed.find(feed_id).category_id
+/         @zone_category = ZoneCategory.new(rpz_zone_id: @rpz_zone.id, feed_id: feed_id, category_id: @category_id, action: 1, destination: "google.com")
+/         puts "To be created: #{@zone_category.inspect}"
+/         next if ZoneCategory.exists?(rpz_zone_id: @rpz_zone.id, feed_id: feed_id)
+/         @zone_category.save
+/     end
+/     redirect_to @rpz_zone

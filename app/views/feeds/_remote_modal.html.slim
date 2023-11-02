@@ -1,0 +1,9 @@
+= turbo_frame_tag "remote_modal" do
+  .modal.fade#shareRecipeModal(tabindex="-1" aria-labelledby="newItemRemoteModalLabel" aria-hidden="true" data-controller="remote-modal" data-action="turbo:before-render@document->remote-modal#hideBeforeRender")
+    .modal-dialog.modal-dialog-centered(role="document")
+      .modal-content#modal_content
+        .modal-header
+          h4.modal-title#newItemRemoteModalLabel= title
+          button.btn-close(data-bs-dismiss="modal" aria-label="Close")
+        .modal-body.remote_modal_body#remote_modal_body
+          = yield

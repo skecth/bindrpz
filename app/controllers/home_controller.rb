@@ -8,8 +8,9 @@ def show
 end
 
 def index
-    @feeds = Feed.all
-    puts @feed
+    @zones= Zone.last(10)
+    @categories = Category.last(10)
+    @feeds = Feed.last(10)
 end
 
 end

@@ -3,8 +3,10 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-    = f.input :host
-    = f.input :domain
+    = f.input :category_id,as: :select, collection: Category.all,value_method: :id, label_method: :name, label: "Category"
+    = f.input :feed_path
+    = f.input :source
+    = f.input :url
     
   .form-actions
     = f.button :submit

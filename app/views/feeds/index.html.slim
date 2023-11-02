@@ -1,11 +1,40 @@
 /css=>domain_index.scss
-p style="color: green" = notice
+.d-flex.db-higlight.mb-3 
+  .me-auto.p-2.bd-highlight
+    .container_title
+     | Feed
+    .container_desc
+     | The current feed that has been added
+  .p-2.bd-highlight
+    .container_button
+      =link_to "Create", new_feed_path, class: "btn btn-secondary", data: { turbo_frame: "remote_modal" }
+table.table.feed
+  thead.table-dark
+    tr 
+      th(scope="col") URL
+      th(scope="col") ID
+      th(scope="col") Source
+      th(scope="col") Category
+      th(scope="col") Name
+      th(scope="col") Create at
+      th(scope="col") Action
+      th(scope="col") 
+    
+  tbody.feed_body
+    - @feeds.each do |feed|
+      tr
+        td = feed.id
+        td = feed.url
+        td = feed.source
+        td = feed.category.name 
+        td = feed.feed_name
+        td = feed.created_at
+        td = button_to "Destroy", feed,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
+        td = link_to "Edit", edit_feed_path(feed),data: { turbo_frame: "remote_modal" }
+        
 
-hr.hr
-.container-fluid
-  .row.flex-nowrap
-    =render "feeds/sidebar"
-    .col.py-3 
-    .container
-      
 
+
+
+        
+        

@@ -23,14 +23,14 @@ default: &default
 
 development:
   <<: *default
-  adapter: postgresql 
-  host: dbdns.postgres.database.azure.com
-  port: 5432
-  database: blacklistDomain
-  username: admindns
-  password: 'DN5V@ul7'
-  encoding: utf8
- # database: bindrpz_development
+  # adapter: postgresql 
+  # host: dbdns.postgres.database.azure.com
+  # port: 5432
+  # database: blacklistDomain
+  # username: admindns
+  # password: 'DN5V@ul7'
+  # encoding: utf8
+  database: bindrpz_development
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.

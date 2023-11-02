@@ -1,0 +1,75 @@
+-if @feed_zones.nil?
+  h1 hai 
+-else
+  hr.hr
+  .container-fluid
+    .row.flex-nowrap
+      =render "feed_zones/sidebar"
+      .col.py-3
+        
+          .container
+            .row-fluid
+              .container-feed-delete
+                .d-flex 
+                  .me-auto.p-2
+                    .feed-name
+                      =@name
+                  .p-2
+                    .dropdown(style="margin-left: 10px;")
+                      button.btn.btn-secondary.dropdown-toggle-partial.ft(type="button" data-bs-toggle="dropdown" aria-expanded="false")
+                        | Domain Update
+                        i.bi.bi-plus-square
+                      ul.dropdown-menu
+                        li
+                          = link_to "Bulk Add Blacklist", class: "dropdown-item", style: "font-size: 14px;"
+                        li
+                          = link_to "Create Blacklist", class: "dropdown-item", style: "font-size: 14px"
+                  .p-2
+                    = button_to "Delete",class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete 
+            div[data-controller="datatables"]
+            table.table#dttb
+              .d-flex.flex-row-reverse
+                
+                thead.table-dark
+                  tr.column-data
+                    th(scope="col") Line Count
+                    th(scope="col") Blacklist Domain
+                    th(scope="col") Destination
+                    th(scope="col") Category
+                    th(scope="col") Created at
+                    th(scope="col") Action
+                tbody 
+                    -@feed_zones.each do |f|
+                      =f.action
+
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/ p style="color: green" = notice
+
+/ == render @feed_zone
+
+/ div
+/   => link_to "Edit this feed zone", edit_feed_zone_path(@feed_zone)
+/   '|
+/   =< link_to "Back to feed zones", feed_zones_path
+
+/   = button_to "Destroy this feed zone", @feed_zone, method: :delete

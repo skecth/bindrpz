@@ -1,14 +1,20 @@
-nav.navbar.navbar-expand-lg.navbar-light.nav-custom
-  .container-fluid
-    a.navbar-brand(href="#") Navbar
-    button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
-      span.navbar-toggler-icon
-    .collapse.navbar-collapse#navbarSupportedContent
-      ul.navbar-nav.me-auto.mb-2.mb-lg-0
-        li.nav-item
-        = link_to "App managment", feeds_path, method: :post, class: 'nav-link'
-        li.nav-item
-        = link_to "Category", categories_path,class: 'nav-link'
-       
-=yield
-= turbo_frame_tag "remote_modal", target: "_top" 
+.container-fluid
+  .row.flex-nowrap
+    .col-auto.col-md-3.col-xl-2.px-sm-2.px-0
+      .sidebar
+        h1 Brand
+        = link_to "Home", root_path
+        = link_to "Category", categories_path
+        = link_to "Feed", feeds_path
+        = link_to "Zone", zones_path
+        
+        
+    .col.py-3
+      = yield
+      = turbo_frame_tag "remote_modal", target: "_top"
+
+
+
+    
+
+  // Content
