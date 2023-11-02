@@ -4,7 +4,6 @@ class ZonesController < ApplicationController
   # GET /zones or /zones.json
   def index
     @zones = Zone.all
-   
   end
 
   # GET /zones/1 or /zones/1.json
@@ -32,7 +31,7 @@ class ZonesController < ApplicationController
 
     respond_to do |format|
       if @zone.save
-        format.html { redirect_to feed_zones_path, notice: "Zone was successfully created." }
+        format.html { redirect_to zones_path, notice: "Zone was successfully created." }
         format.json { render :show, status: :created, location: @zone }
       else
         format.html { render :new, status: :unprocessable_entity }

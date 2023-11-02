@@ -4,17 +4,17 @@
             = hidden_field_tag :zone_id,@zone.id
         h4 Listed Feed
         .container_feed
-            .mb-3
-                -Feed.all.each do |feed|
-                    label 
-                    =check_box_tag 'feed_ids[]', feed.id 
-                    =feed.feed_name
-                    br/
+            -Feed.all.each do |feed|
+                =check_box_tag 'feed_ids[]', feed.id 
+                =feed.feed_name
+                br/
 
         .container_feed  
             .mb-3
                 = select_tag :action, options_for_select([["NXDOMAIN", 1], ["DROP", 2], ["PASSTHRU", 3],["NODATA", 4]], 2), class: 'form-control'
             .mb-3
                 = text_field_tag "destination"
+            .mb-3
+                = text_field_tag "file_path"
 
         = submit_tag 'Submit', class: 'btn btn-primary'

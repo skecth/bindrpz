@@ -3,29 +3,12 @@
     .col-auto.col-md-3.col-xl-2.px-sm-2.px-0
       .sidebar
         h1 Brand
-        = link_to "New", feeds_path
+        = link_to "Home", root_path
+        = link_to "Category", categories_path
+        = link_to "Feed", feeds_path
         = link_to "Zone", zones_path
-        a href="" Portfolio
-        a href="" Gallery
-        a href="" Service
-        a href="" Join
-        li
-          a href="#submenu3" data-bs-toggle="collapse" class="nav-link.px-0.align-middle"
-            i.fs-4.bi-grid
-            span.ms-1.d-none.d-sm-inline Products
-          ul.collapse.nav.flex-column.ms-1 id="submenu3" data-bs-parent="#menu"
-            li.w-100
-              a href="#" class="nav-link.px-0"
-                span.d-none.d-sm-inline Product 1
-            li
-              a href="#" class="nav-link.px-0"
-                span.d-none.d-sm-inline Product 2
-            li
-              a href="#" class="nav-link.px-0"
-                span.d-none.d-sm-inline Product 3
-            li
-              a href="#" class="nav-link.px-0"
-                span.d-none.d-sm-inline Product 4
+        
+        
     .col.py-3
       = yield
       = turbo_frame_tag "remote_modal", target: "_top"

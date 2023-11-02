@@ -6,7 +6,7 @@
      | The current zone that has been added
   .p-2.bd-highlight
     .container_button
-      =link_to "Create", new_feed_path, class: "btn btn-secondary", data: { turbo_frame: "remote_modal" }
+      =link_to "Create", new_zone_path, class: "btn btn-secondary", data: { turbo_frame: "remote_modal" }
 table.table.feed
   thead.table-dark
     tr 
@@ -25,7 +25,7 @@ table.table.feed
         td = zone.name
         td = zone.zone_path
         td = zone.description
-        td = link_to "Configure Zone",zone_path(zone),class: "btn btn-secondary"
+        td = link_to "Configure Zone",index_feedZone_path(zone),class: "btn btn-secondary"
         td = button_to "Destroy", zone,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
         td = link_to "Edit",data: { turbo_frame: "remote_modal" }
         

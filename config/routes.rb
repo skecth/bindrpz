@@ -31,4 +31,5 @@ Rails.application.routes.draw do
   post 'feed_zone/new', to: "feed_zones#check_feed", as: :check_feed_id
   get '/add/:id', to: "feed_zones#feed_upload_check", as: :feed_zone_check
   post '/add/:id', to: "feed_zones#feed_upload_check", as: :new_feed_check
+  get 'zone/manage_zone/:id', to: "feed_zones#index",as: :index_feedZone
 end

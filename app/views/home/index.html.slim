@@ -1,0 +1,44 @@
+h2 New Category Created
+table.table(style="width: 30vw")
+    thead 
+        tr.table-dark
+            th(scope="col") Category Name
+            th(scope="col") Created at
+    tbody 
+         -@categories.each do |category|
+            tr 
+                td=category.name
+                td=category.created_at 
+
+h2 New Zone Created
+table.table(style="width: 30vw")
+    thead 
+        tr.table-dark
+            th(scope="col") Zone Name
+            th(scope="col") Created at
+    tbody 
+         -@zones.each do |zone|
+            tr 
+                td=zone.name 
+                td=zone.description 
+                td=zone.created_at
+
+/ h2 New Feed Created
+/ table.table(style="width: 30vw")
+/     thead 
+/         tr.table-dark
+/             th(scope="col") Feed URL
+/             th(scope="col") Feed Category
+/             th(scope="col") Created at
+
+/     tbody 
+/          -@feeds.each do |feed|
+/             tr 
+/                 td=feed.name 
+/                 -feed.category.each do |cat|
+/                     td = cat.created_at 
+/                 td=feed.created_at
+
+
+               
+    

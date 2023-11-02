@@ -11,10 +11,10 @@
     margin-top: 25px;
 }
 
-tbody:before {
-    /* This doesn't work because of border-collapse */
-    line-height:1em;
-    content:"_";
-    color:white;
-    display:block;
-}
+// tbody:before {
+//     /* This doesn't work because of border-collapse */
+//     line-height:1em;
+//     content:"_";
+//     color:white;
+//     display:block;
+// }

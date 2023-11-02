@@ -1,11 +1,42 @@
-p style="color: green" = notice
+.container_zone
+  .d-flex 
+    .p-2.flex-grow-1
+      .name
+        =@zone.name
+          -if @zone.description.present?
+            =@zone.description
+          -else
+            .desc
+              | No desciption
 
 hr.hr
-.container-fluid
-  .row.flex-nowrap
-    =render "feed_zones/sidebar"
-    .col.py-3 
-    .container
+.nav.justify-content-center   
+  l.nav-item 
+    =link_to "Add Custom Feed", new_feed_path, class: "nav-link"
+  l.nav-item 
+    =link_to "Add Included Feed", feed_zone_check_path(@zone), class: "nav-link"
+  l.nav-item 
+    =link_to "Whitelist", new_feed_path, class: "nav-link"
+hr
+
+div[data-controller="datatables"]
+  table.table#dttb
+    thead.table-dark
+      tr.column-data
+        th(scope="col") Category
+        th(scope="col") URL
+        th(scope="col") Feed Name
+        th(scope="col") Action
+        th(scope="col") Destination
+        th(scope="col") Created at
       
-      
-      
+    tbody 
+      - @feed_zones.each do |f|
+        tr
+          td= f.feed.category.name
+          td= f.feed.url
+          td= f.feed.feed_name 
+          td= f.action 
+          td= f.destination
+          td= f.created_at
+    

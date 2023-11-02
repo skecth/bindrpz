@@ -5,6 +5,7 @@ class FeedZonesController < ApplicationController
   def index
     @feed_zones = FeedZone.all
     @zones = Zone.all
+    @zone = Zone.find(params[:id])
   end
 
   # GET /feed_zones/1 or /feed_zones/1.json
@@ -25,21 +26,24 @@ class FeedZonesController < ApplicationController
   def feed_upload_check
     @zones = Zone.all
     @zone = Zone.find(params[:id])
-    if @zone
-      if params[:feed_ids].respond_to?(:each)
-        params[:feed_ids].each do |feed_id|
-          puts "feed ID: #{feed_id}"  
-          next unless Feed.exists?(id: feed_id)
-          # @category_id = Feed.find(feed_id).category_id
-          @feedZone = FeedZone.new(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com")
-          puts "To be created: #{@zone_category.inspect}"
-          @feedZone.save
+    @feedZone = FeedZone.all
+    file = params[:file_path]
+    if params[:feed_ids].present?
+      params[:feed_ids].each do |feed_id|
+        puts "feed ID: #{feed_id}"  
+        next unless Feed.exists?(id: feed_id)
+        feed_zone = FeedZone.find_by(zone_id: @zone.id, feed_id: feed_id)
+        if feed_zone
+          feed_zone.update(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com", file_path: file)
+        else
+          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com", file_path: file)
         end
       end
-    else
-      puts "No ID Zone"
+      redirect_to zone_path(@zone)
     end
   end
+
+ 
   # GET /feed_zones/1/edit
   def edit
     @zone = FeedZone.find(params[:id])

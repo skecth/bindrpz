@@ -8,7 +8,9 @@ def show
 end
 
 def index
-    @zone = Zone.first
+    @zones= Zone.last(10)
+    @categories = Category.last(10)
+    @feeds = Feed.last(10)
 end
 
 end
