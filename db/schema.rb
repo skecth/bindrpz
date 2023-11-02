@@ -61,16 +61,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_29_100733) do
     t.index ["category_id"], name: "index_feeds_on_category_id"
   end
 
-  create_table "rpzdata", force: :cascade do |t|
-    t.string "domain"
-    t.string "category"
-    t.string "action"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "domain_id"
-    t.index ["domain_id"], name: "index_rpzdata_on_domain_id"
-  end
-
   create_table "tests", force: :cascade do |t|
     t.string "link"
     t.string "file"
