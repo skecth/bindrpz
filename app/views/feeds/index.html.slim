@@ -7,12 +7,14 @@
      | The current feed that has been added
   .p-2.bd-highlight
     .container_button
-      =link_to "Create", new_feed_path, class: "btn btn-secondary", data: { turbo_frame: "remote_modal" }
+      = button_to "Update Feeds", bulk_create_path, class: "btn btn-primary btn-sm d-none d-sm-inline-block"
+      / |   |  
+      =link_to "Create", new_feed_path, class: "btn btn-secondary d-sm-inline-block", data: { turbo_frame: "remote_modal" }
 table.table.feed
   thead.table-dark
     tr 
-      th(scope="col") URL
       th(scope="col") ID
+      th(scope="col") URL
       th(scope="col") Source
       th(scope="col") Category
       th(scope="col") Name

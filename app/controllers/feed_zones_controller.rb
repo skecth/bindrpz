@@ -36,7 +36,7 @@ class FeedZonesController < ApplicationController
         if feed_zone
           feed_zone.update(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com", file_path: file)
         else
-          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com", file_path: file)
+          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, action: "DROP", destination: "google.com", file_path: file)
         end
       end
       redirect_to zone_path(@zone)

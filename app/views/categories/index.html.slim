@@ -22,7 +22,7 @@ table.table
       - @categories.each do |cat|
           tr.column-data
           td = cat.name
-          td = cat.created_at
+          td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
           td = button_to "Destroy", cat, class: "btn btn-danger",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
 
           

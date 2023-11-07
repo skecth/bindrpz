@@ -56,7 +56,7 @@ class ZonesController < ApplicationController
   # DELETE /zones/1 or /zones/1.json
   def destroy
     @zone = Zone.find(params[:id])
-    file = @zone.feed_zone.file_path
+    # file = @zone.feed_zone.file_path
     @zone.destroy
     
     respond_to do |format|
@@ -74,8 +74,8 @@ class ZonesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def zone_params
       params.require(:zone).permit(:name,
-                                   :zone_path
-      )
-                    
+                                   :zone_path,
+                                    :description
+      )          
     end
 end

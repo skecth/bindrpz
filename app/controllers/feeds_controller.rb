@@ -113,6 +113,52 @@ class FeedsController < ApplicationController
     end
   end
 
+  def bulk_create
+    # create files in /etc/bind/rpz folder for each feed
+    @feeds = Feed.all
+    # create /etc/bind/rpz folder if it does not exist
+    Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
+    
+    @feeds.each do |feed|
+      # give permission to create file
+      system("sudo chmod 777 /etc/bind/feed")
+      # create file
+      file = File.new("/etc/bind/feed/#{feed.feed_name}.rpz", "w")
+      file.puts "# Last updated: #{Time.now.strftime("%d %b %Y %H:%M:%S")}"
+      # Net::HTTP.get_response(URI.parse(feed.link)) do |res|
+      #   res.body.lines.each do |line|
+      #     next if line.start_with?('#') || line.strip.empty? || line.start_with?('!') || line =~ /^:|^ff|^fe|^255|^127|^#|^$/
+      #     line.gsub!(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '')
+      #     line.gsub!(/^www\./, '')
+      #     line.gsub!(/#.*$/, '')
+      #     # write line that are not duplicate
+
+          
+      #     file.puts line
+      #     # file.puts line
+      #   end
+      # end
+      @blacklist_data = Net::HTTP.get(URI.parse(feed.url)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^#|^$/}.join("\n")
+      @blacklist_data = @blacklist_data.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/#.*$/, '')
+      # if the line has space, then split it 
+      @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
+      @blacklist_data = @blacklist_data.gsub(/^www\./, '')
+      @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
+
+      
+
+    
+      file.puts @blacklist_data
+      # close file
+      file.close
+    end
+    # reload bind9
+    # system("sudo systemctl reload bind9")
+    # redirect to feeds page
+    redirect_to feeds_url, notice: "Feeds were successfully created."
+    puts "Feeds were successfully created."
+  end
+
 
 
   private
@@ -156,7 +202,7 @@ class FeedsController < ApplicationController
             next if line.start_with?('#') || line.strip.empty? || line.start_with?('!') || line =~ /^:|^ff|^fe|^255|^$/ || line.include?('localhost')
             case @feed.blacklist_type
             when "Host"
-              @data. << line.split('#')[0].strip if line.match(host_pattern) && !line.nil?
+              # @data. << line.split('#')[0].strip if line.match(host_pattern) && !line.nil?
               @data << line.split('#')[0].strip if line.match(host_pattern) && !line.nil?
             when "DNSMASQ"
               @data << line if line.match(dnsmasq_pattern) && !line.nil?

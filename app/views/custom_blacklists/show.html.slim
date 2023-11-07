@@ -1,0 +1,10 @@
+p style="color: green" = notice
+
+== render @custom_blacklist
+
+div
+  => link_to "Edit this custom blacklist", edit_custom_blacklist_path(@custom_blacklist)
+  '|
+  =< link_to "Back to custom blacklists", custom_blacklists_path
+
+  = button_to "Destroy this custom blacklist", @custom_blacklist, method: :delete

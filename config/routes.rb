@@ -1,12 +1,12 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :custom_blacklists
   resources :feed_zones
   
   resources :categories
   resources :feeds 
   resources :zones
-  resources :tests
   resources :domains
   get 'home/index'
   mount Sidekiq::Web =>'/sidekiq'
@@ -32,4 +32,7 @@ Rails.application.routes.draw do
   get '/add/:id', to: "feed_zones#feed_upload_check", as: :feed_zone_check
   post '/add/:id', to: "feed_zones#feed_upload_check", as: :new_feed_check
   get 'zone/manage_zone/:id', to: "feed_zones#index",as: :index_feedZone
+
+  post 'bulk_create' => 'feeds#bulk_create', as: :bulk_create
+
 end

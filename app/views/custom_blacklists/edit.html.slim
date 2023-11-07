@@ -1,0 +1,10 @@
+h1 Editing custom blacklist
+
+== render "form", custom_blacklist: @custom_blacklist
+
+br
+
+div
+  => link_to "Show this custom blacklist", @custom_blacklist
+  '|
+  =< link_to "Back to custom blacklists", custom_blacklists_path
