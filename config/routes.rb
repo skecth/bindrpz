@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  get 'custom_blacklists/new_bulk' => 'custom_blacklists#new_bulk', as: :new_bulk
   resources :custom_blacklists
   resources :feed_zones
   
@@ -34,5 +35,6 @@ Rails.application.routes.draw do
   get 'zone/manage_zone/:id', to: "feed_zones#index",as: :index_feedZone
 
   post 'bulk_create' => 'feeds#bulk_create', as: :bulk_create
+  # get 'single_form' => 'feeds#new', as: :single_form
 
 end

@@ -23,16 +23,20 @@
 // }
 
 .container_zone {
-    width: 35vw;
+    width: 50vw;
+    padding: 22px;
     background-color: aliceblue;
-    margin: 10px 0px 0px 5px;
+    box-shadow: 8px 10px grey;
 }
-.name{
-    font-family: "Rubik";
-    font-size: 30px;
+
+
+
+// p in card
+.card p{
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Rubik', sans-serif;
+    color: gray;
+    margin-bottom: 0;
 }
-.desc{
-    font-family: "Rubik";
-    font-size: 20px;
-    margin-bottom: 20px;
-}
+

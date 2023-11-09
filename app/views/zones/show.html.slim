@@ -1,45 +1,85 @@
-.container_zone
-  .d-flex 
-    .p-2.flex-grow-1
-      .name
-        =@zone.name
+/ .container_zone
+/   .d-flex 
+/     .p-2.flex-grow-1
+/       .name
+/         h2 = @zone.name
+/         -if @zone.description.present?
+/           =@zone.description
+/         -else
+/           .desc
+/             | No desciption
+
+/             .main-content
+.container-feed-title
+  .category-title
+    .d-flex
+      .me-auto.p-2
+        h4 = @zone.name
         -if @zone.description.present?
-          =@zone.description
+          p.column-data = @zone.description
         -else
           .desc
             | No desciption
 
-hr.hr
-.nav.justify-content-center   
-  l.nav-item 
-    =link_to "Add Custom Feed", new_feed_path, class: "nav-link"
-  l.nav-item 
-    =link_to "Add Included Feed", feed_zone_check_path(@zone), class: "nav-link"
-  l.nav-item 
-    =link_to "Whitelist", new_feed_path, class: "nav-link"
-hr
+br
+.container 
+  .row.row-cols-1.row-cols-md-4.g-4
+    .col 
+      .card.border-light.mb-3.shadow
+        .card-body.p-3
+          p.text-muted Blacklist:
+          - if @custom_blacklists.present?
+            h4 = @custom_blacklists.count
+          - else
+            h4 0
 
-div[data-controller="datatables"]
-  table.table#dttb
-    thead.table-dark
-      tr.column-data
-        th(scope="col") Category
-        th(scope="col") URL
-        th(scope="col") Feed Name
-        th(scope="col") Action
-        th(scope="col") Destination
-        th(scope="col") Created at
-        th(scope="col") Action
-        th(scope="col") Action
-    tbody 
-      - @feed_zones.each do |f|
-        tr
-          td= f.feed.category.name
-          td= f.feed.url
-          td= f.feed.feed_name 
-          td= f.action 
-          td= f.destination
-          td= f.created_at
-          td= link_to "Pull", pull_path(f)
-          td= button_to "Destroy", f,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
-    
+
+    .col
+      .card.border-light.mb-3.shadow
+        .card-body.p-3
+          p Feed:
+          - if @feeds.present?
+            // count the number of feeds that belongs to a zone
+            = @feeds.count
+          - else
+            h4 0
+    .col
+      .card.border-light.mb-3.shadow
+        .card-body.p-3
+          p Whitelist:
+          - if @feeds.present?
+            table.table.table-striped.table-borderless
+              tbody
+                - @feeds.each do |feed|
+                  tr
+                    td = feed.feed_name
+          - else
+            h4 0
+    .col  
+      .card.border-light.mb-3.shadow
+        .card-body.p-3
+          p Custom Blacklist:
+          - if @feeds.present?
+            table.table.table-striped.table-borderless
+              tbody
+                - @feeds.each do |feed|
+                  tr
+                    td = feed.feed_name
+          - else
+            / .box 
+            h4 0
+
+
+nav 
+  .nav.nav-tabs#nav-tab role="tablist"
+      button.nav-link.active#nav-home-tab data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" Policy
+      / button.nav-link#nav-custom-tab data-bs-toggle="tab" data-bs-target="#nav-custom" type="button" role="tab" aria-controls="nav-custom" aria-selected="true" Custom
+      button.nav-link#nav-profile-tab data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" Feed
+      button.nav-link#nav-contact-tab data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false" Whitelist
+.tab-content#nav-tabContent
+    .tab-pane.fade.show.active#nav-home role="tabpanel" aria-labelledby="nav-home-tab"
+      == render "zones/list_blacklist"
+    / .tab-pane.fade.show#nav-custom role="tabpanel" aria-labelledby="nav-custom-tab"
+    /   == render "custom_blacklists/base_form"
+    .tab-pane.fade#nav-profile role="tabpanel" aria-labelledby="nav-profile-tab"
+    .tab-pane.fade#nav-contact role="tabpanel" aria-labelledby="nav-contact-tab"

@@ -1,42 +1,50 @@
-.container_zone
-  .d-flex 
-    .p-2.flex-grow-1
-      .name
-        =@zone.name
-          -if @zone.description.present?
-            =@zone.description
-          -else
-            .desc
-              | No desciption
+h3 Configure Zone
+br
+nav 
+  .nav.nav-tabs#nav-tab role="tablist"
+      button.nav-link.active#nav-home-tab data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" Blacklist
+      button.nav-link#nav-profile-tab data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" Feed
+      button.nav-link#nav-contact-tab data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false" Whitelist
+.tab-content#nav-tabContent
+    .tab-pane.fade.show.active#nav-home role="tabpanel" aria-labelledby="nav-home-tab"
+      = button_to "Add Blacklist", data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2"
+      / == render "custom_blacklists/single_form", custom_blacklist: @custom_blacklist, kind: "single"
+    .tab-pane.fade#nav-profile role="tabpanel" aria-labelledby="nav-profile-tab"
+      / == render "custom_blacklists/bulk_form", custom_blacklist: @custom_blacklist, kind: "bulk"
+    .tab-pane.fade#nav-contact role="tabpanel" aria-labelledby="nav-contact-tab"
+      / == render "feeds/single_form", feed: @feed, kind: "single"
+/ .container_zone
+/   h2 = @zone.name
+/   -if @zone.description.present?
+/     span = @zone.description
+/   -else
+/     span No desciption
 
-hr.hr
-.nav.justify-content-center   
-  l.nav-item 
-    =link_to "Add Custom Blacklist", new_custom_blacklist_path, class: "nav-link"
-  l.nav-item 
-    =link_to "Add Included Feed", feed_zone_check_path(@zone), class: "nav-link"
-  l.nav-item 
-    =link_to "Whitelist", new_feed_path, class: "nav-link"
-hr
 
-div[data-controller="datatables"]
-  table.table#dttb
-    thead.table-dark
-      tr.column-data
-        th(scope="col") Category
-        th(scope="col") URL
-        th(scope="col") Feed Name
-        th(scope="col") Action
-        th(scope="col") Destination
-        th(scope="col") Created at
-      
-    tbody 
-      - @feed_zones.each do |f|
-        tr
-          td= f.feed.category.name
-          td= f.feed.url
-          td= f.feed.feed_name 
-          td= f.action 
-          td= f.destination
-          td= f.created_at
+/ / hr
+/ .nav.justify-content-center   
+/   l.nav-item 
+/     =link_to "Add Custom Blacklist", new_custom_blacklist_path, class: "nav-link"
+/   l.nav-item 
+/     =link_to "Add Included Feed", feed_zone_check_path(@zone), class: "nav-link"
+/   l.nav-item 
+/     =link_to "Whitelist", new_feed_path, class: "nav-link"
+/ hr
+/ .table-responsive-lg
+/   table.table.column-data
+/     thead.table-dark
+/       tr.column-data
+/         th Category
+/         th Feed Name
+/         th Action
+/         th Destination
+/         th Created at 
+/     tbody 
+/       - @feed_zones.each do |f|
+/         tr
+/           td= f.feed.category.name
+/           td= f.feed.feed_name 
+/           td= f.action 
+/           td= f.destination
+/           td= f.created_at
     

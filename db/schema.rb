@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_06_143411) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_08_153247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -22,7 +22,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_143411) do
 
   create_table "custom_blacklists", force: :cascade do |t|
     t.string "file"
-    t.string "category"
     t.integer "blacklist_type"
     t.integer "action"
     t.string "destination"
@@ -30,6 +29,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_143411) do
     t.integer "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "zone_id", null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_custom_blacklists_on_category_id"
+    t.index ["zone_id"], name: "index_custom_blacklists_on_zone_id"
   end
 
   create_table "domains", force: :cascade do |t|
@@ -81,6 +84,8 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_143411) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "custom_blacklists", "categories"
+  add_foreign_key "custom_blacklists", "zones"
   add_foreign_key "domains", "feeds"
   add_foreign_key "feed_zones", "categories"
   add_foreign_key "feed_zones", "feeds"

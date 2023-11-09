@@ -1,45 +1,42 @@
-h2 New Category Created
-table.table(style="width: 30vw")
-    thead 
-        tr.table-dark
-            th(scope="col") Category Name
-            th(scope="col") Created at
-    tbody 
-         -@categories.each do |category|
-            tr 
-                td=category.name
-                td=category.created_at 
+.row.row-cols-1.row-cols-md-3.g-3
+	.col 
+		.card.border-light.mb-3.shadow
+			h4.card-header Category
+			//make it one line
+			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @categories.count
+			.card-body.p-1
+				table.table.table-striped.table-borderless
+					tbody
+						- @categories.each do |category|
+							tr
+								td = category.name
+	.col
+		.card.border-light.mb-3.shadow
+			h4.card-header Feed
+			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @feeds.count
+			.card-body.p-1
+				table.table.table-striped.table-borderless
+					tbody
+						- @feeds.each do |feed|
+							tr
+								td = feed.feed_name
+	.col
+		.card.border-light.mb-3.shadow
+			h4.card-header Zone
+			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @zones.count
+			.card-body.p-1
+				table.table.table-striped.table-borderless
+					tbody
+						- @zones.each do |zone|
+							tr
+								td = zone.name
 
-h2 New Zone Created
-table.table(style="width: 30vw")
-    thead 
-        tr.table-dark
-            th(scope="col") Name
-            th(scope="col") Description
-            th(scope="col") Created at
-    tbody 
-         -@zones.each do |zone|
-            tr 
-                td=zone.name 
-                td=zone.description 
-                td=zone.created_at.strftime("%d %b %Y %H:%M:%S")
-
-/ h2 New Feed Created
-/ table.table(style="width: 30vw")
-/     thead 
-/         tr.table-dark
-/             th(scope="col") Feed URL
-/             th(scope="col") Feed Category
-/             th(scope="col") Created at
-
-/     tbody 
-/          -@feeds.each do |feed|
-/             tr 
-/                 td=feed.name 
-/                 -feed.category.each do |cat|
-/                     td = cat.created_at 
-/                 td=feed.created_at
+								
 
 
-               
+
+  
+
+
+
     

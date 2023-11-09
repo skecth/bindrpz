@@ -1,33 +1,36 @@
-.d-flex.db-higlight.mb-3 
-  .me-auto.p-2.bd-highlight
-    .container_title
-     | Zone
-    .container_desc
-     | The current zone that has been added
-  .p-2.bd-highlight
-    .container_button
-      =link_to "Create", new_zone_path, class: "btn btn-secondary", data: { turbo_frame: "remote_modal" }
-table.table.feed
-  thead.table-dark
-    tr 
-      th(scope="col") ID
-      th(scope="col") Zone Name
-      th(scope="col") Zone Path
-      th(scope="col") Zone Description
-      th(scope="col") Configure Zone
-      th(scope="col") 
-      th(scope="col") 
-    
-  tbody.feed_body
-    - @zones.each do |zone|
-      tr
-        td = zone.id
-        td = zone.name
-        td = zone.zone_path
-        td = zone.description
-        td = link_to "Configure Zone",index_feedZone_path(zone),class: "btn btn-secondary"
-        td = button_to "Destroy", zone,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
-        td = link_to "Edit",data: { turbo_frame: "remote_modal" }
+.main-content
+    .container-feed-title
+      .category-title
+        .d-flex.mb-3 
+          .me-auto.p-2
+            h3 Total Zone: #{Zone.count}
+          .p-2
+            = link_to 'New Zone', new_zone_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
+hr
+.table-responsive-lg
+  table.table.column-data
+    thead.table-dark
+      tr 
+        th Name
+        th File Path
+        th Description
+        th style="width: 1%"
+        th style="width: 1%"
+        th style="width: 1%"
+        th style="width: 1%"
+      
+    tbody.feed_body
+      - @zones.each do |zone|
+        tr
+          td = link_to zone.name, zone, class: "text-decoration-none text-dark"
+          td = zone.zone_path
+          td = zone.description
+          td = link_to zone, class: "btn btn-secondary btn-sm" do 
+            i.bi.bi-gear-fill title="Configure Zone"
+          td = link_to edit_zone_path(zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do 
+            i.bi.bi-pencil-square title="Edit Zone"
+          td = button_to zone, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
+            i.bi.bi-trash3 title="Delete"
         
 
 

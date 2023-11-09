@@ -3,10 +3,16 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-    = f.input :name
-    = f.input :zone_path
-    = f.input :description
+    // name and zone path are read only when editing
+    -if @zone.persisted?
+      = f.input :name, input_html: { readonly: true, disabled: true }
+      = f.input :zone_path, input_html: { readonly: true, disabled: true }
+      = f.input :description
+    -else
+      = f.input :name, placeholder: "Demo_Zone"
+      = f.input :zone_path, placeholder: "/etc/bind/zones"
+      = f.input :description, placeholder: "Description"
 
 
   .form-actions
-    = f.button :submit
+    = f.button :submit, class: "btn btn-primary btn-sm"

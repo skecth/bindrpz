@@ -54,7 +54,7 @@ hr.hr
                   td = d.created_at
                   td 
                     .dropdown 
-                      button.btn.btn-secondary.dropdown-toggle.column-data(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
+                      button.btn.btn-secondary.btn-new.dropdown-toggle.column-data(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
                       ul.dropdown-menu 
                         - if d.status == "bulk"
                           li = button_to "Update List", instant_update_path(d, feed_id: @feed.id), class: "dropdown-item"
