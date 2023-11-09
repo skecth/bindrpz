@@ -22,11 +22,13 @@ class DomainUpdateJob
       @blacklist_data = @blacklist_data.gsub(/^www\./, '')
       @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
       if File.exist?(file)
-        # update file
+        # update file using system command
+        system("sudo chmod 777 #{file}")
         File.open(file, "w") do |f|
           f.write(@blacklist_data)
         end
       else
+        system("sudo chmod 777 #{file}")
         # create file
         File.new(file, "w")
         # give permission to create file
@@ -36,6 +38,8 @@ class DomainUpdateJob
           f.write(@blacklist_data)
         end
       end
+      # update the updated_at column
+      feed.update(updated_at: Time.now)
     end
     #
   end

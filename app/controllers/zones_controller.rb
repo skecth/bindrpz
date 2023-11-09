@@ -10,15 +10,15 @@ class ZonesController < ApplicationController
   def show
     @zones = Zone.all
     @zone = Zone.find(params[:id])
-    @feed_zones = FeedZone.all    
+    @feed_zones = FeedZone.all.where(zone_id: @zone.id) 
     @feed_zones = @zone.feed_zones
     puts @feed_zones
+    @custom_blacklists = CustomBlacklist.all.where(zone_id: @zone.id)
   end
 
   # GET /zones/new
   def new
     @zone = Zone.new
-    
   end
 
   # GET /zones/1/edit
@@ -36,6 +36,8 @@ class ZonesController < ApplicationController
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }
+        format.turbo_stream { render partial: "zones/form_update", status: :unprocessable_entity }
+
       end
     end
   end
@@ -44,7 +46,7 @@ class ZonesController < ApplicationController
   def update
     respond_to do |format|
       if @zone.update(zone_params)
-        format.html { redirect_to zone_url(@zone), notice: "Zone was successfully updated." }
+        format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
       else
         format.html { render :edit, status: :unprocessable_entity }

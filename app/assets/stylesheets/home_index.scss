@@ -1,5 +1,18 @@
-.container_home{
-    width: max-content;
-    background-color: aqua;
-    margin-bottom: 10px;
+.side_bar{
+  background-color: #222529;
+}
+
+.side_bar a{
+  color: whitesmoke;
+  font-size: 14px;
+  font-family: 'Rubik', sans-serif;
+}
+
+// font size for td in card body
+.card-body td{
+  font-size: 14px;
+}
+
+.card-header{
+  font-family: 'Rubik', sans-serif;
 }

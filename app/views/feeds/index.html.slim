@@ -1,39 +1,39 @@
-/css=>domain_index.scss
-.d-flex.db-higlight.mb-3 
-  .me-auto.p-2.bd-highlight
-    .container_title
-     | Feed
-    .container_desc
-     | The current feed that has been added
-  .p-2.bd-highlight
-    .container_button
-      = button_to "Update Feeds", bulk_create_path, class: "btn btn-primary btn-sm d-none d-sm-inline-block"
-      / |   |  
-      =link_to "Create", new_feed_path, class: "btn btn-secondary d-sm-inline-block", data: { turbo_frame: "remote_modal" }
-table.table.feed
-  thead.table-dark
-    tr 
-      th(scope="col") ID
-      th(scope="col") URL
-      th(scope="col") Source
-      th(scope="col") Category
-      th(scope="col") Name
-      th(scope="col") Create at
-      th(scope="col") Action
-      th(scope="col") 
-    
-  tbody.feed_body
-    - @feeds.each do |feed|
-      tr
-        td = feed.id
-        td = feed.url
-        td = feed.source
-        td = feed.category.name 
-        td = feed.feed_name
-        td = feed.created_at
-        td = button_to "Destroy", feed,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
-        td = link_to "Edit", edit_feed_path(feed),data: { turbo_frame: "remote_modal" }
-        
+.main-content
+    .container-feed-title
+      .category-title
+        .d-flex.mb-3 
+          .me-auto.p-2
+            h3 Total Feed: #{Feed.count}
+          .d-flex.flex-row-reverse.bd-highlight 
+            .p-2
+              = link_to 'New Feed', new_feed_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
+            .p-2
+              = button_to "Fetch List", bulk_create_path, class: "btn btn-primary btn-sm px-3 py-2 btn-new"
+
+hr
+.table-responsive-lg
+  table.table.column-data
+    thead.table-dark
+      tr 
+        th Name
+        th Source
+        th Category
+        th File Path
+        th Last Updated
+        / th 
+        th 
+    tbody.feed_body
+      - @feeds.each do |feed|
+        tr
+          td = feed.feed_name
+          td = feed.source
+          td = feed.category.name 
+          td = feed.feed_path
+          td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
+          / td = link_to "Update", edit_feed_path(feed),data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm"
+          td = button_to feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
+            i.bi.bi-trash3 title="Delete"
+          
 
 
 
