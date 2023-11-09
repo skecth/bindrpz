@@ -1,24 +1,4 @@
-.container_zone
-  .d-flex 
-    .p-2.flex-grow-1
-      .name
-        =@zone.name
-          -if @zone.description.present?
-            =@zone.description
-          -else
-            .desc
-              | No desciption
-
-hr.hr
-.nav.justify-content-center   
-  l.nav-item 
-    =link_to "Add Custom Blacklist", new_custom_blacklist_path, class: "nav-link"
-  l.nav-item 
-    =link_to "Add Included Feed", feed_zone_check_path(@zone), class: "nav-link"
-  l.nav-item 
-    =link_to "Whitelist", new_feed_path, class: "nav-link"
-hr
-
+=render "zones/zone_title"
 div[data-controller="datatables"]
   table.table#dttb
     thead.table-dark
@@ -36,7 +16,7 @@ div[data-controller="datatables"]
           td= f.feed.category.name
           td= f.feed.url
           td= f.feed.feed_name 
-          td= f.action 
+          td= f.selected_action 
           td= f.destination
           td= f.created_at
     

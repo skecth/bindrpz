@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import CheckboxSelectAllController from "./checkbox_select_all_controller"
+application.register("checkbox-select-all", CheckboxSelectAllController)
+
 import DatatablesController from "./datatables_controller"
 application.register("datatables", DatatablesController)
 
@@ -16,3 +19,6 @@ application.register("hello", HelloController)
 
 import RemoteModalController from "./remote_modal_controller"
 application.register("remote-modal", RemoteModalController)
+
+import ShowhideController from "./showhide_controller"
+application.register("showhide", ShowhideController)

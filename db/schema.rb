@@ -49,7 +49,7 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_06_143411) do
   create_table "feed_zones", force: :cascade do |t|
     t.bigint "feed_id"
     t.bigint "zone_id", null: false
-    t.string "action"
+    t.string "selected_action"
     t.string "destination"
     t.string "file_path"
     t.string "zone_name"
