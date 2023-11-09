@@ -1,5 +1,5 @@
 domain_update_job:
-  cron: "*/10 * * * *" 
+  cron: "*/2 * * * *" 
   name: "Update Job"
   class: "DomainUpdateJob"
   queue: default

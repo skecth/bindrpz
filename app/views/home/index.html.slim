@@ -14,14 +14,15 @@ h2 New Zone Created
 table.table(style="width: 30vw")
     thead 
         tr.table-dark
-            th(scope="col") Zone Name
+            th(scope="col") Name
+            th(scope="col") Description
             th(scope="col") Created at
     tbody 
          -@zones.each do |zone|
             tr 
                 td=zone.name 
                 td=zone.description 
-                td=zone.created_at
+                td=zone.created_at.strftime("%d %b %Y %H:%M:%S")
 
 / h2 New Feed Created
 / table.table(style="width: 30vw")

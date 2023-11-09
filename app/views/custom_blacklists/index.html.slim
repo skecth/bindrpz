@@ -1,0 +1,35 @@
+.container.p-4
+  p style="color: green" = notice
+
+  h1 Custom blacklists
+  table.table-responsive.table-bordered
+    thead
+      tr
+        th File
+        th Category
+        th Blacklist type
+        th Action
+        th Destination
+        th Domain
+        th Kind
+        th colspan="3"
+    tbody
+      - @custom_blacklists.each do |custom_blacklist|
+        td = custom_blacklist.file
+        td = custom_blacklist.category
+        td = custom_blacklist.blacklist_type
+        td = custom_blacklist.action
+        td = custom_blacklist.destination
+        td = custom_blacklist.domain
+        td = custom_blacklist.kind
+        td = link_to 'Show', custom_blacklist
+        td = link_to 'Edit', edit_custom_blacklist_path(custom_blacklist)
+        td = link_to 'Destroy', custom_blacklist, method: :delete, data: { confirm: 'Are you sure?' }
+
+  / #custom_blacklists
+  /   - @custom_blacklists.each do |custom_blacklist|
+  /     == render custom_blacklist
+  /     p
+  /       = link_to "Show this custom blacklist", custom_blacklist
+
+  / = link_to "New custom blacklist", new_custom_blacklist_path

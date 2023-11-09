@@ -24,14 +24,21 @@ class CategoriesController < ApplicationController
   # POST /categories or /categories.json
   def create
     @category = Category.new(category_params)
-
-    respond_to do |format|
-      if @category.save
-        format.html { redirect_to categories_path, notice: "Category was successfully created." }
-        format.json { render :show, status: :created, location: @category }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @category.errors, status: :unprocessable_entity }
+    @category.name = @category.name.upcase
+    if Category.exists?(name: @category.name)
+      # if category exists, redirect to existing category
+      redirect_to new_category_path, notice: "Category already exists."
+      return
+    else
+      # if category does not exist, create it 
+      respond_to do |format|
+        if @category.save
+          format.html { redirect_to category_url(@category), notice: "Category was successfully created." }
+          format.json { render :show, status: :created, location: @category }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @category.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
@@ -69,4 +76,5 @@ class CategoriesController < ApplicationController
     def category_params
       params.require(:category).permit(:name)
     end
+    
 end

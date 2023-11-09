@@ -10,12 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_29_100733) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_06_143411) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "categories", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "custom_blacklists", force: :cascade do |t|
+    t.string "file"
+    t.string "category"
+    t.integer "blacklist_type"
+    t.integer "action"
+    t.string "destination"
+    t.string "domain"
+    t.integer "kind"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -59,23 +71,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_29_100733) do
     t.datetime "updated_at", null: false
     t.bigint "category_id", null: false
     t.index ["category_id"], name: "index_feeds_on_category_id"
-  end
-
-  create_table "rpzdata", force: :cascade do |t|
-    t.string "domain"
-    t.string "category"
-    t.string "action"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "domain_id"
-    t.index ["domain_id"], name: "index_rpzdata_on_domain_id"
-  end
-
-  create_table "tests", force: :cascade do |t|
-    t.string "link"
-    t.string "file"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
   end
 
   create_table "zones", force: :cascade do |t|

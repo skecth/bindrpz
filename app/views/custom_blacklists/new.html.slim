@@ -1,0 +1,19 @@
+.container.p-4
+
+  h1 New custom blacklist
+  nav 
+    .nav.nav-tabs#nav-tab role="tablist"
+      button.nav-link.active#nav-home-tab data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" Single
+      button.nav-link#nav-profile-tab data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" Bulk
+  .tab-content#nav-tabContent
+    .tab-pane.fade.show.active#nav-home role="tabpanel" aria-labelledby="nav-home-tab"
+      == render "single_form", custom_blacklist: @custom_blacklist, kind: "single"
+    .tab-pane.fade#nav-profile role="tabpanel" aria-labelledby="nav-profile-tab"
+      // render bulk_form and bring in the kind which is bulk
+      == render "bulk_form", custom_blacklist: @custom_blacklist, kind: "bulk"
+  / == render "form", custom_blacklist: @custom_blacklist
+
+  / br
+
+  / div
+  /   = link_to "Back to custom blacklists", custom_blacklists_path
