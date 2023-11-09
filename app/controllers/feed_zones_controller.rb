@@ -1,3 +1,4 @@
+#feed_zone controlle
 class FeedZonesController < ApplicationController
   before_action :set_feed_zone, only: %i[ show edit update destroy ]
 
@@ -25,28 +26,46 @@ class FeedZonesController < ApplicationController
 
   def feed_upload_check
     @zones = Zone.all
-    @zone = Zone.find(params[:id])
+    @categories = Category.all
+    @categoryFeed = @categories.select { |cat| cat.feeds.any? }
+    @zone = Zone.find(params[:id]) 
     @feedZone = FeedZone.all
     file = params[:file_path]
+  
     if params[:feed_ids].present?
       params[:feed_ids].each do |feed_id|
-        puts "feed ID: #{feed_id}"  
+        feedID = Feed.find(feed_id)
+        categoryID = feedID.category_id
+        feedPath = feedID.feed_path
+  
+        # Get the selected action and destination for this feed
+        selected_action = params["feed_#{feed_id}_selected_action"]
+        feedDestination = params["feed_#{feed_id}_destination"]
+        puts "Destination: #{feedDestination}"
+        file = "#{@zone.zone_path}/#{feedID.feed_name}.txt"
+  
+        File.open(file, 'w') do |file|
+          file.write("@include #{feedPath}")
+        end
+  
         next unless Feed.exists?(id: feed_id)
         feed_zone = FeedZone.find_by(zone_id: @zone.id, feed_id: feed_id)
-        if feed_zone
-          feed_zone.update(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com", file_path: file)
+        
+        if feed_zone.nil?
+          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, selected_action: selected_action, destination: feedDestination, file_path: file, category_id: categoryID)
         else
-          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, category_id: 1, action: "DROP", destination: "google.com", file_path: file)
+          flash[:alert]="Feed already exist"
         end
       end
       redirect_to zone_path(@zone)
     end
   end
-
+  
  
   # GET /feed_zones/1/edit
   def edit
-    @zone = FeedZone.find(params[:id])
+   @feeds = Feed.all
+   @zone = Zone.find(params[:zone_id])
   end
 
   def pull
@@ -57,44 +76,44 @@ class FeedZonesController < ApplicationController
   end
 
   # POST /feed_zones or /feed_zones.json
-  def create
-    @zone = Zone.find(params[:zone_id])
-    params[feed_ids].each do |feed_id|
-    end
-    @feed_zone = FeedZone.new(feed_zone_params)
-    zone_file_path = @feed_zone.file_path
-    #create new file
-    #id = params[:feed_zone][:zone_id]
-    feed_id = params[:feed_zone][:feed_id]
-    fID = Feed.find(feed_id)
-    fPath = fID.feed_path
-    zone = Zone.find(params[:feed_zone][:zone_id])
-    name = zone.name
-    path = zone.zone_path
-    file = "#{path}/#{name}.txt"
+  # def create
+  #   @zone = Zone.find(params[:zone_id])
+  #   params[feed_ids].each do |feed_id|
+  #   end
+  #   @feed_zone = FeedZone.new(feed_zone_params)
+  #   zone_file_path = @feed_zone.file_path
+  #   #create new file
+  #   #id = params[:feed_zone][:zone_id]
+  #   feed_id = params[:feed_zone][:feed_id]
+  #   fID = Feed.find(feed_id)
+  #   fPath = fID.feed_path
+  #   zone = Zone.find(params[:feed_zone][:zone_id])
+  #   name = zone.name
+  #   path = zone.zone_path
+  #   file = "#{path}/#{name}.txt"
 
-    File.open(file, 'w') do |file|
-      file.write("@include #{fPath}")
-    end
-    @feed_zone.file_path = file
-    respond_to do |format|
-      if @feed_zone.save
-        @zone = @feed_zone.zone  # Set @zone to the associated zone of @feed_zone
-        format.html { redirect_to zone_url(@zone), notice: "Feed zone was successfully created." }
-        format.json { render :show, status: :created, location: @feed_zone }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
-      end
-    end
-  end
+  #   File.open(file, 'w') do |file|
+  #     file.write("@include #{fPath}")
+  #   end
+  #   @feed_zone.file_path = file
+  #   respond_to do |format|
+  #     if @feed_zone.save
+  #       @zone = @feed_zone.zone  # Set @zone to the associated zone of @feed_zone
+  #       format.html { redirect_to zone_url(@zone), notice: "Feed zone was successfully created." }
+  #       format.json { render :show, status: :created, location: @feed_zone }
+  #     else
+  #       format.html { render :new, status: :unprocessable_entity }
+  #       format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
+  #     end
+  #   end
+  # end
  
  
   # PATCH/PUT /feed_zones/1 or /feed_zones/1.json
   def update
     respond_to do |format|
       if @feed_zone.update(feed_zone_params)
-        format.html { redirect_to feed_zone_url(@feed_zone), notice: "Feed zone was successfully updated." }
+        format.html { redirect_to zone_url(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
         format.json { render :show, status: :ok, location: @feed_zone }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -106,12 +125,14 @@ class FeedZonesController < ApplicationController
   # DELETE /feed_zones/1 or /feed_zones/1.json
   def destroy
     @id = FeedZone.find(params[:id])
-    File.delete(@feed_zone.file_path)
-    @feed_zone.destroy
+    if File.exist?(@feed_zone.file_path)
+      File.delete(@feed_zone.file_path)
+      @feed_zone.destroy
 
-    respond_to do |format|
-      format.html { redirect_to rpz_zone_path(@id), notice: "Feed zone was successfully destroyed." }
-      format.json { head :no_content }
+      respond_to do |format|
+        format.html { redirect_to rpz_zone_path(@id), notice: "Feed zone was successfully destroyed." }
+        format.json { head :no_content }
+      end
     end
   end
 
@@ -123,7 +144,7 @@ class FeedZonesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def feed_zone_params
-      params.require(:feed_zone).permit(:action, 
+      params.require(:feed_zone).permit(:selected_action, 
                                         :destination,
                                         :zone_id,
                                         :file_path,

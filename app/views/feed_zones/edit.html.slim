@@ -1,10 +1,7 @@
 h1 Editing feed zone
 
-== render "form", feed_zone: @feed_zone
+= render "remote_modal", title: "New item" do
+  = render "feed_zone_edit", feed_zone: @feed_zone 
+
 
 br
-
-div
-  => link_to "Show this feed zone", @feed_zone
-  '|
-  =< link_to "Back to feed zones", feed_zones_path
