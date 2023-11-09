@@ -1,0 +1,20 @@
+.container_zone
+  .d-flex 
+    .p-2.flex-grow-1
+      .name
+        =@zone.name
+        -if @zone.description.present?
+          =@zone.description
+        -else
+          .desc
+            | No desciption
+
+hr.hr
+.nav.justify-content-center   
+  l.nav-item 
+    =link_to "Blacklist",zone_path(@zone), class: "nav-link"
+  l.nav-item 
+    =link_to "Add Included Feed", feed_zone_check_path(@zone), class: "nav-link"
+  l.nav-item 
+    =link_to "Whitelist", new_feed_path, class: "nav-link"
+hr
