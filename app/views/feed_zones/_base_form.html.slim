@@ -1,0 +1,31 @@
+.container.bg-white.pt-3
+  .d-md-flex.justify-content-end
+    = link_to feed_zone_check_path(id: @zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm btn-new" do
+      i.bi.bi-plus-lg
+      |  Add feed
+
+  h4 Listed Feed
+  table.table.column-data 
+    thead 
+      tr 
+        th Category
+        th URL
+        th Feed Name
+        th Action
+        th Destination
+        th Created
+        th
+    tbody
+      - @feed_zones.each do |f|
+        tr
+          td= f.feed.category.name
+          td= f.feed.url
+          td= f.feed.feed_name 
+          td= f.selected_action 
+          td= f.destination
+          td= f.created_at.strftime("%d %b %Y %H:%M:%S")
+          td
+            = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm" do
+              i.bi.bi-pencil title="Edit"
+            = link_to f, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" do
+              i.bi.bi-trash title="Delete"
