@@ -31,8 +31,9 @@ class FeedZonesController < ApplicationController
     @zone = Zone.find(params[:id]) 
     @feedZone = FeedZone.all
     file = params[:file_path]
-  
+
     if params[:feed_ids].present?
+      puts "Feed ids present"
       params[:feed_ids].each do |feed_id|
         feedID = Feed.find(feed_id)
         categoryID = feedID.category_id
