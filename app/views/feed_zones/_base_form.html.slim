@@ -1,6 +1,6 @@
 .container.bg-white.pt-3
   .d-md-flex.justify-content-end
-    = link_to feed_zone_check_path(id: @zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm btn-new" do
+    = link_to feed_zone_check_path(@zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm btn-new" do
       i.bi.bi-plus-lg
       |  Add feed
 
@@ -25,7 +25,7 @@
           td= f.destination
           td= f.created_at.strftime("%d %b %Y %H:%M:%S")
           td
-            = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm" do
+            = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm",data: { turbo_frame: "remote_modal" } do
               i.bi.bi-pencil title="Edit"
-            = link_to f, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" do
+            = link_to f, data: { turbo_method: :delete } ,  class: "btn btn-danger btn-sm" do
               i.bi.bi-trash title="Delete"
