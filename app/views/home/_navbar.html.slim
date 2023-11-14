@@ -1,14 +1,45 @@
-nav.navbar.navbar-expand-lg.navbar-light.nav-custom
-  .container-fluid
-    a.navbar-brand(href="#") Navbar
-    button.navbar-toggler(type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation")
-      span.navbar-toggler-icon
-    .collapse.navbar-collapse#navbarSupportedContent
-      ul.navbar-nav.me-auto.mb-2.mb-lg-0
-        li.nav-item
-        = link_to "App managment", feeds_path, method: :post, class: 'nav-link'
-        li.nav-item
-        = link_to "Category", categories_path,class: 'nav-link'
-       
-=yield
-= turbo_frame_tag "remote_modal", target: "_top" 
+.container-fluid 
+  .row.flex-nowrap 
+    .col-auto.col-md-3.col-xl-2.px-sm-2.px-0.side_bar
+      .d-flex.flex-column.align-items-center.align-items-sm-start.px-3.pt-2.text-white.min-vh-100 
+        a = link_to root_path, class: "d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+          span.fs-1.d-none.d-sm-inline Bindrpz
+        ul.nav.nav-pills.flex-column.mb-sm-auto.mb-0.align-items-center.align-items-sm-start#menu 
+          li.nav-item
+            a = link_to root_path, class: "nav-link px-0 align-middle"
+              i.fs-10.bi-house.pe-2
+              span.ms-1.d-none.d-sm-inline Home
+          li
+            a = link_to categories_path, class: "nav-link px-0 align-middle"
+              i.fs-10.bi-c-square.pe-2
+              span.ms-1.d-none.d-sm-inline Category
+          li 
+            a = link_to feeds_path, class: "nav-link px-0 align-middle"
+              i.fs-10.bi-dropbox.pe-2 
+              span.ms-1.d-none.d-sm-inline Feed
+          li 
+            a = link_to zones_path, class: "nav-link px-0 align-middle"
+              i.fs-10.bi-layers.pe-2
+              span.ms-1.d-none.d-sm-inline Zone
+
+        hr 
+        div.dropdown.pb-4 
+          a.d-flex.align-items-center.text-white.text-decoration-none.dropdown-toggle#dropdownUser1 data-bs-toggle="dropdown" aria-expanded="false" 
+            img.rounded-circle src='https://github.com/mdo.png' alt="hugenerd" width="30" height="30"
+            span.d-none.d-sm-inline.mx-1 User
+          ul.dropdown-menu.dropdown-menu-dark.text-small.shadow
+            li 
+              a.dropdown-item href="#" New project...
+            li 
+              a.dropdown-item href="#" Settings
+            li 
+              a.dropdown-item href="#" Profile
+            li 
+              hr.dropdown-divider
+            li 
+              a.dropdown-item href="#" Sign out
+    .col.py-3
+      - if notice
+        = render 'layouts/alerts'
+      = yield
+      = turbo_frame_tag "remote_modal", target: "_top"

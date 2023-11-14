@@ -1,0 +1,11 @@
+p style="color: green" = notice
+
+h1 Custom blacklists
+
+#custom_blacklists
+  - @custom_blacklists.each do |custom_blacklist|
+    == render custom_blacklist
+    p
+      = link_to "Show this custom blacklist", custom_blacklist
+
+= link_to "New custom blacklist", new_custom_blacklist_path

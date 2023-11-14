@@ -1,0 +1,15 @@
+/ = simple_form_for(@custom_blacklist) do |f|
+/   = f.error_notification
+/   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+/   .form-inputs
+/     = f.input :file
+/     = f.input :category
+/     = f.input :blacklist_type
+/     = f.input :action
+/     = f.input :destination
+/     = f.input :domain
+/     = f.input :kind
+
+/   .form-actions
+/     = f.button :submit

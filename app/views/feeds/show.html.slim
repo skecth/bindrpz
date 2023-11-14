@@ -31,8 +31,7 @@ hr.hr
             
             thead.table-dark
               tr.column-data
-                th(scope="col") ID
-                th(scope="col") Blakclist's Line
+                th(scope="col") Line Count
                 th(scope="col") Blacklist Domain
                 th(scope="col") Destination
                 th(scope="col") Category
@@ -42,8 +41,7 @@ hr.hr
             tbody
               - @feed.domains.each do |d|
                 tr.column-data
-                  td = d.id
-                  td = d.list_domain.split("\n").count
+                  td = d.line_count
                   -if d.URL.present?
                     td = link_to "#{d.URL}", d.URL
                   -elsif d.list_domain.split("\n").count<=1
@@ -52,18 +50,18 @@ hr.hr
                   -if d.category.present?
                     td = d.category.name
                   -else
-                    td = "No category"
-                  td = d.created_at.strftime("%d %b %y")
+                    td = "No Category"
+                  td = d.created_at
                   td 
                     .dropdown 
-                      button.btn.btn-secondary.dropdown-toggle.column-data(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
+                      button.btn.btn-secondary.btn-new.dropdown-toggle.column-data(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
                       ul.dropdown-menu 
                         - if d.status == "bulk"
                           li = button_to "Update List", instant_update_path(d, feed_id: @feed.id), class: "dropdown-item"
-                          li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
+                          li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item",data: { turbo_frame: "remote_modal" }
                           li = button_to "Destroy", d,class: "dropdown-item" ,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
                         - else
-                          li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item"
+                          li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item",data: { turbo_frame: "remote_modal" }
                           li = button_to "Destroy", d, class: "dropdown-item",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
             
 

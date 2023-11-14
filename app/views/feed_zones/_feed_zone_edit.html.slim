@@ -1,0 +1,24 @@
+= simple_form_for (@feed_zone) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    .container
+      -if @feed_zone.feed_id.present?
+        -feed = Feed.find(@feed_zone.feed_id)
+      =feed.feed_name
+      br/
+      -if @feed_zone.category_id.present?
+        -cat = Category.find(@feed_zone.category_id)
+      =cat.name
+    = f.input :selected_action, as: :select, collection: ["DROP", "PASSTHRU", "NXDOMAIN", "NODATA"]
+    = f.input :destination
+    = f.input :zone_id, input_html: { value: @feed_zone.zone_id }, as: :hidden
+    = f.input :feed_id, input_html: { value: @feed_zone.feed_id }, as: :hidden
+    = f.input :category_id, input_html: { value: @feed_zone.category_id }, as: :hidden
+
+   
+   
+  .form-actions
+    = f.button :submit
+

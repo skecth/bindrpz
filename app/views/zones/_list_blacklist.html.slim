@@ -1,0 +1,44 @@
+/ .d-grid.gap-2.d-md-flex.justify-content-end
+/   // bring along the zone id
+/   = link_to new_custom_blacklist_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do
+/     i.bi.bi-plus-lg
+/     |  Single blacklist
+/   = link_to new_bulk_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do
+/     i.bi.bi-plus-lg
+/     |  Bulk blacklist
+.container.bg-white.pt-3
+  .dropdown.d-md-flex.justify-content-end
+    a.btn.btn-secondary.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+      | Add Blacklist
+    ul.dropdown-menu aria-labelledby="dropdownMenuLink"
+      li
+        a = link_to new_custom_blacklist_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
+          |  Single blacklist
+      li
+        a = link_to new_bulk_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
+          |  Bulk blacklist
+
+  // show all custom blaclist that belongs to a zone
+  table.table.column-data
+    thead
+      tr
+        th Category
+        th Blacklist
+        th Resource Record
+        th Destination
+        th Created
+        th
+    tbody
+      - @custom_blacklists.each do |custom_blacklist|
+        tr
+          // find the category name based on the category_id from category table
+          td = custom_blacklist.category.name
+          td = custom_blacklist.domain
+          td = custom_blacklist.action
+          td = custom_blacklist.destination
+          td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
+          td
+            = link_to edit_custom_blacklist_path(custom_blacklist), class: "btn btn-primary btn-sm" do
+              i.bi.bi-pencil title="Edit"
+            = link_to custom_blacklist, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" do
+              i.bi.bi-trash title="Delete"

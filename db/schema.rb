@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
+ActiveRecord::Schema[7.0].define(version: 2023_11_08_153247) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -20,6 +20,21 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "custom_blacklists", force: :cascade do |t|
+    t.string "file"
+    t.integer "blacklist_type"
+    t.integer "action"
+    t.string "destination"
+    t.string "domain"
+    t.integer "kind"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "zone_id", null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_custom_blacklists_on_category_id"
+    t.index ["zone_id"], name: "index_custom_blacklists_on_zone_id"
+  end
+
   create_table "domains", force: :cascade do |t|
     t.string "URL"
     t.text "list_domain"
@@ -27,38 +42,53 @@ ActiveRecord::Schema[7.0].define(version: 2023_10_25_044047) do
     t.string "category"
     t.string "action"
     t.integer "status", default: 0
+    t.integer "line_count"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "feed_id", null: false
-    t.bigint "category_id"
-    t.index ["category_id"], name: "index_domains_on_category_id"
     t.index ["feed_id"], name: "index_domains_on_feed_id"
   end
 
+  create_table "feed_zones", force: :cascade do |t|
+    t.bigint "feed_id"
+    t.bigint "zone_id", null: false
+    t.string "selected_action"
+    t.string "destination"
+    t.string "file_path"
+    t.string "zone_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "category_id"
+    t.index ["category_id"], name: "index_feed_zones_on_category_id"
+    t.index ["feed_id"], name: "index_feed_zones_on_feed_id"
+    t.index ["zone_id"], name: "index_feed_zones_on_zone_id"
+  end
+
   create_table "feeds", force: :cascade do |t|
-    t.string "host"
-    t.string "domain"
+    t.integer "blacklist_type"
+    t.string "source"
+    t.string "url"
+    t.string "feed_name"
+    t.string "feed_path"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "category_id", null: false
+    t.index ["category_id"], name: "index_feeds_on_category_id"
+  end
+
+  create_table "zones", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "zone_path"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "rpzdata", force: :cascade do |t|
-    t.string "domain"
-    t.string "category"
-    t.string "action"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "domain_id"
-    t.index ["domain_id"], name: "index_rpzdata_on_domain_id"
-  end
-
-  create_table "tests", force: :cascade do |t|
-    t.string "link"
-    t.string "file"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_foreign_key "domains", "categories"
+  add_foreign_key "custom_blacklists", "categories"
+  add_foreign_key "custom_blacklists", "zones"
   add_foreign_key "domains", "feeds"
+  add_foreign_key "feed_zones", "categories"
+  add_foreign_key "feed_zones", "feeds"
+  add_foreign_key "feed_zones", "zones"
+  add_foreign_key "feeds", "categories"
 end

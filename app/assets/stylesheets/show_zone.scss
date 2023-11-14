@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css?family=Rubik&display=swap');
+
+// .noBorder{
+//     border: none;
+// }
+// .noColor{
+//     background-color: #EFEFEF;
+// }
+
+// .container{
+//     background-color: white;
+//     padding: 0px 0px 10px 0px;
+// }
+
+// .container-feed-delete{
+//     border: 1px black;
+//     border-style: solid;
+//     border-radius: 10px 10px 0px 0px;
+//     background-color: #333333;
+// }
+// .container_not_present{
+//     background-color: aqua;
+// }
+
+.container_zone {
+    width: 50vw;
+    padding: 22px;
+    background-color: aliceblue;
+    box-shadow: 8px 10px grey;
+}
+
+
+
+// p in card
+.card p{
+    font-size: 13px;
+    font-weight: 600;
+    font-family: 'Rubik', sans-serif;
+    color: gray;
+    margin-bottom: 0;
+}
+

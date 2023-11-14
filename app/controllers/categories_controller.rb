@@ -32,6 +32,7 @@ class CategoriesController < ApplicationController
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @category.errors, status: :unprocessable_entity }
+        format.turbo_stream { render partial: "categories/form_update", status: :unprocessable_entity }
       end
     end
   end
@@ -69,4 +70,5 @@ class CategoriesController < ApplicationController
     def category_params
       params.require(:category).permit(:name)
     end
+    
 end

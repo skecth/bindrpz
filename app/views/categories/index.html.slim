@@ -3,23 +3,27 @@
 .main-content
     .container-feed-title
       .category-title
-        .d-flex.mb-3 
+        .d-flex
           .me-auto.p-2
-            h2 Total Category: #{@count}
+            h3 Total Category: #{@count}
           .p-2
-            = link_to 'Create Custom Category', new_category_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary"
-
-
-table.table
-  .d-flex.mb-3
+            = link_to 'New Category', new_category_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
+hr
+.table-responsive-lg
+  table.table.column-data
     thead.table-dark
-      tr.column-data
-        th(scope="col") Category
-        
-        br/
+      tr
+        th style="width: 65%" Category
+        th Created at
+        th 
     tbody
-      - @categories.each do |cat|
-          tr.column-data
-          td = cat.name
+    - @categories.each do |cat|
+      tr
+        td = cat.name
+        td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
+        
+        td = button_to cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
+          i.bi.bi-trash3 title="Delete"
+
           
 

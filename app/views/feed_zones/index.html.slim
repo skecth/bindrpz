@@ -1,0 +1,23 @@
+=render "zones/zone_title"
+div[data-controller="datatables"]
+  table.table#dttb
+    thead.table-dark
+      tr.column-data
+        th(scope="col") Category
+        th(scope="col") URL
+        th(scope="col") Feed Name
+        th(scope="col") Action
+        th(scope="col") Destination
+        th(scope="col") Created at
+      
+    tbody 
+      - @feed_zones.each do |f|
+        tr
+          td= f.feed.category.name
+          td= f.feed.url
+          td= f.feed.feed_name 
+          td= f.selected_action 
+          td= f.destination
+          td= f.created_at
+
+    

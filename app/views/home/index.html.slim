@@ -1,0 +1,42 @@
+.row.row-cols-1.row-cols-md-3.g-3
+	.col 
+		.card.border-light.mb-3.shadow
+			h4.card-header Category
+			//make it one line
+			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @categories.count
+			.card-body.p-1
+				table.table.table-striped.table-borderless
+					tbody
+						- @categories.each do |category|
+							tr
+								td = category.name
+	.col
+		.card.border-light.mb-3.shadow
+			h4.card-header Feed
+			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @feeds.count
+			.card-body.p-1
+				table.table.table-striped.table-borderless
+					tbody
+						- @feeds.each do |feed|
+							tr
+								td = feed.feed_name
+	.col
+		.card.border-light.mb-3.shadow
+			h4.card-header Zone
+			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @zones.count
+			.card-body.p-1
+				table.table.table-striped.table-borderless
+					tbody
+						- @zones.each do |zone|
+							tr
+								td = zone.name
+
+								
+
+
+
+  
+
+
+
+    

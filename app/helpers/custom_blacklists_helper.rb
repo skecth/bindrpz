@@ -1,0 +1,2 @@
+module CustomBlacklistsHelper
+end

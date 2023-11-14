@@ -5,7 +5,7 @@
   .form-inputs
 
   -if @domain.bulk?
-    = f.input :URL, list: 'url-datalist', class: 'form-control', placeholder: 'URL only', autocomplete: :off
+    = f.input :URL, list: 'url-datalist', class: 'form-control', placeholder: 'URL (*.txt file only)', autocomplete: :off
     datalist(id="url-datalist")
       - Domain.order(:URL).pluck(:URL).uniq.each do |url| # Define 'url' as a local variable
         option(value=url) 
@@ -25,7 +25,7 @@
       -Domain.order(:source).pluck(:source).uniq.each do |source|
        option(value=source)    
   -else
-    = f.text_field :list_domain, class: "form-control",placeholder: "IP Addresss/Domain "
+    = f.text_field :list_domain, class: "form-control",placeholder: "IP Addresss/Domain"
     br/
     = f.input :source, list: 'source-datalist', class: 'form-control', placeholder: 'Source', autocomplete: :off
     datalist(id="source-datalist")

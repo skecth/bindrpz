@@ -35,6 +35,7 @@ class ZonesController < ApplicationController
         format.json { render :show, status: :created, location: @zone }
         #add job @zone to config zone
         ConfigZoneJob.perform_async
+
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }

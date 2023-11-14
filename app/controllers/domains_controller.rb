@@ -74,15 +74,14 @@ class DomainsController < ApplicationController
         response = http.request(request)
 
         if response.code.to_i == 200 && @domain.URL.include?(".txt")
-          @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
-          @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
-          @domain.list_domain = @domain.list_domain.split("\n").map(&:strip).uniq.join("\n") #remove duplicate   
-         
+          # @domain.list_domain = Net::HTTP.get(URI.parse(@domain.URL)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^127|^#|^$/}.join("\n")
+          # @domain.list_domain = @domain.list_domain.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/^www\./, '').gsub(/#.*$/, '')
+          # @domain.list_domain = @domain.list_domain.split("\n").map(&:strip).uniq.join("\n") #remove duplicate   
+          @domain.line_count = 0
           @domain.status = "bulk"
-
           respond_to do |format|
             if @domain.save
-              format.html { redirect_to feeds_path, notice: "Domain was successfully created." }
+              format.html { redirect_to feed_url(@domain.feed_id), notice: "Domain was successfully created." }
               format.json { render :show, status: :created, location: @domain }
             else
               format.html { render :new, status: :unprocessable_entity }
@@ -96,6 +95,7 @@ class DomainsController < ApplicationController
       end
     else
       @domain.status = "blacklist"
+      @domain.line_count = 1
       respond_to do |format|
         if @domain.save
           format.html { redirect_to feed_url(@domain.feed_id), notice: "Domain was successfully created." }
@@ -123,7 +123,7 @@ class DomainsController < ApplicationController
   def update
     respond_to do |format|
       if @domain.update(domain_params)
-        format.html { redirect_to feeds_path, notice: "Domain was successfully updated." }
+        format.html { redirect_to feeds_url(@domain.feed_id), notice: "Domain was successfully updated." }
 
         format.json { render :show, status: :ok, location: @domain }
       else
@@ -160,7 +160,7 @@ class DomainsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def domain_params
-      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category_id,:action,:feed_id, :status, :name)
+      params.require(:domain).permit(:file, :URL, :list_domain, :source, :category_id,:action,:feed_id, :status, :name, :line_count)
     end
 end
 
