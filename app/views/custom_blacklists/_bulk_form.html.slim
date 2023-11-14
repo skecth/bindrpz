@@ -3,7 +3,7 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-    = f.input :category, collection: Category.all, label: 'Category'
+    = f.input :category_id, collection: Category.all
     = f.input :blacklist_type, collection: CustomBlacklist.blacklist_types.keys, label: 'Blacklist Type' 
     = f.input :file, as: :file, input_html: { accept: ".csv", max: 10.kilobyte }
     = f.input :action, collection: CustomBlacklist.actions.keys

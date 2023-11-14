@@ -6,19 +6,23 @@ class CustomBlacklist < ApplicationRecord
   belongs_to :zone
   belongs_to :category
 
+  has_many_attached :files
+
   validates :blacklist_type, presence: true
   validates :action, presence: true
+  validates :domain, presence: true
+
+
 
   with_options if: :single? do |single|
     single.validates :domain, presence: true
-    single.validates :domain, uniqueness: true
     single.validate :check_domain
   end
 
   with_options if: :bulk? do |bulk|
     bulk.validates :file, presence: true
     bulk.validate :file_format
-    bulk.validate :check_list
+    # bulk.validate :check_list
   end
 
   def check_domain
@@ -53,7 +57,14 @@ class CustomBlacklist < ApplicationRecord
     end
   end
 
-
+  #check files attached
+  def file_attached?
+    if files.attached?
+      return true
+    else
+      return false
+    end
+  end
 
   # check list in the csv file according to the blacklist type
   def check_list
