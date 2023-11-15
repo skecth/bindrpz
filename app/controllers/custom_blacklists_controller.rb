@@ -27,6 +27,7 @@ class CustomBlacklistsController < ApplicationController
 
   # POST /custom_blacklists or /custom_blacklists.json
   def create
+    zone_id = params[:custom_blacklist][:zone_id]
     @custom_blacklist = CustomBlacklist.new(custom_blacklist_params)
 
     if @custom_blacklist.file.present?

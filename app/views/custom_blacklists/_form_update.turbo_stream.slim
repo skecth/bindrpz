@@ -1,5 +1,5 @@
 = turbo_stream.update "remote_modal_body" do
   - if @custom_blacklist.errors.any? && @custom_blacklist.kind == "single"
     == render "single_form", custom_blacklist: @custom_blacklist, kind: "single"
-  - else
+  - elsif @custom_blacklist.errors.any? && @custom_blacklist.kind == "bulk"
     = render "bulk_form", custom_blacklist: @custom_blacklist, kind: "bulk"

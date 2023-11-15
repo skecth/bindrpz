@@ -1,7 +1,7 @@
 class CustomBlacklist < ApplicationRecord
   enum blacklist_type: [:Domain, :IP]
   mount_uploader :file, AttachmentUploader
-  enum action: [:NODATA, :NXDOMAIN, :A, :AAAA]
+  enum action: [:CNAME, :A, :AAAA]
   enum kind: [:single, :bulk]
   belongs_to :zone
   belongs_to :category
@@ -14,15 +14,17 @@ class CustomBlacklist < ApplicationRecord
 
 
 
-  with_options if: :single? do |single|
-    single.validates :domain, presence: true
-    single.validate :check_domain
+  with_options if: :single? do 
+    validates :domain, presence: true
+    validate :check_domain
   end
 
-  with_options if: :bulk? do |bulk|
-    bulk.validates :file, presence: true
-    bulk.validate :file_format
-    # bulk.validate :check_list
+  with_options if: :bulk? do
+    validates :file, presence: true
+    validate :file_format
+    # validate :check_list
+    validate :check_list
+
   end
 
   def check_domain
@@ -72,9 +74,9 @@ class CustomBlacklist < ApplicationRecord
       if file.present?
         CSV.foreach(file.path) do |row|
           # check for all rows if it is a valid domain and only first column has value
-          if row[0].present? && !row[0].match(/^[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/)
-          	# if not valid, add error once
-            errors.add(:file, "Invalid domain format.")
+          if row[0].present? && !row[0].match(/[A-Za-z0-9.-]+\.[A-Za-z]{2,}/)
+            errors.add(:file, "Invalid domain format for bulk.")
+          	puts row[0] + " is not a valid domain"
             # break the loop
             break
           end
