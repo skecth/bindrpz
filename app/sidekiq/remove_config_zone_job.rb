@@ -30,10 +30,11 @@ class RemoveConfigZoneJob
         file.truncate(file.pos)
       end
     end
-  
+    
     def remove_zone_folder(zone)
-      if File.directory?(zone.zone_path)
-        system("sudo rm -r #{zone.zone_path}")
+      folder_path = "/etc/bind/#{zone.name}"
+      if File.directory?(folder_path)
+        system("sudo rm -r #{folder_path}")
       end
     end
   end
