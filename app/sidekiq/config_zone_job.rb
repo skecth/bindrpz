@@ -48,7 +48,18 @@ class ConfigZoneJob
       if !File.directory?(zone_path)
         system("sudo mkdir #{zone_path}")
       end
-      zone.update(zone_path: zone_path)
+
+      zone_file = "#{zone_path}/db.rpz.#{zone.name}"
+      template_path = "/etc/bind/db.empty"
+      
+      # Create file if not exist
+      unless File.exist?(zone_file)
+        system("sudo cp #{template_path} #{zone_file}")
+      end
+
+      system("sudo chmod 777 #{zone_file}")
+
+      zone.update(zone_path: zone_file)
     end
   
   
