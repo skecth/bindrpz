@@ -40,5 +40,5 @@
           td
             = link_to edit_custom_blacklist_path(custom_blacklist), class: "btn btn-primary btn-sm" do
               i.bi.bi-pencil title="Edit"
-            = link_to custom_blacklist, method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" do
+            = link_to custom_blacklist, data: {turbo_method: :delete, confirm: "Are you sure"}, class: "btn btn-danger btn-sm" do
               i.bi.bi-trash title="Delete"

@@ -27,7 +27,22 @@ class CustomBlacklistsController < ApplicationController
 
   # POST /custom_blacklists or /custom_blacklists.json
   def create
+    zone_id = params[:custom_blacklist][:zone_id]
     @custom_blacklist = CustomBlacklist.new(custom_blacklist_params)
+
+    if @custom_blacklist.file.present?
+      CSV.foreach(@custom_blacklist.file.path) do |row|
+        # skip if domain is already in database
+        if CustomBlacklist.where(domain: row[0]).present?
+          next
+          puts "Domain already exists"
+        else
+        # create a new custom blacklist for each line in the file
+          @custom_blacklist = CustomBlacklist.create(blacklist_type: @custom_blacklist.blacklist_type, action: @custom_blacklist.action, destination: @custom_blacklist.destination, domain: row[0], kind: @custom_blacklist.kind, zone_id: @custom_blacklist.zone_id, category_id: @custom_blacklist.category_id, file: @custom_blacklist.file)
+        end
+        puts @custom_blacklist.errors.full_messages
+      end
+    end
 
     respond_to do |format|
       if @custom_blacklist.save
@@ -45,28 +60,28 @@ class CustomBlacklistsController < ApplicationController
   # PATCH/PUT /custom_blacklists/1 or /custom_blacklists/1.json
   def update
     respond_to do |format|
-      if @custom_blacklist.update(custom_blacklist_params)
-        format.html { redirect_to custom_blacklist_url(@custom_blacklist), notice: "Custom blacklist was successfully updated." }
+      if @custom_blacklist.update(custom_blacklist_params) && update_files
+        format.html { redirect_to zone_url(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully updated." }
         format.json { render :show, status: :ok, location: @custom_blacklist }
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @custom_blacklist.errors, status: :unprocessable_entity }
       end
     end
+   
   end
 
   # DELETE /custom_blacklists/1 or /custom_blacklists/1.json
   def destroy
     @custom_blacklist.destroy
-
+    
     respond_to do |format|
-      format.html { redirect_to custom_blacklists_url, notice: "Custom blacklist was successfully destroyed." }
+      format.html { redirect_to zone_url(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully destroyed." }
       format.json { head :no_content }
     end
   end
 
   
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_custom_blacklist
@@ -76,5 +91,9 @@ class CustomBlacklistsController < ApplicationController
     # Only allow a list of trusted parameters through.
     def custom_blacklist_params
       params.require(:custom_blacklist).permit(:file, :blacklist_type, :action, :destination, :domain, :kind, :zone_id, :category_id)
+    end
+
+    def update_files
+      @custom_blacklist.files&.purge
     end
 end
