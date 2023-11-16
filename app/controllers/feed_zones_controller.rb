@@ -30,34 +30,29 @@ class FeedZonesController < ApplicationController
     @categoryFeed = @categories.select { |cat| cat.feeds.any? }
     @zone = Zone.find(params[:id]) 
     @feedZone = FeedZone.all
-    file = params[:file_path]
 
     if params[:feed_ids].present?
       puts "Feed ids present"
       params[:feed_ids].each do |feed_id|
         feedID = Feed.find(feed_id)
         categoryID = feedID.category_id
-        feedPath = feedID.feed_path
-  
+        category = Category.find(feedID.category_id)
+
+        file_zone = "/etc/bind/#{@zone.name}/#{category.name}.rpzfeed"
         # Get the selected action and destination for this feed
         selected_action = params["feed_#{feed_id}_selected_action"]
         feedDestination = params["feed_#{feed_id}_destination"]
-        puts "Destination: #{feedDestination}"
-        file = "#{@zone.zone_path}/#{feedID.feed_name}.txt"
-  
-        File.open(file, 'w') do |file|
-          file.write("@include #{feedPath}")
-        end
   
         next unless Feed.exists?(id: feed_id)
         feed_zone = FeedZone.find_by(zone_id: @zone.id, feed_id: feed_id)
         
         if feed_zone.nil?
-          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, selected_action: selected_action, destination: feedDestination, file_path: file, category_id: categoryID)
+          @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, selected_action: selected_action, destination: feedDestination, file_path: file_zone, category_id: categoryID)
         else
-          flash[:alert]="Feed already exist"
+          flash[:alert] ="Feed already exist"
         end
       end
+      GenerateRpzJob.perform_async
       redirect_to zone_path(@zone)
     end
   end
@@ -66,7 +61,8 @@ class FeedZonesController < ApplicationController
   # GET /feed_zones/1/edit
   def edit
    @feeds = Feed.all
-   @zone = Zone.find(params[:zone_id])
+   #@zone = Zone.find(params[:zone_id])
+
   end
 
   def pull
@@ -109,13 +105,25 @@ class FeedZonesController < ApplicationController
   #   end
   # end
  
+  def include
+    filepath = params[:path]
+    IncludeJob.perform_async(filepath)
+    #redirect_to zone_path(filepath), notice: "File was successfully included."
+  end
+
+  def exclude
+    filepath = params[:path]
+    ExcludeJob.perform_async(filepath)
+    #redirect_to zone_path(filepath), notice: "File was successfully excluded."
+  end
  
   # PATCH/PUT /feed_zones/1 or /feed_zones/1.json
   def update
     respond_to do |format|
       if @feed_zone.update(feed_zone_params)
-        format.html { redirect_to zone_url(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
+        format.html { redirect_to zone_path(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
         format.json { render :show, status: :ok, location: @feed_zone }
+        GenerateRpzJob.perform_async
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
@@ -126,14 +134,11 @@ class FeedZonesController < ApplicationController
   # DELETE /feed_zones/1 or /feed_zones/1.json
   def destroy
     @id = FeedZone.find(params[:id])
-    if File.exist?(@feed_zone.file_path)
-      File.delete(@feed_zone.file_path)
-      @feed_zone.destroy
-
-      respond_to do |format|
-        format.html { redirect_to rpz_zone_path(@id), notice: "Feed zone was successfully destroyed." }
-        format.json { head :no_content }
-      end
+    File.delete(@id.file_path)
+    @id.destroy
+    respond_to do |format|
+      format.html { redirect_to rpz_zone_path(@id), notice: "Feed zone was successfully destroyed." }
+      format.json { head :no_content }
     end
   end
 

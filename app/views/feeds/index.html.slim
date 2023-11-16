@@ -18,7 +18,6 @@ hr
         th Name
         th Source
         th Category
-        th File Path
         th Last Updated
         / th 
         th 
@@ -28,7 +27,6 @@ hr
           td = feed.feed_name
           td = feed.source
           td = feed.category.name 
-          td = feed.feed_path
           td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
           / td = link_to "Update", edit_feed_path(feed),data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm"
           td = button_to feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 

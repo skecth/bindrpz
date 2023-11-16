@@ -92,7 +92,7 @@ class FeedsController < ApplicationController
 
   # DELETE /feeds/1 or /feeds/1.json
   def destroy
-    # File.delete(@feed.feed_path)
+    @feed = Feed.find(params[:id])
     @feed.destroy
     respond_to do |format|
       format.html { redirect_to feeds_url, notice: "Feed was successfully destroyed." }
@@ -102,6 +102,7 @@ class FeedsController < ApplicationController
 
   def bulk_create
     # create files in /etc/bind/rpz folder for each feed
+    system("sudo chmod 777 /etc/bind")
     @feeds = Feed.all
     # create /etc/bind/rpz folder if it does not exist
     Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")

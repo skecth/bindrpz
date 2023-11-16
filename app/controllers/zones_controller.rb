@@ -33,6 +33,9 @@ class ZonesController < ApplicationController
       if @zone.save
         format.html { redirect_to zones_path, notice: "Zone was successfully created." }
         format.json { render :show, status: :created, location: @zone }
+        #add job @zone to config zone
+        ConfigZoneJob.perform_async
+
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }
@@ -58,8 +61,8 @@ class ZonesController < ApplicationController
   # DELETE /zones/1 or /zones/1.json
   def destroy
     @zone = Zone.find(params[:id])
-    # file = @zone.feed_zone.file_path
-    @zone.destroy
+    #remove zone from config
+    RemoveConfigZoneJob.perform_async(@zone.id)
     
     respond_to do |format|
       format.html { redirect_to rpz_zone_path(@zone), notice: "Zone was successfully destroyed." }

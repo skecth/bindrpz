@@ -30,11 +30,12 @@ Rails.application.routes.draw do
   get '/feed/admin', to: "feeds#admin", as: :admin_feed
   post 'instant_update/:id', to: "domains#instant_update", as: :instant_update
   post 'feed_zone/new', to: "feed_zones#check_feed", as: :check_feed_id
-  get '/add', to: "feed_zones#feed_upload_check", as: :feed_zone_check
-  post '/add', to: "feed_zones#feed_upload_check", as: :new_feed_check
+  get '/add/:id', to: "feed_zones#feed_upload_check", as: :feed_zone_check
+  post '/add/:id', to: "feed_zones#feed_upload_check", as: :new_feed_check
   get 'zone/manage_zone/:id', to: "feed_zones#index",as: :index_feedZone
 
   post 'bulk_create' => 'feeds#bulk_create', as: :bulk_create
   # get 'single_form' => 'feeds#new', as: :single_form
-
+  post '/include', to: 'feed_zones#include', as: 'include'
+  post '/exclude', to: 'feed_zones#exclude', as: 'exclude'
 end
