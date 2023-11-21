@@ -32,6 +32,15 @@ class RemoveConfigZoneJob
     end
     
     def remove_zone_folder(zone)
+      feed_zones = FeedZone.where(zone_id: zone.id)
+      feed_zones.each do |feed_zone|
+        file_path = feed_zone.file_path
+        if File.exist?(file_path)
+          system("sudo rm #{file_path}")
+        end
+        feed_zone.destroy
+      end
+
       folder_path = "/etc/bind/#{zone.name}"
       if File.directory?(folder_path)
         system("sudo rm -r #{folder_path}")

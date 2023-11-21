@@ -1,7 +1,8 @@
 require 'fileutils'
 
 class GenerateRpzJob
-  include Sidekiq::Job
+  include Sidekiq::Worker
+  sidekiq_options queue: "default"
 
   def perform(*args)
     zones = Zone.all
