@@ -48,6 +48,7 @@ class CustomBlacklistsController < ApplicationController
       if @custom_blacklist.save
         format.html { redirect_to zone_url(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully created." }
         format.json { render :show, status: :created, location: @custom_blacklist }
+        GenerateBlacklistJob.perform_async
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @custom_blacklist.errors, status: :unprocessable_entity }
@@ -63,6 +64,7 @@ class CustomBlacklistsController < ApplicationController
       if @custom_blacklist.update(custom_blacklist_params) && update_files
         format.html { redirect_to zone_url(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully updated." }
         format.json { render :show, status: :ok, location: @custom_blacklist }
+        GenerateBlacklistJob.perform_async
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @custom_blacklist.errors, status: :unprocessable_entity }
@@ -73,8 +75,9 @@ class CustomBlacklistsController < ApplicationController
 
   # DELETE /custom_blacklists/1 or /custom_blacklists/1.json
   def destroy
-    @custom_blacklist.destroy
-    
+    @custom_blacklist = CustomBlacklist.find(params[:id])
+    #remove blacklist from the zone file
+    RemoveBlacklistJob.perform_async(@custom_blacklist.id)
     respond_to do |format|
       format.html { redirect_to zone_url(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully destroyed." }
       format.json { head :no_content }

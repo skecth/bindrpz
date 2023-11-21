@@ -5,8 +5,8 @@ domain_update_job:
   queue: default
 
 
-generate_rpz_zone_file:
-  cron: "*/2 * * * *"
-  name: "Generate RPZ Zone File"
-  class: "GenerateRpzJob"
+update_feedzone_job:
+  cron: "*/2 * * * *" 
+  name: "Update Feedzone Job"
+  class: "UpdateFeedzoneJob"
   queue: default
