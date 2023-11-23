@@ -56,4 +56,5 @@ class Feed < ApplicationRecord
 	end
 	
 
+
 end

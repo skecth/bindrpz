@@ -4,22 +4,15 @@
 
   .form-inputs
     .container
-      -if @feed_zone.feed_id.present?
-        -feed = Feed.find(@feed_zone.feed_id)
-      h6 Feed Name
-      =feed.feed_name
-      br/
-      -if @feed_zone.category_id.present?
-        -cat = Category.find(@feed_zone.category_id)
-      h6 Category
-      =cat.name
-    = f.input :selected_action, as: :select, collection: ["DROP", "PASSTHRU", "NXDOMAIN", "NODATA"]
-    = f.input :destination
-    = f.input :zone_id, input_html: { value: @feed_zone.zone_id }, as: :hidden
-    = f.input :feed_id, input_html: { value: @feed_zone.feed_id }, as: :hidden
-    = f.input :category_id, input_html: { value: @feed_zone.category_id }, as: :hidden
+    div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
+
+    -if @feed_zone.persisted?
+      = f.input :zone_id, input_html: { value: @feed_zone.zone_id }, as: :hidden
+      = f.input :feed_id, input_html: { value: @feed_zone.feed_id }, as: :hidden
+      = f.input :category_id, input_html: { value: @feed_zone.category_id }, as: :hidden
+      div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
+        = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }}
+        = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }
    
   .form-actions
     = f.button :submit
-
-

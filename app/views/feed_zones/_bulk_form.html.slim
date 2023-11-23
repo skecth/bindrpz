@@ -1,4 +1,6 @@
 = form_with model: @feed_zone, url: new_feed_check_path, method: :post do |form|
+ 
+
   .mb-3
     = form.hidden_field :zone_id, value: @zone.id
   h4 Listed Feed
@@ -18,7 +20,7 @@
                 = check_box_tag 'feed_ids[]', feed.id, nil, { data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent", parent_id: category.id }}
                 = feed.feed_name
                 div[data-controller="showhide" data-showhide-show-if-value="PASSTHRU"  ]
-                  = form.select "feed_#{feed.id}_selected_action", options_for_select([["NXDOMAIN"], [ "DROP"], ["PASSTHRU"], ["NODATA"]]),{ }, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
-                  = form.text_field "feed_#{feed.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
+                  = form.select "feed_#{feed.id}_selected_action", options_for_select([['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP','CNAME rpz-tcp-only']]),{ }, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
+                  = text_field_tag "feed_#{feed.id}_destination", nil, class: 'form-control', placeholder: 'Destination'
 
   = form.submit

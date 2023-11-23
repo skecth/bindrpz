@@ -1,0 +1,6 @@
+.nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
+  = f.input :feed_name
+
+  button(type="button" data-action="nested-form#remove") Remove todo
+
+  = f.hidden_field :_destroy

@@ -1,0 +1,27 @@
+= simple_form_for @zone,html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' } } do |f|
+  = f.error_notification
+  -if @zone.errors.any?
+      .alert.alert-danger 
+          h4 Alert
+          ul 
+              -@zone.errors.full_messages.each do |msg|
+                  li = msg
+
+  .form-inputs
+    = f.input :name, placeholder: "Demo_Zone"
+
+    template[data-nested-form-target="template"]
+      = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
+        == render "zones/nested_form", f: feed_zones
+
+      - f.fields_for :feed_zones do |feed_zones|
+        == render "zones/nested_form", f: feed_zones
+    div[data-nested-form-target="target"]
+    button(type="button" data-action="nested-form#add" class="btn btn-secondary btn-sm") Add Feed
+    // name and zone path are read only when editing
+
+      
+
+
+  .form-actions
+    = f.button :submit, class: "btn btn-primary btn-sm"

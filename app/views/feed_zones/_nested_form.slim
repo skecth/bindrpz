@@ -1,0 +1,21 @@
+.nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
+
+= f.input :zone_id,input_html: {value: @zone.id}
+= select_tag 'feed_ids[]', options_from_collection_for_select(Feed.all, 'id', 'feed_name'), { include_blank: 'Select Feed', data: { select_all_target: "child", action: "change->select-all#toggleParent" }}
+
+= f.input :feed_id, as: :select, collection: Feed.all,value_method: :id, label_method: :feed_name, include_blank: 'Select Feed', input_html: { class: 'form-select' }
+div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
+    = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', data: { showhide_target: "input", action: "change->showhide#toggle" }
+    = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }
+
+
+
+
+
+/   / = select_tag 'category_ids[]', options_from_collection_for_select(@categories, 'id', 'name'), { prompt: 'Select Category' }
+/   = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', data: { showhide_target: "input", action: "change->showhide#toggle" }
+/   = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output" } }
+
+  button(type="button" data-action="nested-form#remove") Remove todo
+
+  = f.hidden_field :_destroy

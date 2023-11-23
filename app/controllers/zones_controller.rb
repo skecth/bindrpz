@@ -12,7 +12,8 @@ class ZonesController < ApplicationController
     @zone = Zone.find(params[:id])
     @feed_zones = FeedZone.all.where(zone_id: @zone.id) 
     @feed_zones = @zone.feed_zones
-    puts @feed_zones
+    @zone = Zone.find(params[:id])
+    # puts @feed_zones
     @custom_blacklists = CustomBlacklist.all.where(zone_id: @zone.id)
   end
 
@@ -28,7 +29,7 @@ class ZonesController < ApplicationController
   # POST /zones or /zones.json
   def create
     @zone = Zone.new(zone_params)
-
+    
     respond_to do |format|
       if @zone.save
         format.html { redirect_to zones_path, notice: "Zone was successfully created." }
@@ -47,6 +48,7 @@ class ZonesController < ApplicationController
 
   # PATCH/PUT /zones/1 or /zones/1.json
   def update
+    puts "Create Feed Zone"
     respond_to do |format|
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
@@ -54,6 +56,8 @@ class ZonesController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }
+        format.turbo_stream { render partial: "feed_zones/feed_zone_update", status: :unprocessable_entity }
+
       end
     end
   end
@@ -76,11 +80,14 @@ class ZonesController < ApplicationController
       @zone = Zone.find(params[:id])
     end
 
+  
+
     # Only allow a list of trusted parameters through.
     def zone_params
       params.require(:zone).permit(:name,
                                    :zone_path,
-                                    :description
+                                   :description,
+                                   feed_zones_attributes: [:id, :feed_id, :destination,:file_path,:selected_action,:_destroy]
       )          
     end
 end
