@@ -39,5 +39,6 @@ Rails.application.routes.draw do
   get 'zone/feed_zone/new/:id', to: "feed_zones#new", as: :newFeedZone
   delete 'bulk_destroy', to: "feed_zones#delete_all", as: :delete_all
   # get 'single_form' => 'feeds#new', as: :single_form
-
+  post '/include', to: 'feed_zones#include', as: 'include'
+  post '/exclude', to: 'feed_zones#exclude', as: 'exclude'
 end
