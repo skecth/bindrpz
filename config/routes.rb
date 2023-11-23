@@ -33,8 +33,11 @@ Rails.application.routes.draw do
   get '/add/:id', to: "feed_zones#feed_upload_check", as: :feed_zone_check
   post '/add/:id', to: "feed_zones#feed_upload_check", as: :new_feed_check
   get 'zone/manage_zone/:id', to: "feed_zones#index",as: :index_feedZone
-
   post 'bulk_create' => 'feeds#bulk_create', as: :bulk_create
+
+  #test
+  get 'zone/feed_zone/new/:id', to: "feed_zones#new", as: :newFeedZone
+  delete 'bulk_destroy', to: "feed_zones#delete_all", as: :delete_all
   # get 'single_form' => 'feeds#new', as: :single_form
 
 end

@@ -1,0 +1,10 @@
+.nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
+
+  = f.input :feed_id, as: :select, collection: Feed.all,value_method: :id, label_method: :feed_name, include_blank: 'Select Feed', input_html: { class: 'form-select' }
+  div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
+      = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }}
+      = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }
+
+  button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Remove Feed
+
+  = f.hidden_field :_destroy

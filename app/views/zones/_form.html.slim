@@ -1,15 +1,12 @@
-= simple_form_for(@zone) do |f|
+= simple_form_for @zone,html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' } } do |f|
   = f.error_notification
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-    // name and zone path are read only when editing
-    -if @zone.persisted?
-      = f.input :name, input_html: { readonly: true, disabled: true }
-      = f.input :description
-    -else
-      = f.input :name, placeholder: "Demo_Zone"
-      = f.input :description, placeholder: "Description"
+    = f.input :name, placeholder: "Demo_Zone"
+    = f.input :description, placeholder: "Description"
+
+      
 
 
   .form-actions

@@ -3,4 +3,5 @@ class Feed < ApplicationRecord
     belongs_to :category
     enum blacklist_type: [:Domain, :IP, :Host, :DNSMASQ]
 
+
 end

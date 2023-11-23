@@ -12,6 +12,8 @@ export default class extends Controller {
   toggle() {
     if (this.inputTarget.value !== this.showIfValue) {
       this.outputTarget.hidden = true;
+      this.outputTarget.value =" ";
+
     } else {
       this.outputTarget.hidden = false;
     }

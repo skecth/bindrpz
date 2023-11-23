@@ -64,19 +64,11 @@ class FeedsController < ApplicationController
     @feed.feed_name = "#{@feed.category.name}_#{@feed.source}"
     # uppercase the feed name
     @feed.feed_name.upcase!
+    system("sudo chmod 777 /etc/bind")
+    # create /etc/bind/rpz folder if it does not exist
+    Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
+    @feed.feed_path = "/etc/bind/feed/"
 
-
-    if Feed.exists?(feed_name: @feed.feed_name)
-      render :new, status: :unprocessable_entity, notice: "Feed name already exists."
-      puts "Feed name already exists."
-      return
-    end
-    # check if feed url is unique
-    if Feed.exists?(url: @feed.url)
-      render :new, status: :unprocessable_entity, notice: "Feed url already exists."
-      puts "Feed url already exists."
-      return
-    end
 
     respond_to do |format|
       if @feed.save

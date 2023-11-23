@@ -4,6 +4,9 @@
 
 import { application } from "./application"
 
+import CheckSelectAllController from "./check_select_all_controller"
+application.register("check-select-all", CheckSelectAllController)
+
 import CheckboxSelectAllController from "./checkbox_select_all_controller"
 application.register("checkbox-select-all", CheckboxSelectAllController)
 
@@ -16,6 +19,8 @@ application.register("domain-table", DomainTableController)
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 
+import NestedFormController from "./nested_form_controller"
+application.register("nested-form", NestedFormController)
 
 import RemoteModalController from "./remote_modal_controller"
 application.register("remote-modal", RemoteModalController)
