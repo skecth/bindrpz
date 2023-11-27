@@ -3,6 +3,9 @@ class ConfigZoneJob
   
     def perform
       zones = Zone.all
+      system("sudo chmod 777 /etc/bind/named.conf.local")
+      system("sudo chmod 777 /etc/bind/named.conf.options")
+
       File.open('/etc/bind/named.conf.local', 'w') do |file|
         file.write(generate_zones(zones))
       end

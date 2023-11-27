@@ -1,10 +1,10 @@
 .nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
-
   .row  
     .col
       div[data-controller="feed-path-select" data-action="change->feed-path-select#handleChange"]
         = f.input :feed_id, as: :select, collection: Feed.all, value_method: :id, label_method: :feed_name, include_blank: 'Select Feed', input_html: { class: 'form-select', data: { feed_path_select_target: "feedId"} }, label: false 
         = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
+        input#zone_id.form-select[data-feed-path-select-target="zone" type="hidden" name="zone_id" value="#{@zone_id}"]
     .col 
       div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
         = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'

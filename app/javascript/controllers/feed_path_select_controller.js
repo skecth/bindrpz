@@ -2,17 +2,20 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="feed-path-select"
 export default class extends Controller {
-  static targets = ['feedId', 'output']
+  static targets = ['feedId', 'output', 'zone']
   feedPaths = {}
 
 
   connect() {
-    console.log("feed-path-select")
+    console.log("feed-path-select");
+    // Assign value to zoneName property
   }
- 
+
   handleChange() {
     const selectedFeedId = this.feedIdTarget.value;
-  
+    console.log(selectedFeedId)
+    const zoneName =this.zoneTarget.value;
+    console.log(zoneName);
     // Make an AJAX request to fetch the details of the selected feed
     fetch(`/feeds/${selectedFeedId}.json`) // Assuming the endpoint is /feeds/:id.json
       .then(response => {
@@ -24,8 +27,9 @@ export default class extends Controller {
       .then(feed => {
         // Use the fetched feed data here
         console.log(`ID: ${feed.id}`);
-        console.log(`Feed: ${feed.feed_path}`)
-        const feedPath = `${feed.feed_path}`
+        console.log(`Feed Name: ${feed.feed_name}`)
+        const feedPath = `/etc/bind/${zoneName}/${feed.feed_name}.rpzfeed`
+        console.log(feedPath)
         this.outputTarget.value =feedPath;
 
 
