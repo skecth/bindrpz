@@ -28,7 +28,7 @@ hr
             i.bi.bi-gear-fill title="Configure Zone"
           / td = link_to edit_zone_path(zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do 
           /   i.bi.bi-pencil-square title="Edit Zone"
-          td = link_to zone, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
+          td = link_to zone, data: { turbo_confirm: "Are you sure?",turbo_method: :delete } , class: "btn btn-danger btn-sm" do 
             i.bi.bi-trash3 title="Delete"
         
 

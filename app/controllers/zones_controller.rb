@@ -74,7 +74,7 @@ class ZonesController < ApplicationController
     @zone = Zone.find(params[:id])
     #remove zone from config
     RemoveConfigZoneJob.perform_async(@zone.id)
-    
+    @zone.destroy
     respond_to do |format|
       format.html { redirect_to zones_path, notice: "Zone was successfully destroyed." }
       format.json { head :no_content }
