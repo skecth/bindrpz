@@ -4,7 +4,7 @@ class FeedZone < ApplicationRecord
     belongs_to :category, optional: true
     validates :feed_id, presence: { message: "Please choose the feed" }, allow_blank: false
     validates :selected_action, presence: { message: "Please choose the action" }, allow_blank: false
-    validates :feed_id, uniqueness: true
+    # validates :feed_id, uniqueness: true
 
     validate :check_action
     
