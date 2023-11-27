@@ -16,6 +16,9 @@ application.register("datatables", DatatablesController)
 import DomainTableController from "./domain_table_controller"
 application.register("domain-table", DomainTableController)
 
+import FeedPathSelectController from "./feed_path_select_controller"
+application.register("feed-path-select", FeedPathSelectController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
 

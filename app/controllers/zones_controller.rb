@@ -24,6 +24,7 @@ class ZonesController < ApplicationController
 
   # GET /zones/1/edit
   def edit
+    @category = Category.all
   end
 
   # POST /zones or /zones.json
@@ -46,9 +47,9 @@ class ZonesController < ApplicationController
     end
   end
 
+
   # PATCH/PUT /zones/1 or /zones/1.json
   def update
-    puts "Create Feed Zone"
     respond_to do |format|
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
@@ -56,7 +57,7 @@ class ZonesController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }
-        format.turbo_stream { render partial: "feed_zones/feed_zone_update", status: :unprocessable_entity }
+        format.turbo_stream { render partial: "zones/nested_feed_zone_create", status: :unprocessable_entity }
 
       end
     end
