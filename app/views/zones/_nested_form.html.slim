@@ -1,10 +1,17 @@
 .nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
 
-  = f.input :feed_id, as: :select, collection: Feed.all,value_method: :id, label_method: :feed_name, include_blank: 'Select Feed', input_html: { class: 'form-select' }
-  div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
-      = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }}
-      = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }
-
-  button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Remove Feed
+  .row  
+    .col
+      div[data-controller="feed-path-select" data-action="change->feed-path-select#handleChange"]
+        = f.input :feed_id, as: :select, collection: Feed.all, value_method: :id, label_method: :feed_name, include_blank: 'Select Feed', input_html: { class: 'form-select', data: { feed_path_select_target: "feedId"} }, label: false 
+        = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
+    .col 
+      div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
+        = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'
+        .col
+          = f.input :destination,  placeholder: "Demo_Zone", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
+    .col
+      button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm" style="margin-top: 10px") 
+        i.bi.bi-trash3-fill
 
   = f.hidden_field :_destroy

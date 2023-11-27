@@ -7,57 +7,34 @@
   h4 Listed Feed
 
   = form_tag delete_all_path, method: :delete do
-    div[data-controller="check_select_all"]
-      table.table.column-data
-        thead
-          tr
-            th Category
-            th URL
-            th Feed Name
-            th Action
-            th Destination
-            th Last Update
-            th
-
-        tbody
-          - @feed_zones.each do |f|
+    table.table.column-data 
+      thead 
+        tr 
+          th Category
+          th URL
+          th Feed Name
+          th Action
+          th Destination
+          th(colspan="2") Action
+      tbody
+        - @feed_zones.each do |f|
+          
             tr
               td= f.feed.category.name
               td= f.feed.url
               td= f.feed.feed_name 
               td= f.selected_action 
               td= f.destination
-              td= f.created_at.strftime("%d %b %Y %H:%M:%S")
-              td 
-                = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm", data: { turbo_frame: "remote_modal" } do
+              / td= button_to 'Enable', include_path(path: path), method: :post
+              / td= button_to 'Disable', exclude_path(path: path), method: :post
+              td
+                = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm",data: { turbo_frame: "remote_modal" } do
                   i.bi.bi-pencil title="Edit"
-                = link_to f, data: { turbo_method: :delete }, class: "btn btn-danger btn-sm" do
+                = link_to f, data: { turbo_method: :delete } ,  class: "btn btn-danger btn-sm" do
                   i.bi.bi-trash title="Delete"
 
-  table.table.column-data 
-    thead 
-      tr 
-        th Category
-        th URL
-        th Feed Name
-        th Action
-        th Destination
-        th(colspan="2") Action
-    tbody
-      - @feed_zones.each do |f|
-        - if f.file_path
-          - path = f.file_path
-          tr
-            td= f.feed.category.name
-            td= f.feed.url
-            td= f.feed.feed_name 
-            td= f.selected_action 
-            td= f.destination
-            td= button_to 'Enable', include_path(path: path), method: :post
-            td= button_to 'Disable', exclude_path(path: path), method: :post
-            td
-              = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm",data: { turbo_frame: "remote_modal" } do
-                i.bi.bi-pencil title="Edit"
-              = link_to f, data: { turbo_method: :delete } ,  class: "btn btn-danger btn-sm" do
-                i.bi.bi-trash title="Delete"
+
+            /        td = button_to zone, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
+            / i.bi.bi-trash3 title="Delete"
+        
 

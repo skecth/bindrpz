@@ -101,35 +101,50 @@ class FeedZonesController < ApplicationController
     # @zone = Zone.find(params[:id]) 
     @feedZone = FeedZone.all
     feed_id =params[:feed_id]
-    zone_id =params[:zone_id]
-    puts "feed_id: #{feed_id}"
-    feedID = Feed.find_by(id: feed_id)
-    feed_path = feedID.feed_path
-    feed_name = feedID.feed_name
-    feed_zone_path = "#{feed_path}/#{feed_name}.txt"
-    puts "zone_id: #{zone_id}"
-    puts "zone: #{@zone}"
-    feedID = Feed.find(id: feed_id)
-    puts "feed: #{feedID}"
-    feed_zone = FeedZone.find_by(zone_id: @zone, feed_id: feed_id)
-    selected_action = params[:selected_action]
-    feedDestination = params[:destination]
-   
-    @feed_zone = FeedZone.new(zone_id: @zone, feed_id: feed_id, selected_action: selected_action, destination: feedDestination, file_path: feed_zone_path) 
-   
-     
-    respond_to do |format|
-      if @feed_zone.save
-        format.json { render json:feed_zone, status: :created }
-        format.html { redirect_to zone_path(@zone), notice: "Zones were successfully created." }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
-        format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: }
+    zone=Zone.find_by(id: params[:feed_zone][:zone_id])
+    puts "zone id: #{zone.id}"
+    cat_id = params[:category_ids]
+    categories = Category.where(id: cat_id) # Retrieve categories based on IDs
+    all_saved = true
+    categories.each do |cat|
+      cat.feeds.each do |feed|
+        feed_id = feed.id
+        feed_zone_path = feed.feed_path
+        selected_action = params[:feed_zone][:selected_action]
+        feedDestination = params[:feed_zone][:destination]
+        puts selected_action
+        puts feedDestination
+        # @feed_zone = FeedZone.create(zone_id: zone.id, feed_id: feed_id, selected_action: selected_action, destination: feedDestination, file_path: feed_zone_path) 
+
+      #   if !@feed_zone.save
+      #     all_saved = false
+      #   end
       end
     end
-    end
+    # redirect_to zone_path(zone.id)
+
+    # puts "feed_id: #{feed_id}"
+    # feedID = Feed.find_by(id: feed_id)
+    # feed_path = feedID.feed_path
+    # feed_name = feedID.feed_name
+    # feed_zone_path = "#{feed_path}/#{feed_name}.txt"
+    # puts "zone_id: #{zone_id}"
+    # puts "zone: #{@zone}"
+    # feedID = Feed.find(id: feed_id)
+    # puts "feed: #{feedID}"
+    # feed_zone = FeedZone.find_by(zone_id: @zone, feed_id: feed_id)  
+    # respond_to do |format|
+    #   if @feed_zone.save
+    #     format.json { render json:feed_zone, status: :created }
+    #     format.html { redirect_to zone_path(zone.id), notice: "Zones were successfully created." }
+    #   else
+    #     format.html { render :new, status: :unprocessable_entity }
+    #     format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
+    #     format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: }
+    #   end
+    # end
   
+  end
 
  
   def include
@@ -153,7 +168,7 @@ class FeedZonesController < ApplicationController
         format.json { render :show, status: :ok, location: @feed_zone }
         GenerateRpzJob.perform_async
       else
-        format.html { render partial: "zones/nested_form", status: :unprocessable_entity }
+        format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
         format.turbo_stream { render partial: "feed_zones/feed_zone_update", status: :unprocessable_entity }
 

@@ -13,29 +13,29 @@ class FeedsController < ApplicationController
   # GET /feeds/1 or /feeds/1.json
   def show
 
-    @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
+    # # @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
     @feeds =Feed.all    
-    domain = Domain.all
-    @feeds = Feed.all
-    @feed = Feed.find(params[:id])
-    @domains = @feed.domains
-    # limit the number of domains to 10 per page using Pagy
-    # @pagy, @domains = pagy(@feed.domains, items: 50)
-    @urls = @feed.domains.pluck(:URL).uniq
+    # domain = Domain.all
+    # @feeds = Feed.all
+    # @feed = Feed.find(params[:id])
+    # @domains = @feed.domains
+    # # limit the number of domains to 10 per page using Pagy
+    # # @pagy, @domains = pagy(@feed.domains, items: 50)
+    # @urls = @feed.domains.pluck(:URL).uniq
 
-    # count the number of list_domain in each feed
-    @feed.domains.each do |domain|
-      @c = domain.list_domain
-    end
-    #remove unwanted symbol
-    if @c.present?
-      list_domain = @c.split("\n")
-      @num = list_domain.count
-      @content = list_domain
-      @pagy,@content = pagy_array(@content.to_a,items: 100)
-    else
-      puts "No domain list"
-    end
+    # # count the number of list_domain in each feed
+    # @feed.domains.each do |domain|
+    #   @c = domain.list_domain
+    # end
+    # #remove unwanted symbol
+    # if @c.present?
+    #   list_domain = @c.split("\n")
+    #   @num = list_domain.count
+    #   @content = list_domain
+    #   @pagy,@content = pagy_array(@content.to_a,items: 100)
+    # else
+    #   puts "No domain list"
+    # end
   end
 
 
@@ -61,13 +61,13 @@ class FeedsController < ApplicationController
   def create
     @feed = Feed.new(feed_params)
 
-    @feed.feed_name = "#{@feed.category.name}_#{@feed.source}"
-    @feed.feed_name.upcase!
+    feed_name= @feed.feed_name = "#{@feed.category.name}_#{@feed.source}"
+    # @feed.feed_name.upcase!
 
     system("sudo chmod 777 /etc/bind")
     # create /etc/bind/rpz folder if it does not exist
     Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
-    @feed.feed_path = "/etc/bind/feed/#{@feed.feed_name}.txt"
+    @feed.feed_path = "/etc/bind/feed/#{feed_name.upcase!}.txt"
 
 
 
