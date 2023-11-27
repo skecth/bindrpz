@@ -25,6 +25,9 @@ class ZonesController < ApplicationController
   # GET /zones/1/edit
   def edit
     @category = Category.all
+    @zone =  Zone.find(params[:id])
+    @zone_id = @zone.name
+    puts "zone: #{@zone_id}"
   end
 
   # POST /zones or /zones.json
@@ -50,6 +53,9 @@ class ZonesController < ApplicationController
 
   # PATCH/PUT /zones/1 or /zones/1.json
   def update
+    feed_zones_attributes = params[:zone][:feed_zones_attributes] # Ensure the correct nesting
+    puts "feed_zones_attributes: #{feed_zones_attributes}"
+    
     respond_to do |format|
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
@@ -68,7 +74,7 @@ class ZonesController < ApplicationController
     @zone = Zone.find(params[:id])
     #remove zone from config
     RemoveConfigZoneJob.perform_async(@zone.id)
-    
+    @zone.destroy
     respond_to do |format|
       format.html { redirect_to zones_path, notice: "Zone was successfully destroyed." }
       format.json { head :no_content }
@@ -76,6 +82,10 @@ class ZonesController < ApplicationController
   end
 
   private
+
+ 
+  
+ 
     # Use callbacks to share common setup or constraints between actions.
     def set_zone
       @zone = Zone.find(params[:id])

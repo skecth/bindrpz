@@ -4,7 +4,9 @@ class FeedZone < ApplicationRecord
     belongs_to :category, optional: true
     validates :feed_id, presence: { message: "Please choose the feed" }, allow_blank: false
     validates :selected_action, presence: { message: "Please choose the action" }, allow_blank: false
-    # validates :feed_id, uniqueness: true
+    #check if feed_id is already exist in specific zone
+    validates :feed_id, uniqueness: { scope: :zone_id, message: "Feed already exist" }
+
 
     validate :check_action
     
