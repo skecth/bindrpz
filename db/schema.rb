@@ -63,20 +63,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_062348) do
     t.index ["zone_id"], name: "index_custom_blacklists_on_zone_id"
   end
 
-  create_table "domains", force: :cascade do |t|
-    t.string "URL"
-    t.text "list_domain"
-    t.string "source"
-    t.string "category"
-    t.string "action"
-    t.integer "status", default: 0
-    t.integer "line_count"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "feed_id", null: false
-    t.index ["feed_id"], name: "index_domains_on_feed_id"
-  end
-
   create_table "feed_zones", force: :cascade do |t|
     t.bigint "feed_id"
     t.bigint "zone_id", null: false
@@ -116,7 +102,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_14_062348) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "custom_blacklists", "categories"
   add_foreign_key "custom_blacklists", "zones"
-  add_foreign_key "domains", "feeds"
   add_foreign_key "feed_zones", "categories"
   add_foreign_key "feed_zones", "feeds"
   add_foreign_key "feed_zones", "zones"

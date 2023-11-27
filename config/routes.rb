@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   resources :categories
   resources :feeds 
   resources :zones
-  resources :domains
   get 'home/index'
   mount Sidekiq::Web =>'/sidekiq'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

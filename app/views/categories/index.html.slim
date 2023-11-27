@@ -10,20 +10,20 @@
             = link_to 'New Category', new_category_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
 hr
 .table-responsive-lg
-  table.table.column-data
+  table.table.column-data#dttb data-controller="datatables"
     thead.table-dark
       tr
         th style="width: 65%" Category
         th Created at
         th 
     tbody
-    - @categories.each do |cat|
-      tr
-        td = cat.name
-        td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
-        
-        td = button_to cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
-          i.bi.bi-trash3 title="Delete"
+      - @categories.each do |cat|
+        tr
+          td = cat.name
+          td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
+          
+          td = button_to cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
+            i.bi.bi-trash3 title="Delete"
 
           
 

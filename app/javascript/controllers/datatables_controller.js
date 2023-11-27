@@ -1,23 +1,33 @@
+import $ from 'jquery';
+import DataTable from 'datatables.net';
 import { Controller } from "@hotwired/stimulus";
-import DataTable from "datatables.net";
 
 export default class extends Controller {
   connect() {
-    console.log("hello data");
-    document.addEventListener("turbo:load", function () {
-      if (!DataTable.isDataTable('#dttb')) {
-        let table = new DataTable('#dttb', {
-          // "iDisplayLength": 10, //limit how many entries
-          "bPaginate": false, //hide the entries
-          "aaSorting": [1, 'asc'],
+    document.addEventListener('turbo:load', function() {
+      const table = $('#dttb');
+      // Check if DataTable is not initialized
+      if (!$.fn.DataTable.isDataTable('#dttb')) {
+        // Initialize DataTable
+        table.DataTable({
           language: {
-            searchPlaceholder: "Search By"
-          },
+            search: "",
+            searchPlaceholder: "Search...",
+            dom: 'rfltip',
+            bSort: true
+          }
         });
-      }else{
-        let newTable=new DataTable('#dttb');
-        newTable.destroy();
       }
     });
+    
+    document.addEventListener('turbo:before-cache', function() {
+      const table = $('#dttb').DataTable();
+      // Check if DataTable is initialized
+      if ($.fn.DataTable.isDataTable('#dttb')) {
+        // Destroy the DataTable instance
+        table.destroy();
+      }
+    });
+       
   }
 }
