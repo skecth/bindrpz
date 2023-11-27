@@ -69,7 +69,7 @@ class ZonesController < ApplicationController
     RemoveConfigZoneJob.perform_async(@zone.id)
     
     respond_to do |format|
-      format.html { redirect_to rpz_zone_path(@zone), notice: "Zone was successfully destroyed." }
+      format.html { redirect_to zones_path, notice: "Zone was successfully destroyed." }
       format.json { head :no_content }
     end
   end
