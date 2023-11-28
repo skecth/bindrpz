@@ -57,6 +57,7 @@ class ZonesController < ApplicationController
     puts "feed_zones_attributes: #{feed_zones_attributes}"
     
     respond_to do |format|
+      GenerateRpzJob.perform_async
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
