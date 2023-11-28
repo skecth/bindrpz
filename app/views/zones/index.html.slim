@@ -12,7 +12,6 @@ hr
     thead.table-dark
       tr 
         th Name
-        th File Path
         th Description
         th style="width: 1%"
         th style="width: 1%"
@@ -22,7 +21,6 @@ hr
       - @zones.each do |zone|
         tr
           td = link_to zone.name, zone, class: "text-decoration-none text-dark"
-          td = zone.zone_path
           td = zone.description
           td = link_to zone, class: "btn btn-secondary btn-sm" do 
             i.bi.bi-gear-fill title="Configure Zone"

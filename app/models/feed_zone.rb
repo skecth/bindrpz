@@ -12,7 +12,7 @@ class FeedZone < ApplicationRecord
     
 
     def check_action
-      if  selected_action == "IN CNAME rpz-passthru"
+      if  selected_action == "CNAME"
           if destination.nil? || !destination.match(/\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/)
             errors.add(:destination, "Invalid IP format.")
           end

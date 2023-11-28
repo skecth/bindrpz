@@ -6,6 +6,9 @@
 			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @categories.count
 			.card-body.p-1
 				table.table.table-striped.table-borderless
+					thead 
+						tr 
+							th(scope="col") Category Name
 					tbody
 						- @categories.each do |category|
 							tr
@@ -16,16 +19,26 @@
 			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @feeds.count
 			.card-body.p-1
 				table.table.table-striped.table-borderless
+					thead 
+						tr 
+							th(scope="col") Feed Name 
+							th(scope="col") Total Domain
 					tbody
 						- @feeds.each do |feed|
 							tr
 								td = feed.feed_name
+								td = @line_counts[feed.feed_name]
+					
 	.col
 		.card.border-light.mb-3.shadow
 			h4.card-header Zone
 			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @zones.count
 			.card-body.p-1
 				table.table.table-striped.table-borderless
+					thead 
+						tr 
+							th(scope="col") Zone Name
+
 					tbody
 						- @zones.each do |zone|
 							tr
