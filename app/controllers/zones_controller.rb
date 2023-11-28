@@ -57,7 +57,6 @@ class ZonesController < ApplicationController
     puts "feed_zones_attributes: #{feed_zones_attributes}"
     file_path = feed_zones_attributes.values.first['file_path']
     respond_to do |format|
-
       if @zone.update(zone_params)
         GenerateRpzJob.perform_async
         IncludeJob.perform_async(file_path)
