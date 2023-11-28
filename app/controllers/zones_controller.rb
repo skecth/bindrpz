@@ -55,9 +55,12 @@ class ZonesController < ApplicationController
   def update
     feed_zones_attributes = params[:zone][:feed_zones_attributes] # Ensure the correct nesting
     puts "feed_zones_attributes: #{feed_zones_attributes}"
-    
+    file_path = feed_zones_attributes.values.first['file_path']
     respond_to do |format|
+
       if @zone.update(zone_params)
+        GenerateRpzJob.perform_async
+        IncludeJob.perform_async(file_path)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
       else
@@ -71,9 +74,9 @@ class ZonesController < ApplicationController
 
   # DELETE /zones/1 or /zones/1.json
   def destroy
+    RemoveConfigZoneJob.perform_async(@zone.id)
     @zone = Zone.find(params[:id])
     #remove zone from config
-    RemoveConfigZoneJob.perform_async(@zone.id)
     @zone.destroy
     respond_to do |format|
       format.html { redirect_to zones_path, notice: "Zone was successfully destroyed." }

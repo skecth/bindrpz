@@ -20,7 +20,7 @@ export default class extends Controller {
       }
     });
     
-    document.addEventListener('turbo:before-cache', function() {
+    document.addEventListener('turbo:before-render', function() {
       const table = $('#dttb').DataTable();
       // Check if DataTable is initialized
       if ($.fn.DataTable.isDataTable('#dttb')) {
