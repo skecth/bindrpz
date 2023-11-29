@@ -3,16 +3,12 @@
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
   .form-inputs
-    .container
-    div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
-
     -if @feed_zone.persisted?
       = f.input :zone_id, input_html: { value: @feed_zone.zone_id }, as: :hidden
       = f.input :feed_id, input_html: { value: @feed_zone.feed_id }, as: :hidden
       = f.input :category_id, input_html: { value: @feed_zone.category_id }, as: :hidden
-      div[data-controller="showhide" data-showhide-show-if-value=" CNAME" ]
+      div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
         = f.input :selected_action, as: :select, collection: [['CNAME rpz-drop', 'CNAME rpz-drop.'], ['CNAME .', 'CNAME .'], ['CNAME rpz-passthru', 'CNAME rpz-passthru.'], ['CNAME *.', 'CNAME *.'], ['CNAME rpz-tcp-only', 'CNAME rpz-tcp-only.'], ['CNAME', 'CNAME']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'
-        = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }
-   
+        = f.input :destination,  placeholder: "Demo_Zone", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
   .form-actions
     = f.button :submit
