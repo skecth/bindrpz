@@ -21,6 +21,7 @@ class DomainUpdateJob
       @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
       @blacklist_data = @blacklist_data.gsub(/^www\./, '')
       @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
+      @count = @blacklist_data.split("\n").count
       if File.exist?(file)
         # update file using system command
         system("sudo chmod 777 #{file}")
@@ -40,6 +41,8 @@ class DomainUpdateJob
       end
       # update the updated_at column
       feed.update(updated_at: Time.now)
+      # update the number_of_domain column
+      feed.update(number_of_domain: @count)
     end
     #
   end

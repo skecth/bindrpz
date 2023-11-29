@@ -168,7 +168,8 @@ class FeedsController < ApplicationController
                                    :blacklist_type, 
                                    :feed_name,
                                    :feed_path,
-                                   :category_id)
+                                   :category_id, 
+                                   :number_of_domain)
     end
    
 end
