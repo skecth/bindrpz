@@ -14,7 +14,8 @@ class UpdateFeedzoneJob < ApplicationJob
         destination = feed_zone.destination.split(',').map(&:strip).reject(&:empty?)
         feed_rules = []
         feed_path = feed_zone.file_path
-
+        # Change the permission of the file
+        system("sudo chmod 777 #{feed_path}")
         # Iterate over each file path
         file_paths.each do |file_path|
           # make sure the file exists
@@ -26,7 +27,15 @@ class UpdateFeedzoneJob < ApplicationJob
             domain_names = new_domains - existing_domains
 
             domain_names.each do |domain_name|
-              domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}"
+              #domain_rule = "#{domain_name}.#{rule}. #{action} #{destination}"
+              #add condition of the domain is ip
+              if domain_name =~ /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
+                #change the domain name as reverse ip
+                domain_name = domain_name.split('.').reverse.join('.')
+                domain_rule = "24.#{domain_name}.#{rule}. #{action.first} #{destination.first}"
+              else
+                domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}"
+              end
               feed_rules << domain_rule
             end
           else

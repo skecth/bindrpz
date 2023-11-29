@@ -62,6 +62,7 @@ class ZonesController < ApplicationController
         IncludeJob.perform_async(file_path)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
+        GenerateRpzJob.perform_async
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }
@@ -76,7 +77,8 @@ class ZonesController < ApplicationController
     RemoveConfigZoneJob.perform_async(@zone.id)
     @zone = Zone.find(params[:id])
     #remove zone from config
-    @zone.destroy
+    RemoveConfigZoneJob.perform_async(@zone.id)
+    #@zone.destroy
     respond_to do |format|
       format.html { redirect_to zones_path, notice: "Zone was successfully destroyed." }
       format.json { head :no_content }
