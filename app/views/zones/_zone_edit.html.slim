@@ -8,7 +8,7 @@
                   li = msg
 
   .form-inputs
-    = f.input :name, placeholder: "Demo_Zone"
+    = f.input :name, placeholder: "Demo_Zone", readonly: true
     
     template[data-nested-form-target="template"]
       = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
