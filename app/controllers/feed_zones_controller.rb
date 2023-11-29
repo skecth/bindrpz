@@ -149,13 +149,20 @@ class FeedZonesController < ApplicationController
  
   def include
     filepath = params[:path]
+    id = params[:id]
+    @feed_zone = FeedZone.find_by(id: id)
+    @feed_zone.update(enable_disable_status: true) 
     IncludeJob.perform_async(filepath)
-    #redirect_to zone_path(filepath), notice: "File was successfully included."
+    redirect_to zone_path(filepath)
   end
 
   def exclude
     filepath = params[:path]
+    id = params[:id]
+    @feed_zone = FeedZone.find_by(id: id)
+    @feed_zone.update(enable_disable_status: false) 
     ExcludeJob.perform_async(filepath)
+    redirect_to zone_path(filepath)
     #redirect_to zone_path(filepath), notice: "File was successfully excluded."
   end
  
