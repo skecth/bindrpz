@@ -194,7 +194,12 @@ class FeedZonesController < ApplicationController
   # DELETE /feed_zones/1 or /feed_zones/1.json
   def destroy
     @id = FeedZone.find(params[:id])
-
+    #delete file_path
+    file_path = @id.file_path
+    if File.exist?(file_path)
+      system("sudo rm #{file_path}")
+    end
+    
     @id.destroy
     respond_to do |format|
       format.html { redirect_to zone_url(@id.zone_id), notice: "Feed zone was successfully destroyed." }

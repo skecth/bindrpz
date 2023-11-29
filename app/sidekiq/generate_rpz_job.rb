@@ -33,7 +33,14 @@ class GenerateRpzJob
           domain_names = File.read(file_path, encoding: 'UTF-8').split("\n")
           domain_names.each do |domain_name|
             #domain_rule = "#{domain_name}.#{rule}. #{action} #{destination}"
-            domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}"
+            #add condition of the domain is ip
+            if domain_name =~ /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
+              #change the domain name as reverse ip
+              domain_name = domain_name.split('.').reverse.join('.')
+              domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}."
+            else
+              domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}."
+            end
             feed_rules << domain_rule
           end
 
@@ -41,6 +48,19 @@ class GenerateRpzJob
           File.open(feed_path, 'w') do |file|
             file.write(feed_rules.join("\n"))
           end
+
+          # include the file in zone file
+          rpz_path = zone.zone_path
+          rpz_rule = "$INCLUDE #{feed_path}; \n"
+          lines = File.readlines(rpz_path)
+
+          unless lines.include?(rpz_rule)
+            File.open(rpz_path, 'a') do |file|
+              file.write(rpz_rule)
+            end
+            Rails.logger.info "Added #{rpz_rule} to #{rpz_path}"
+          end
+
         end
       end
     end

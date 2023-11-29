@@ -40,6 +40,10 @@ class RemoveConfigZoneJob
         end
         feed_zone.destroy
       end
+      custom_blacklists = CustomBlacklist.where(zone_id: zone.id)
+      custom_blacklists.each do |custom_blacklist|
+        custom_blacklist.destroy
+      end
 
       folder_path = "/etc/bind/#{zone.name}"
       if File.directory?(folder_path)
