@@ -73,28 +73,8 @@ class FeedZonesController < ApplicationController
      puts "The url #{feedzone.feed.url}"  
     end
   end
-  # def create
-  #   @zone = Zone.new(zone_params)
-
-  #   respond_to do |format|
-  #     if @zone.save
-  #       format.html { redirect_to zones_path, notice: "Zone was successfully created." }
-  #       format.json { render :show, status: :created, location: @zone }
-  #       #add job @zone to config zone
-  #       ConfigZoneJob.perform_async
-
-  #     else
-  #       format.html { render :new, status: :unprocessable_entity }
-  #       format.json { render json: @zone.errors, status: :unprocessable_entity }
-  #       format.turbo_stream { render partial: "zones/form_update", status: :unprocessable_entity }
-
-  #     end
-  #   end
-  # end
-
 
   # POST /feed_zones or /feed_zones.json
-
   def create
     # @feed_zone = FeedZone.new(feed_zone_params)
     @categories = Category.all
@@ -121,29 +101,6 @@ class FeedZonesController < ApplicationController
       #   end
       end
     end
-    # redirect_to zone_path(zone.id)
-
-    # puts "feed_id: #{feed_id}"
-    # feedID = Feed.find_by(id: feed_id)
-    # feed_path = feedID.feed_path
-    # feed_name = feedID.feed_name
-    # feed_zone_path = "#{feed_path}/#{feed_name}.txt"
-    # puts "zone_id: #{zone_id}"
-    # puts "zone: #{@zone}"
-    # feedID = Feed.find(id: feed_id)
-    # puts "feed: #{feedID}"
-    # feed_zone = FeedZone.find_by(zone_id: @zone, feed_id: feed_id)  
-    # respond_to do |format|
-    #   if @feed_zone.save
-    #     format.json { render json:feed_zone, status: :created }
-    #     format.html { redirect_to zone_path(zone.id), notice: "Zones were successfully created." }
-    #   else
-    #     format.html { render :new, status: :unprocessable_entity }
-    #     format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
-    #     format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: }
-    #   end
-    # end
-  
   end
 
  
@@ -215,12 +172,6 @@ class FeedZonesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def feed_zone_params
-      params.require(:feed_zone).permit(:selected_action, 
-                                        :destination,
-                                        :zone_id,
-                                        :file_path,
-                                        :category_id,
-                                        :feed_id,
-                                        )
+      params.require(:feed_zone).permit(:selected_action, :destination, :zone_id, :file_path, :category_id, :feed_id)
     end
 end
