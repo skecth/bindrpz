@@ -16,16 +16,25 @@
         th Destination
         th(colspan="2") Action
     tbody
-      - @feed_zones.each do |f|
+      - @feed_zones.order(:id).each do |f|
         
           tr
             td= f.feed.category.name
-            td= f.feed.url
+            td= link_to "View",f.feed.url, target: :_blank
             td= f.feed.feed_name 
             td= f.selected_action 
-            td= f.destination
-            td= button_to 'Enable', include_path(path: f.file_path), method: :post
-            td= button_to 'Disable', exclude_path(path: f.file_path), method: :post
+            -if f.destination.present?
+              td= f.destination
+            -else
+              td=f.selected_action
+            -if f.enable_disable_status
+              /If enabled, show the 'Enable' button as disabled 
+              td= button_to 'Enable', include_path(path: f.file_path, id: f.id), method: :post,class: "btn btn-danger", disabled: true
+              td= button_to 'Disable', exclude_path(path: f.file_path, id: f.id), method: :post, class: "btn btn-danger"
+            -else 
+              /If disabled, show the 'Disable' button -->
+              td= button_to 'Enable', include_path(path: f.file_path, id: f.id), method: :post, class: "btn btn-danger"
+              td= button_to 'Disable', exclude_path(path: f.file_path, id: f.id), method: :post, disabled: true, class: "btn btn-danger"
             td
               = link_to edit_feed_zone_path(f), class: "btn btn-primary btn-sm",data: { turbo_frame: "remote_modal" } do
                 i.bi.bi-pencil title="Edit"

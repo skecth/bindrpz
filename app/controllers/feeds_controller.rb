@@ -68,8 +68,7 @@ class FeedsController < ApplicationController
     # create /etc/bind/rpz folder if it does not exist
     Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
     @feed.feed_path = "/etc/bind/feed/#{feed_name.upcase!}.txt"
-
-
+  
 
     respond_to do |format|
       if @feed.save
