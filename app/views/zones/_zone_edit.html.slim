@@ -13,12 +13,11 @@
     template[data-nested-form-target="template"]
       = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
         == render "zones/nested_form", f: feed_zones
-
       - f.fields_for :feed_zones do |feed_zones|
         == render "zones/nested_form", f: feed_zones
     div[data-nested-form-target="target"]
-    button(type="button" data-action="nested-form#add" class="btn btn-outline-secondary btn-sm")
+    button(type="button" data-action="nested-form#add" class="btn btn-outline-secondary btn-sm" style="margin-top: 10px")
       i.bi.bi-plus-lg
-  br/
+
   .form-actions
-    = f.button :submit, class: "btn btn-primary btn-sm"
+    = f.button :submit, 'Add Feed', class: "btn btn-primary btn-sm", style: "margin-top: 10px"

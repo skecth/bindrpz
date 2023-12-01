@@ -11,10 +11,12 @@ class ZonesController < ApplicationController
     @zones = Zone.all
     @zone = Zone.find(params[:id])
     @feed_zones = FeedZone.all.where(zone_id: @zone.id) 
+    puts "feed zone: #{@feed_zones.count}"
     @feed_zones = @zone.feed_zones
     @zone = Zone.find(params[:id])
     # puts @feed_zones
     @custom_blacklists = CustomBlacklist.all.where(zone_id: @zone.id)
+
   end
 
   # GET /zones/new
@@ -28,6 +30,11 @@ class ZonesController < ApplicationController
     @zone =  Zone.find(params[:id])
     @zone_id = @zone.name
     puts "zone: #{@zone_id}"
+    saved_feed_ids = FeedZone.pluck(:feed_id)
+    # Filter available Feed records to exclude saved feed_ids
+    @available_feeds = Feed.where.not(id: saved_feed_ids)
+
+
   end
 
   # POST /zones or /zones.json
@@ -55,7 +62,7 @@ class ZonesController < ApplicationController
   def update
     feed_zones_attributes = params[:zone][:feed_zones_attributes] # Ensure the correct nesting
     puts "feed_zones_attributes: #{feed_zones_attributes}"
-    file_path = feed_zones_attributes.values.first['file_path']
+    file_path = feed_zones_attributes.values.first['file_path']     
     respond_to do |format|
       if @zone.update(zone_params)
         GenerateRpzJob.perform_async
@@ -74,7 +81,6 @@ class ZonesController < ApplicationController
 
   # DELETE /zones/1 or /zones/1.json
   def destroy
-    RemoveConfigZoneJob.perform_async(@zone.id)
     @zone = Zone.find(params[:id])
     #remove zone from config
     RemoveConfigZoneJob.perform_async(@zone.id)

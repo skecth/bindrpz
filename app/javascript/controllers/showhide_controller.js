@@ -10,12 +10,15 @@ export default class extends Controller {
   }
 
   toggle() {
-    if (this.inputTarget.value !== this.showIfValue) {
-      this.outputTarget.hidden = true;
-      this.outputTarget.value =" ";
-
-    } else {
+    const inputValue = this.inputTarget.value;
+    const showIfValues = ['CNAME']; // Array of values to match against
+  
+    if (showIfValues.includes(inputValue)) {
       this.outputTarget.hidden = false;
+    } else {
+      this.outputTarget.hidden = true;
+      this.outputTarget.value = "";
     }
   }
+  
 }

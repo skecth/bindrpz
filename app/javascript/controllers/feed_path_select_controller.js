@@ -12,8 +12,8 @@ export default class extends Controller {
   }
 
   handleChange() {
+    //show feed id
     const selectedFeedId = this.feedIdTarget.value;
-    console.log(selectedFeedId)
     const zoneName =this.zoneTarget.value;
     console.log(zoneName);
     // Make an AJAX request to fetch the details of the selected feed
