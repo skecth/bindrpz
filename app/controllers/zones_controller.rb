@@ -65,8 +65,6 @@ class ZonesController < ApplicationController
     file_path = feed_zones_attributes.values.first['file_path']     
     respond_to do |format|
       if @zone.update(zone_params)
-        GenerateRpzJob.perform_async
-        IncludeJob.perform_async(file_path)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
         GenerateRpzJob.perform_async
@@ -74,13 +72,13 @@ class ZonesController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @zone.errors, status: :unprocessable_entity }
         format.turbo_stream { render partial: "zones/nested_feed_zone_create", status: :unprocessable_entity }
-
       end
     end
   end
 
   # DELETE /zones/1 or /zones/1.json
   def destroy
+    #RemoveConfigZoneJob.perform_async(@zone.id)
     @zone = Zone.find(params[:id])
     #remove zone from config
     RemoveConfigZoneJob.perform_async(@zone.id)
@@ -110,5 +108,19 @@ class ZonesController < ApplicationController
                                    :description,
                                    feed_zones_attributes: [:id, :feed_id, :destination,:file_path,:selected_action,:_destroy]
       )          
+    end
+
+    # def to include feed_zone in zone_path
+    def include_feed_zone_in_zone_path(file_path)
+      #add $INCLUDE of every file_path in zone_path
+      rpz_rule = "$INCLUDE #{file_path};\n"
+      lines = File.readlines(@zone.zone_path).map(&:strip)
+    
+      unless lines.include?(rpz_rule.strip)
+        File.open(@zone.zone_path, 'a') do |file|
+          file.write(rpz_rule)
+        end
+        Rails.logger.info "Added #{rpz_rule} to #{@zone.zone_path}"
+      end
     end
 end
