@@ -117,15 +117,14 @@ class FeedZonesController < ApplicationController
     filepath = params[:path]
     id = params[:id]
     @feed_zone = FeedZone.find_by(id: id)
-    @feed_zone.update(enable_disable_status: false) 
-    ExcludeJob.perform_async(filepath)
+    @feed_zone.update(enable_disable_status: false)
+    ExcludeJob.perform_async(filepath) 
     redirect_to zone_path(filepath)
     #redirect_to zone_path(filepath), notice: "File was successfully excluded."
   end
  
   # PATCH/PUT /feed_zones/1 or /feed_zones/1.json
   def update
-
     respond_to do |format|
       if @feed_zone.update(feed_zone_params)
         format.html { redirect_to zone_path(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
@@ -135,11 +134,10 @@ class FeedZonesController < ApplicationController
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
         format.turbo_stream { render partial: "feed_zones/feed_zone_update", status: :unprocessable_entity }
-
       end
     end
   end
-
+  
   def delete_all
     if params[:feed_zone_ids].present?
       puts "Exist"
@@ -153,10 +151,20 @@ class FeedZonesController < ApplicationController
     @id = FeedZone.find(params[:id])
     #delete file_path
     file_path = @id.file_path
+    #ExcludeJob.perform_async(file_path)
+    rpz_rule = "$INCLUDE #{file_path}; \n"
+    lines = File.readlines(@id.zone.zone_path)
+    if lines.include?(rpz_rule)
+      lines.delete(rpz_rule)
+      File.open(@id.zone.zone_path, 'w') do |file|
+        file.write(lines.join)
+      end
+      Rails.logger.info "Removed #{rpz_rule}"
+    end
+
     if File.exist?(file_path)
       system("sudo rm #{file_path}")
     end
-    
     @id.destroy
     respond_to do |format|
       format.html { redirect_to zone_url(@id.zone_id), notice: "Feed zone was successfully destroyed." }

@@ -29,12 +29,20 @@ class UpdateFeedzoneJob < ApplicationJob
             domain_names.each do |domain_name|
               #domain_rule = "#{domain_name}.#{rule}. #{action} #{destination}"
               #add condition of the domain is ip
-              if domain_name =~ /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
-                #change the domain name as reverse ip
-                domain_name = domain_name.split('.').reverse.join('.')
-                domain_rule = "24.#{domain_name}.#{rule}. #{action.first} #{destination.first}"
+              if domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/
+                ip = domain_name.split('.').reverse.join('.')
+                domain_name = "32.#{ip}"
+              elsif domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}\z/
+                parts = domain_name.split('/')
+                ip_parts = parts[0].split('.').reverse
+                domain_name = parts[1] + '.' + ip_parts.join('.')
+              end
+
+              #check if destination exist
+              if destination.first.present?
+                domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}."
               else
-                domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}"
+                domain_rule = "#{domain_name}.#{rule}. #{action.first}"
               end
               feed_rules << domain_rule
             end

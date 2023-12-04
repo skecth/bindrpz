@@ -29,38 +29,39 @@ class GenerateRpzJob
 
           system("sudo chmod 777 #{feed_path}")
 
+          File.open(feed_path, 'w') do |file|
+            file.write("$INCLUDE #{feed_path}; \n")
+          end
+
           # Read the file
           domain_names = File.read(file_path, encoding: 'UTF-8').split("\n")
           domain_names.each do |domain_name|
             #domain_rule = "#{domain_name}.#{rule}. #{action} #{destination}"
-            #add condition of the domain is ip
-            if domain_name =~ /\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/
-              #change the domain name as reverse ip
-              domain_name = domain_name.split('.').reverse.join('.')
+            # If the domain name is an IP address without a range
+            if domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/
+              ip = domain_name.split('.').reverse.join('.')
+              domain_name = "32.#{ip}"
+            # If the domain name is an IP address with a range
+            elsif domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}\z/
+              parts = domain_name.split('/')
+              ip_parts = parts[0].split('.').reverse
+              domain_name = parts[1] + '.' + ip_parts.join('.')
+            end
+
+            #check if destination exist
+            if destination.first.present?
               domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}."
             else
-              domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}."
+              domain_rule = "#{domain_name}.#{rule}. #{action.first}"
             end
             feed_rules << domain_rule
+
           end
 
           # Write the file
           File.open(feed_path, 'w') do |file|
             file.write(feed_rules.join("\n"))
           end
-
-          # include the file in zone file
-          rpz_path = zone.zone_path
-          rpz_rule = "$INCLUDE #{feed_path}; \n"
-          lines = File.readlines(rpz_path)
-
-          unless lines.include?(rpz_rule)
-            File.open(rpz_path, 'a') do |file|
-              file.write(rpz_rule)
-            end
-            Rails.logger.info "Added #{rpz_rule} to #{rpz_path}"
-          end
-
         end
       end
     end
