@@ -8,9 +8,7 @@ class FeedZone < ApplicationRecord
     validates :feed_id, uniqueness: { scope: :zone_id, message: "Feed already exist" }
      # validates :destination, presence: { message: "Please choose the feed" }, allow_blank: false
  
-     validate :check_action
-     validate :check_feed
-    
+    validate :check_action    
 
     def check_action
       if  selected_action == "CNAME"
@@ -23,16 +21,5 @@ class FeedZone < ApplicationRecord
         end
       end
     end 
-    
-    def check_feed
-      if feed_id.present?
-        errors.add(:feed_id, "Cannot have same feed.")
-      end
-    end
-   
 
-    
-
-
-    
 end
