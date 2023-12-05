@@ -117,31 +117,14 @@ class FeedsController < ApplicationController
       # give permission to create file
       system("sudo chmod 777 /etc/bind/feed")
       # create file
-      file = File.new("/etc/bind/feed/#{feed.feed_name}.rpz", "w")
+      file = File.new("/etc/bind/feed/#{feed.feed_name}.txt", "w")
       file.puts "# Last updated: #{Time.now.strftime("%d %b %Y %H:%M:%S")}"
-      # Net::HTTP.get_response(URI.parse(feed.link)) do |res|
-      #   res.body.lines.each do |line|
-      #     next if line.start_with?('#') || line.strip.empty? || line.start_with?('!') || line =~ /^:|^ff|^fe|^255|^127|^#|^$/
-      #     line.gsub!(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '')
-      #     line.gsub!(/^www\./, '')
-      #     line.gsub!(/#.*$/, '')
-      #     # write line that are not duplicate
-
-          
-      #     file.puts line
-      #     # file.puts line
-      #   end
-      # end
       @blacklist_data = Net::HTTP.get(URI.parse(feed.url)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^#|^$/}.join("\n")
       @blacklist_data = @blacklist_data.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/#.*$/, '')
       # if the line has space, then split it 
       @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
       @blacklist_data = @blacklist_data.gsub(/^www\./, '')
       @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
-
-      
-
-    
       file.puts @blacklist_data
       # close file
       file.close

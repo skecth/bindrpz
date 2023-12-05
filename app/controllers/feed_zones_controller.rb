@@ -119,8 +119,7 @@ class FeedZonesController < ApplicationController
     @feed_zone = FeedZone.find_by(id: id)
     @feed_zone.update(enable_disable_status: false)
     ExcludeJob.perform_async(filepath) 
-    redirect_to zone_path(filepath)
-    #redirect_to zone_path(filepath), notice: "File was successfully excluded."
+    redirect_to zone_path(@feed_zone.zone_id)
   end
  
   # PATCH/PUT /feed_zones/1 or /feed_zones/1.json
