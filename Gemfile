@@ -57,6 +57,7 @@ gem 'sass-rails'
 gem 'jquery-datatables'
 gem 'jquery-rails'
 gem 'pagy'
+gem 'tomo', '~> 1.18'
 #new gem -end
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
