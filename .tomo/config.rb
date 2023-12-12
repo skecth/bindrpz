@@ -38,6 +38,7 @@ set linked_dirs: %w[
 
 set linked_files: %w[
   config/database.yml
+  config/master.key
 ]
 
 setup do
