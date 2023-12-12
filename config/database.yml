@@ -89,5 +89,5 @@ test:
 production:
   <<: *default
   database: bindrpz_production
-  username: bindrpz
-  password: <%= ENV["BINDRPZ_DATABASE_PASSWORD"] %>
+  # username: bindrpz
+  # password: <%= ENV["BINDRPZ_DATABASE_PASSWORD"] %>
