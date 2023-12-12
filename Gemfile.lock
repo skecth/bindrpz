@@ -258,6 +258,8 @@ GEM
     tilt (2.3.0)
     timeout (0.4.1)
     tomo (1.18.1)
+    tomo-plugin-sidekiq (1.3.1)
+      tomo (~> 1.0)
     turbo-rails (1.5.0)
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
@@ -310,6 +312,7 @@ DEPENDENCIES
   sprockets-rails
   stimulus-rails
   tomo (~> 1.18)
+  tomo-plugin-sidekiq
   turbo-rails
   tzinfo-data
   web-console

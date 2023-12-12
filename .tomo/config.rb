@@ -5,6 +5,7 @@ plugin "rails"
 plugin "nodenv"
 plugin "puma"
 plugin "./plugins/bindrpz.rb"
+plugin "sidekiq"
 
 host "afiq@113.23.254.70"
 
@@ -51,6 +52,7 @@ setup do
   run "bundler:config"
   run "bundler:install"
   run "puma:setup_systemd"
+  run "sidekiq:setup_systemd"
 end
 
 deploy do
@@ -68,4 +70,5 @@ deploy do
   run "core:clean_releases"
   run "bundler:clean"
   run "core:log_revision"
+  run "sidekiq:restart"
 end
