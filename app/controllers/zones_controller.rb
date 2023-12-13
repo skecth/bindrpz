@@ -80,6 +80,7 @@ class ZonesController < ApplicationController
   def destroy
     #RemoveConfigZoneJob.perform_async(@zone.id)
     @zone = Zone.find(params[:id])
+    @zone.destroy
     #remove zone from config
     RemoveConfigZoneJob.perform_async(@zone.id)
     #@zone.destroy

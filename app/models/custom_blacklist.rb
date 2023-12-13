@@ -1,7 +1,6 @@
 class CustomBlacklist < ApplicationRecord
   enum blacklist_type: [:Domain, :IP]
   mount_uploader :file, AttachmentUploader
-  enum action: [:CNAME, :A, :AAAA]
   enum kind: [:single, :bulk]
   belongs_to :zone
   belongs_to :category
