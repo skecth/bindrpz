@@ -67,6 +67,7 @@ class ZonesController < ApplicationController
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
+        GenerateRpzJob.perform_async
         include_feed_zone_in_zone_path(file_path)
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -114,7 +115,7 @@ class ZonesController < ApplicationController
     # def to include feed_zone in zone_path
     def include_feed_zone_in_zone_path(file_path)
       @zone = Zone.find(params[:id])
-      @feed_zones = FeedZone.all.where(zone_id: @zone.id)
+      @feed_zones = FeedZone.all.where(zone_id: @zone.id, enable_disable_status: true)
       @feed_zones.each do |feed_zone|
         file_path = feed_zone.file_path
         include_feed_zone(file_path)
