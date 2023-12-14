@@ -1,9 +1,14 @@
 .card-devise{
+  // opacity for background color 0.5
   background-color: white;
   width: 400px;
-  border-radius: 7px;
+  border-radius: 3px;
+  // shadow
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+
 }
 
 .form-control::-webkit-input-placeholder {
   font-size: 14px;
 }
+

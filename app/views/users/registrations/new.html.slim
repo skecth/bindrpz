@@ -1,21 +1,19 @@
-.container 
-  .vh-100.gradient-custom 
-    .container.py-4.h-80 
-      .row.d-flex.justify-content-center.align-items-center.h-80 
-        .card-devise.m-5 
-          .card-body-devise.p-5.text-center 
-            div 
-              h3.fw-bold.mb-2.text-uppercase Create account
-              br
-              = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
-                .form-inputs
-                  = f.input :username, required: true, autofocus: true, input_html: { autocomplete: "username" }, label: false, placeholder: "Username"
-                  = f.input :email, required: true, autofocus: true, input_html: { autocomplete: "email" }, label: false, placeholder: "Email"
-                  = f.input :password, required: true, input_html: { autocomplete: "new-password" }, label: false, placeholder: "Password"
-                  = f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" }, label: false, placeholder: "Password confirmation"
-                .form-actions
-                  = f.button :submit, "Sign up", class: "btn btn-sm btn-outline-dark px-5"
-              br
-              p
-                small Already have an account ? 
-                = link_to "Log in", new_user_session_path 
+.container.devise
+  .row.d-flex.justify-content-center.align-items-center
+    .card-devise.m-5 
+      .card-body-devise.p-5.text-center 
+        div 
+          h3.fw-bold.mb-2.text-uppercase Create account
+          br
+          = simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f|
+            .form-inputs
+              = f.input :username, required: true, autofocus: true, input_html: { autocomplete: "username" }, label: false, placeholder: "Username"
+              = f.input :email, required: true, autofocus: true, input_html: { autocomplete: "email" }, label: false, placeholder: "Email"
+              = f.input :password, required: true, input_html: { autocomplete: "new-password" }, label: false, placeholder: "Password"
+              = f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" }, label: false, placeholder: "Password confirmation"
+            .form-actions
+              = f.button :submit, "Sign up", class: "btn btn-sm btn-outline-dark px-5"
+          br
+          p
+            small Already have an account ? 
+            = link_to "Log in", new_user_session_path 
