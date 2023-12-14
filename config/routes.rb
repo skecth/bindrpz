@@ -1,7 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations' }
+  devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', passwords: 'users/passwords' }
   devise_scope :user do
     authenticated :user do
       root 'home#index', as: :authenticated_root
@@ -12,7 +12,7 @@ Rails.application.routes.draw do
     end
   end
 
-  
+
   get 'custom_blacklists/new_bulk' => 'custom_blacklists#new_bulk', as: :new_bulk
   resources :custom_blacklists
   resources :feed_zones
