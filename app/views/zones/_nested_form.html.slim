@@ -1,9 +1,10 @@
 .nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
   .row  
     div[data-controller="feed-path-select" data-action="change->feed-path-select#handleChange"]
-      - if @available_feeds&.any?
-        - feed_collection = @available_feeds.map { |feed| [feed.feed_name, feed.id] }
-        = f.input :feed_id, as: :select, collection: feed_collection,include_blank: 'Select Feed', input_html: { class: 'form-select', data: { feed_path_select_target: "feedId", action: "change->feed_path_select#handleChange"} }, label: false 
+      -@saved_feed_ids = FeedZone.pluck(:feed_id)
+      -@available_feeds = Feed.where.not(id: @saved_feed_ids)
+      - if @available_feeds.present?
+        = f.input :feed_id,as: :select,collection: @available_feeds,label_method: :feed_name,value_method: :id,include_blank: 'Select Feed',input_html: { class: 'form-select',data: {feed_path_select_target: "feedId",action: "change->feed_path_select#handleChange"}},label: false
         = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
       input#zone_id.form-select[data-feed-path-select-target="zone" type="hidden" name="zone_id" value="#{@zone_id}"]
     div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
