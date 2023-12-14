@@ -1,3 +1,4 @@
+require 'fileutils'
 class UpdateFeedzoneJob < ApplicationJob
   queue_as :default
 
@@ -17,11 +18,14 @@ class UpdateFeedzoneJob < ApplicationJob
         
         # Create the file if not exist
         unless File.exist?(feed_path)
-          system("sudo touch #{feed_path}")
+          #system("sudo touch #{feed_path}")
+          FileUtils.touch(feed_path)
         end
         
         # Change the permission of the file
-        system("sudo chmod 777 #{feed_path}")
+        #system("sudo chmod 777 #{feed_path}")
+        File.chmod(0777, feed_path)
+
         # Iterate over each file path
         file_paths.each do |file_path|
           # make sure the file exists
