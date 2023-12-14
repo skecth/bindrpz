@@ -2,11 +2,11 @@
   .row.flex-nowrap 
     .col-auto.col-md-3.col-xl-2.px-sm-2.px-0.side_bar
       .d-flex.flex-column.align-items-center.align-items-sm-start.px-3.pt-2.text-white.min-vh-100 
-        a = link_to root_path, class: "d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
+        / a = link_to root_path, class: "d-flex align-items-center pb-3 mb-md-0 me-md-auto text-white text-decoration-none"
           span.fs-1.d-none.d-sm-inline Bindrpz
         ul.nav.nav-pills.flex-column.mb-sm-auto.mb-0.align-items-center.align-items-sm-start#menu 
           li.nav-item
-            a = link_to root_path, class: "nav-link px-0 align-middle"
+            / a = link_to root_path, class: "nav-link px-0 align-middle"
               i.fs-10.bi-house.pe-2
               span.ms-1.d-none.d-sm-inline Home
           li
@@ -23,6 +23,20 @@
               span.ms-1.d-none.d-sm-inline Zone
 
         hr 
+        - if user_signed_in?
+          ul.nav.nav-pills.flex-column.mb-sm-auto.mb-0.align-items-center.align-items-sm-start#menu 
+            li.nav-item
+              a = link_to new_zone_path, class: "nav-link px-0 align-middle"
+                i.fs-10.bi-plus-circle.pe-2
+                span.ms-1.d-none.d-sm-inline New zone
+            li.nav-item
+              a = link_to new_feed_path, class: "nav-link px-0 align-middle"
+                i.fs-10.bi-plus-circle.pe-2
+                span.ms-1.d-none.d-sm-inline New feed
+            li.nav-item
+              a = link_to new_category_path, class: "nav-link px-0 align-middle"
+                i.fs-10.bi-plus-circle.pe-2
+                span.ms-1.d-none.d-sm-inline New category
         div.dropdown.pb-4 
           a.d-flex.align-items-center.text-white.text-decoration-none.dropdown-toggle#dropdownUser1 data-bs-toggle="dropdown" aria-expanded="false" 
             img.rounded-circle src='https://github.com/mdo.png' alt="hugenerd" width="30" height="30"
@@ -37,7 +51,7 @@
             li 
               hr.dropdown-divider
             li 
-              a.dropdown-item href="#" Sign out
+              a.dropdown-item = button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-danger"
     .col.py-3
       - if notice
         = render 'layouts/alerts'

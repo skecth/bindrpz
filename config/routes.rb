@@ -1,6 +1,18 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  devise_for :users, controllers: { sessions: 'users/sessions', registrations: 'users/registrations', passwords: 'users/passwords' }
+  devise_scope :user do
+    authenticated :user do
+      root 'home#index', as: :authenticated_root
+    end
+  
+    unauthenticated do
+      root 'users/sessions#new', as: :unauthenticated_root
+    end
+  end
+
+
   get 'custom_blacklists/new_bulk' => 'custom_blacklists#new_bulk', as: :new_bulk
   resources :custom_blacklists
   resources :feed_zones
@@ -12,8 +24,6 @@ Rails.application.routes.draw do
   mount Sidekiq::Web =>'/sidekiq'
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
-  # Defines the root path route ("/")
-  root 'home#index'
   get "/search", to: 'domains#search', as: :search
   get "domain/bulk", to: "domains#update_bulk",as: :update_bulk
   get 'new', to: "rpzdata#create", as: :create
