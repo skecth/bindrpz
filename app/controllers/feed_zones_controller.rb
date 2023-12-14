@@ -1,4 +1,5 @@
-#feed_zone controlle
+require 'fileutils'
+
 class FeedZonesController < ApplicationController
   before_action :set_feed_zone, only: %i[ show edit update destroy]
 
@@ -109,7 +110,9 @@ class FeedZonesController < ApplicationController
     id = params[:id]
     @feed_zone = FeedZone.find_by(id: id)
     @feed_zone.update(enable_disable_status: true) 
-    IncludeJob.perform_async(filepath)
+    #IncludeJob.perform_async(filepath)
+    #add def include_job
+    include_job(filepath)
     redirect_to zone_path(filepath)
   end
 
@@ -118,7 +121,9 @@ class FeedZonesController < ApplicationController
     id = params[:id]
     @feed_zone = FeedZone.find_by(id: id)
     @feed_zone.update(enable_disable_status: false)
-    ExcludeJob.perform_async(filepath) 
+    #ExcludeJob.perform_async(filepath) 
+    #add def exclude_job
+    exclude_job(filepath)
     redirect_to zone_path(@feed_zone.zone_id)
   end
  
@@ -128,7 +133,8 @@ class FeedZonesController < ApplicationController
       if @feed_zone.update(feed_zone_params)
         format.html { redirect_to zone_path(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
         format.json { render :show, status: :ok, location: @feed_zone }
-        GenerateRpzJob.perform_async
+        #GenerateRpzJob.perform_async
+        generate_rpz
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
@@ -162,7 +168,8 @@ class FeedZonesController < ApplicationController
     end
 
     if File.exist?(file_path)
-      system("sudo rm #{file_path}")
+      #system("sudo rm #{file_path}")
+      File.delete(file_path)
     end
     @id.destroy
     respond_to do |format|
@@ -180,5 +187,111 @@ class FeedZonesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def feed_zone_params
       params.require(:feed_zone).permit(:selected_action, :destination, :zone_id, :file_path, :category_id, :feed_id)
+    end
+
+    #def to generate feedzone
+    def generate_rpz
+      zones = Zone.all
+      feed_zones = FeedZone.all
+
+      zones.each do |zone|
+        rule = zone.name
+        feed_zones_for_zone = feed_zones.where(zone_id: zone.id)
+
+        feed_zones_for_zone.each do |feed_zone|
+          file_paths = feed_zone.feed.feed_path.split(',').map(&:strip)
+          action = feed_zone.selected_action.split(',').map(&:strip).reject(&:empty?)
+          destination = feed_zone.destination.split(',').map(&:strip).reject(&:empty?)
+
+          # Iterate over each file path
+          file_paths.each do |file_path|
+            feed_rules = []
+            feed_path = feed_zone.file_path
+
+            # Create the file if not exist
+            unless File.exist?(feed_path)
+              #system("sudo touch #{feed_path}")
+              FileUtils.touch(feed_path)
+            end
+
+            #system("sudo chmod 777 #{feed_path}")
+            File.chmod(0777, feed_path)
+
+            File.open(feed_path, 'w') do |file|
+              file.write("$INCLUDE #{feed_path}; \n")
+            end
+
+            # Read the file
+            domain_names = File.read(file_path, encoding: 'UTF-8').split("\n")
+            domain_names.each do |domain_name|
+              #domain_rule = "#{domain_name}.#{rule}. #{action} #{destination}"
+              # If the domain name is an IP address without a range
+              if domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/
+                ip = domain_name.split('.').reverse.join('.')
+                domain_name = "32.#{ip}"
+              # If the domain name is an IP address with a range
+              elsif domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}\z/
+                parts = domain_name.split('/')
+                ip_parts = parts[0].split('.').reverse
+                domain_name = parts[1] + '.' + ip_parts.join('.')
+              end
+
+              #check if destination exist
+              if destination.first.present?
+                domain_rule = "#{domain_name}.#{rule}. #{action.first} #{destination.first}."
+              else
+                domain_rule = "#{domain_name}.#{rule}. #{action.first}"
+              end
+              feed_rules << domain_rule
+
+            end
+
+            # Write the file
+            File.open(feed_path, 'w') do |file|
+              file.write(feed_rules.join("\n"))
+            end
+          end
+        end
+      end
+    end
+
+    def include_job(file_path)
+      feed_zone = FeedZone.find_by(file_path: file_path)
+      if feed_zone
+        zone = feed_zone.zone
+        rpz_path = zone.zone_path
+        rpz_rule = "$INCLUDE #{file_path}; \n"
+        lines = File.readlines(rpz_path)
+  
+        unless lines.include?(rpz_rule)
+          File.open(rpz_path, 'a') do |file|
+            file.write(rpz_rule)
+          end
+          Rails.logger.info "Added #{rpz_rule} to #{rpz_path}"
+        end
+      else
+        Rails.logger.error "No FeedZone found with file_path: #{file_path}"
+      end
+    end
+
+    def exclude_job(filepath)
+      feed_zone = FeedZone.find_by(file_path: filepath)
+      if feed_zone
+        zone = feed_zone.zone
+        rpz_path = zone.zone_path
+        rpz_rule = "$INCLUDE #{filepath};\n"
+        lines = File.readlines(rpz_path)
+        
+        if lines.include?(rpz_rule)
+          lines.delete(rpz_rule)
+          File.open(rpz_path, 'w') do |file|
+            file.write(lines.join)
+          end
+        else
+          Rails.logger.error "No #{rpz_rule} found in #{rpz_path}"
+        end
+      else
+        Rails.logger.error "No FeedZone found with file_path: #{filepath}"
+      end
     end
 end
