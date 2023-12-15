@@ -49,8 +49,6 @@ class ZonesController < ApplicationController
         ConfigZoneJob.perform_async
 
       else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @zone.errors, status: :unprocessable_entity }
         format.turbo_stream { render partial: "zones/form_update", status: :unprocessable_entity }
 
       end
@@ -62,7 +60,21 @@ class ZonesController < ApplicationController
   def update
     feed_zones_attributes = params[:zone][:feed_zones_attributes] # Ensure the correct nesting
     puts "feed_zones_attributes: #{feed_zones_attributes}"
-    file_path = feed_zones_attributes.values.first['file_path']     
+    file_path = feed_zones_attributes.values.first['file_path']
+   
+    existing_feed_ids = []
+
+    # Loop through the feed_zones_attributes to filter out duplicate feed_ids
+    feed_zones_attributes.each do |_key, attributes|
+      feed_id = attributes['feed_id']
+      unless existing_feed_ids.include?(feed_id)
+        existing_feed_ids << feed_id
+      else
+        # Remove the duplicate feed_id from the params
+        feed_zones_attributes.delete(_key)
+      end
+    end
+  
     respond_to do |format|
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
