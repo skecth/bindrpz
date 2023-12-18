@@ -52,7 +52,7 @@ class FeedZonesController < ApplicationController
           flash[:alert] ="Feed already exist"
         end
       end
-      GenerateRpzJob.perform_async
+
       redirect_to zone_path(@zone)
     end
   end
@@ -133,7 +133,6 @@ class FeedZonesController < ApplicationController
       if @feed_zone.update(feed_zone_params)
         format.html { redirect_to zone_path(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
         format.json { render :show, status: :ok, location: @feed_zone }
-        #GenerateRpzJob.perform_async
         generate_rpz
       else
         format.html { render :edit, status: :unprocessable_entity }
