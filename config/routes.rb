@@ -50,4 +50,5 @@ Rails.application.routes.draw do
   # get 'single_form' => 'feeds#new', as: :single_form
   post '/include', to: 'feed_zones#include', as: 'include'
   post '/exclude', to: 'feed_zones#exclude', as: 'exclude'
+
 end

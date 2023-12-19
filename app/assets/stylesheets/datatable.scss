@@ -42,6 +42,8 @@
   border-width: 0px;
   border-radius: 3px;
   color: black;
+  text-decoration: none;
+  float: left;
 }
 
 .paginate_button.current{
@@ -50,4 +52,18 @@
 }
 .paginate_button.disabled{
   color: darkgray;
+}
+
+// new
+.dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+    background: none;
+    background-color: rgb(40, 105, 255)!important;
+    cursor: pointer;
+}
+
+.table > thead > tr > th{
+  font-size: 12px;
+  font-weight: 700;
+  color: #6c757d;
+  border-bottom: 2px solid #dee2e6;
 }

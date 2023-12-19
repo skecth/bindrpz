@@ -1,37 +1,36 @@
-.main-content
-    .container-feed-title
-      .category-title
-        .d-flex.mb-3 
-          .me-auto.p-2
-            h3 Total Feed: #{Feed.count}
-          .d-flex.flex-row-reverse.bd-highlight 
-            .p-2
-              = link_to 'New Feed', new_feed_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
-            .p-2
-              = button_to "Fetch List", bulk_create_path, class: "btn btn-primary btn-sm px-3 py-2 btn-new"
+.main-content.p-4
+  .d-flex 
+    .me-auto.p-2
+      h2.fw-bold Feeds
+    - if user_signed_in? && current_user.admin?
+      .p-2
+        = link_to 'New Feed', new_feed_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-sm px-3 py-2 btn-new"
 
-hr
-.table-responsive-lg
-  table.table.column-data#dttb data-controller="datatables"
-    thead.table-dark
-      tr 
-        th Name
-        th Source
-        th Category
-        th Last Updated
-        / th 
-        th 
-    tbody.feed_body
-      - @feeds.each do |feed|
-        tr
-          td = feed.feed_name
-          td = feed.source
-          td = feed.category.name 
-          td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
-          / td = link_to "Update", edit_feed_path(feed),data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm"
-          td = button_to feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
-            i.bi.bi-trash3 title="Delete"
-          
+  hr
+  .table-responsive-lg
+    table.table.column-data#dttb data-controller="datatables"
+      thead
+        tr 
+          th FEED
+          th SOURCE
+          th CATEGORY
+          th LAST UPDATE
+          th
+          - if user_signed_in? && current_user.admin?
+            th 
+      tbody.feed_body
+        - @feeds.each do |feed|
+          tr
+            td = feed.feed_name
+            td = feed.source
+            td = feed.category.name 
+            td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
+            td = link_to feed.url, target: "_blank", rel: "noopener noreferrer", class: "btn btn-new btn-sm" do 
+              i.bi.bi-eye title="View"
+            - if user_signed_in? && current_user.admin?
+              td = button_to feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
+                i.bi.bi-trash3 title="Delete"
+            
 
 
 

@@ -1,40 +1,47 @@
-.main-content
-    .container-feed-title
-      .category-title
-        .d-flex.mb-3 
-          .me-auto.p-2
-            h3 Total Zone: #{Zone.count}
-          .p-2
-            = link_to 'New Zone', new_zone_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
-hr
-.table-responsive-lg
-  table.table.column-data
-    thead.table-dark
-      tr 
-        th Name
-        th Description
-        th style="width: 1%"
-        th style="width: 1%"
-        th style="width: 1%"
-      
-    tbody.feed_body
-      - @zones.each do |zone|
-        tr
-          td = link_to zone.name, zone, class: "text-decoration-none text-dark"
-          td = zone.description
-          td = link_to zone, class: "btn btn-secondary btn-sm" do 
-            i.bi.bi-gear-fill title="Configure Zone"
-          / td = link_to edit_zone_path(zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do 
-          /   i.bi.bi-pencil-square title="Edit Zone"
-          td = link_to zone, data: { turbo_confirm: "Are you sure?",turbo_method: :delete } , class: "btn btn-danger btn-sm" do 
-            i.bi.bi-trash3 title="Delete"
+.main-content.p-4 
+  .d-flex 
+    .me-auto.p-2
+      h2.fw-bold Zones
+    .p-2
+      = link_to 'New Zone', new_zone_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-sm px-3 py-2 btn-new"
+
+  / .container-feed-title
+  /   .category-title
+  /     .d-flex.mb-3 
+  /       .me-auto.p-2
+  /         h3 Total Zone: #{Zone.count}
+  /       .p-2
+  /         = link_to 'New Zone', new_zone_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
+  hr
+  .table-responsive-lg
+    table.table.column-data#dttb data-controller="datatables"
+      thead
+        tr 
+          th ZONE
+          th DESCRIPTION
+          th LAST UPDATE
+          th style="width: 1%"
+          th style="width: 1%"
         
+      tbody.feed_body
+        - @zones.each do |zone|
+          tr
+            td = link_to zone.name, zone, class: "text-decoration-none text-dark"
+            td = zone.description
+            td = zone.updated_at.strftime("%d %b %Y %H:%M:%S")
+            td = link_to zone, class: "btn btn-secondary btn-sm" do 
+              i.bi.bi-gear-fill title="Configure Zone"
+            / td = link_to edit_zone_path(zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do 
+            /   i.bi.bi-pencil-square title="Edit Zone"
+            td = link_to zone, data: { turbo_confirm: "Are you sure?",turbo_method: :delete } , class: "btn btn-danger btn-sm" do 
+              i.bi.bi-trash3 title="Delete"
+          
 
 
 
 
-        
-        
+          
+          
 
 
 
@@ -48,14 +55,14 @@ hr
 
 
 
-/ p style="color: green" = notice
+  / p style="color: green" = notice
 
-/ h1 Zones
+  / h1 Zones
 
-/ #zones
-/   - @zones.each do |zone|
-/     == render zone
-/     p
-/       = link_to "Show this zone", zone
+  / #zones
+  /   - @zones.each do |zone|
+  /     == render zone
+  /     p
+  /       = link_to "Show this zone", zone
 
-/ = link_to "New zone", new_zone_path
+  / = link_to "New zone", new_zone_path
