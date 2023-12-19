@@ -60,6 +60,7 @@ gem 'pagy'
 gem 'tomo', '~> 1.18'
 gem "tomo-plugin-sidekiq"
 gem "devise"
+gem "chartkick"
 #new gem -end
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

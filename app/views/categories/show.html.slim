@@ -1,10 +1,27 @@
-p style="color: green" = notice
-
-== render @category
-
-div
-  => link_to "Edit this category", edit_category_path(@category)
-  '|
-  =< link_to "Back to categories", categories_path
-
-  = button_to "Destroy this category", @category, method: :delete
+.main-content.p-4
+  h2.fw-bold = @category.name
+  
+  hr
+  .table-responsive-lg
+    table.table.column-data#dttb data-controller="datatables"
+      thead
+        tr
+          th FEED
+          th SOURCE
+          TH NUMBER OF DOMAINS
+          th LAST UPDATE
+          th
+          - if user_signed_in? && current_user.admin?
+            th 
+      tbody
+        - @category.feeds.each do |feed|
+          tr
+            td = feed.feed_name
+            td = feed.source
+            td = feed.number_of_domain
+            td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
+            td = link_to feed.url, target: "_blank", rel: "noopener noreferrer", class: "btn btn-new btn-sm" do 
+              i.bi.bi-eye title="Show"
+            - if user_signed_in? && current_user.admin?
+              td = button_to feed, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
+                i.bi.bi-trash3 title="Delete"
