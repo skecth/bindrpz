@@ -1,56 +1,29 @@
-= simple_form_for @feed_zone, html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' } } do |f|
-  = f.error_notification
-  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+= form_with(model: @feed_zone, url: createFeedZone_path, method: :post) do |form|
+  - if @feed_zone.errors.any?
+    #error_explanation
+    h2= "#{pluralize(@feed_zone.errors.count, 'error')} prohibited this record from being saved:"
+    ul
+      - @feed_zone.errors.full_messages.each do |message|
+        li= message
 
-  .form-inputs
-    /zone-nested-form
-    / template[data-nested-form-target="template"]
-    /   = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |todo_fields|
-    /     == render "feed_zones/nested_form", f: todo_fields
+  .mb-3
+    -@zone.feed_zones.each do |fz|
+      -c_id = fz.category_id
+      -@save_c_id<<c_id
+    -@categories_with_feeds = Category.where.not(id: @save_c_id).where(id: @feed_category)
 
-    / - f.fields_for :feed_zones do |todo_fields|
-    /   == render "feed_zones/nested_form", f: todo_fields
-    / div[data-nested-form-target="target"]
-    / button(type="button" data-action="nested-form#add") Add Feed
-   
+  h4 Listed Feed -azim
+  = form.hidden_field :zone_id, value: @zone.id
 
-    div[data-controller="checkbox-select-all"]
-      table.table
-        tbody
-        =f.input :zone_id,input_html: {value: @zone.id}
-        - @categoryFeed.each do |category|
-          tr
-            td
-              = check_box_tag 'category_ids[]', category.id, nil, { data: { checkbox_select_all_target: "parent", action: "change->checkbox-select-all#toggleChildren", parent_id: category.id }}
-              = category.name
-              = f.input :selected_action, as: :select, collection: [['DROP', 'IN CNAME rpz-drop'], ['NXDOMAIN', 'CNAME .'], ['PASSTHRU', 'IN CNAME rpz-passthru'], ['NODATA', 'CNAME *.'], ['TCP', 'CNAME rpz-tcp-only']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action', category_id: category.id
-              = f.input :destination, placeholder: "Destination", input_html: { data: { showhide_target: "output" } }, category_id: category.id
-        / - category.feeds.each do |feed|
-        /   tr
-        /     td
-        /       .container_check
-        /         = check_box_tag 'feed_ids[]', feed.id, nil, { data: { checkbox_select_all_target: "child", action: "change->checkbox-select-all#toggleParent", parent_id: category.id }}
-        /         = feed.feed_name
-        /         div[data-controller="showhide" data-showhide-show-if-value="IN CNAME rpz-passthru" ]
-        /           
-        /           / = text_field_tag "feed_#{feed.id}_destination", nil, class: 'form-control', placeholder: 'Destination', data: { showhide_target: "output",action: "change->showhide#toggle"  } 
+  table.table
+    tbody
+    - @categories_with_feeds.each do |category|
+      tr
+        td
+          div[data-controller="showhide" data-showhide-show-if-value="CNAME "]
+            = check_box_tag 'category_ids[]', category.id
+            = category.name
+            = form.select "feed_#{category.id}_selected_action", options_for_select([["Action", nil],["NXDOMAIN"], [ "DROP"], ["PASSTHRU"], ["NODATA"],["CNAME"]]), {}, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
+            = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
 
-
-  .form-actions
-    = f.button :submit
-
-
-
-
-
-/ @rpz_zone = RpzZone.find(params[:rpz_zone_id])
-/     params[:feed_ids].each do |feed_id|
-/         puts "feed ID: #{feed_id}"  
-/         next unless Feed.exists?(id: feed_id)
-/         @category_id = Feed.find(feed_id).category_id
-/         @zone_category = ZoneCategory.new(rpz_zone_id: @rpz_zone.id, feed_id: feed_id, category_id: @category_id, action: 1, destination: "google.com")
-/         puts "To be created: #{@zone_category.inspect}"
-/         next if ZoneCategory.exists?(rpz_zone_id: @rpz_zone.id, feed_id: feed_id)
-/         @zone_category.save
-/     end
-/     redirect_to @rpz_zone
+  = form.submit 'Submit'

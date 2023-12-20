@@ -18,7 +18,7 @@ export default class extends Controller {
   toggleChildren(event) {
     const parentId = event.target.dataset.parentId;
     const isChecked = event.target.checked;
-
+    console.log("checkbox click")
     // Check/uncheck child checkboxes associated with the clicked parent
     this.childTargets.forEach(child => {
       if (child.dataset.parentId === parentId) {

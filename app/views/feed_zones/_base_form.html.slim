@@ -1,8 +1,15 @@
 .container.bg-white.pt-3
-  .d-md-flex.justify-content-end
-    = link_to edit_zone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm btn-new" do
-      i.bi.bi-plus-lg
-      |  Add feed
+  .dropdown.d-md-flex.justify-content-end
+    a.btn.btn-secondary.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+      | Add Feed
+    ul.dropdown-menu aria-labelledby="dropdownMenuLink"
+      li  
+        a= link_to edit_zone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
+          | Add feed
+      li  
+        a = link_to newFeedZone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
+          |  By Category
+
   
   h4 Listed Feed
 
@@ -25,7 +32,7 @@
             -if f.destination.present?
               td= f.destination
             -else
-              td=f.selected_action
+              td= "N/A"
             -if f.enable_disable_status
               /If enabled, show the 'Enable' button as disabled 
               td= button_to 'Enable', include_path(path: f.file_path, id: f.id), method: :post,class: "btn btn-light btn-sm", disabled: true
