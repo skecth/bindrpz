@@ -30,11 +30,26 @@ class ZonesController < ApplicationController
   def edit
     @category = Category.all
     @zone =  Zone.find(params[:id])
-    @zone_id = @zone.name
-    puts "zone: #{@zone_id}"
-    saved_feed_ids = FeedZone.pluck(:feed_id)
+    @zone_name = @zone.name
+    puts "zone: #{@zone_name}"
+    @saved_feed_id = []
     # Filter available Feed records to exclude saved feed_ids
-    @available_feeds = Feed.where.not(id: saved_feed_ids)
+   # Assuming @zone represents a Zone object and has associated FeedZone records
+    puts "feed zone in zone: #{@zone.feed_zones}"
+    @zone.feed_zones.each do |fz|
+      @f_id = fz.feed_id
+      @saved_feed_id << @f_id
+
+    end
+    puts @saved_feed_id
+   
+    @available_feeds = Feed.where.not(id: @saved_feed_id)
+    @available_feeds.each do |f|
+      puts f.id
+    end
+    # puts "feed zone id #{@f_id}"
+
+
 
 
   end

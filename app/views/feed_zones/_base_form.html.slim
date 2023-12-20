@@ -1,8 +1,15 @@
 .container.bg-white.pt-3
-  .d-md-flex.justify-content-end
-    = link_to edit_zone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm btn-new" do
-      i.bi.bi-plus-lg
-      |  Add feed
+  .dropdown.d-md-flex.justify-content-end
+    a.btn.btn-secondary.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+      | Add Feed
+    ul.dropdown-menu aria-labelledby="dropdownMenuLink"
+      li  
+        a= link_to edit_zone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
+          | Add feed
+      li  
+        a = link_to newFeedZone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
+          |  By Category
+
   
   h4 Listed Feed
 
