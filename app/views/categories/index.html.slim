@@ -1,29 +1,33 @@
 //css =>domaain_index.scss
 //Note:Use this part only for category
-.main-content
-    .container-feed-title
-      .category-title
-        .d-flex
-          .me-auto.p-2
-            h3 Total Category: #{@count}
-          .p-2
-            = link_to 'New Category', new_category_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm px-3 py-2 btn-new"
-hr
-.table-responsive-lg
-  table.table.column-data#dttb data-controller="datatables"
-    thead.table-dark
-      tr
-        th style="width: 65%" Category
-        th Created at
-        th 
-    tbody
-      - @categories.each do |cat|
+.main-content.p-4
+  .d-flex 
+    .me-auto.p-2 
+      h2.fw-bold Categories
+    - if user_signed_in? && current_user.admin?
+      .p-2
+        = link_to 'New Category', new_category_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-sm px-3 py-2 btn-new"
+
+  hr
+  .table-responsive-lg
+    table.table.column-data#dttb data-controller="datatables"
+      thead
         tr
-          td = cat.name
-          td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
-          
-          td = button_to cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
-            i.bi.bi-trash3 title="Delete"
+          th style="width: 65%" CATEGORY
+          th CREATED AT
+          th
+          - if user_signed_in? && current_user.admin?
+            th 
+      tbody
+        - @categories.each do |cat|
+          tr
+            td = cat.name
+            td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
+            td = link_to cat, class: "btn btn-new btn-sm" do 
+              i.bi.bi-eye title="View"
+            - if user_signed_in? && current_user.admin?
+              td = button_to cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
+                i.bi.bi-trash3 title="Delete"
 
           
 

@@ -1,4 +1,5 @@
 class CategoriesController < ApplicationController
+  before_action :authenticate_admin!, except: %i[ index show]
   before_action :set_category, only: %i[ show edit update destroy ]
 
   # GET /categories or /categories.json
@@ -60,6 +61,8 @@ class CategoriesController < ApplicationController
     end
   end
 
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_category
@@ -69,6 +72,12 @@ class CategoriesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def category_params
       params.require(:category).permit(:name)
+    end
+
+    def authenticate_admin!
+      unless current_user.admin?
+        redirect_to categories_path, alert: "You don't have access to this page"
+      end
     end
     
 end

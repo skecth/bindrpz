@@ -113,7 +113,7 @@ class ZonesController < ApplicationController
       if @zone.update(zone_params)
         format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
-      
+        generate_rpz
         include_feed_zone_in_zone_path(file_path)
       else
         format.html { render :edit, status: :unprocessable_entity }

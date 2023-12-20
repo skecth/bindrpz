@@ -2,6 +2,7 @@
 import "@hotwired/turbo-rails"
 import "./controllers"
 import * as bootstrap from "bootstrap"
+import "chartkick/chart.js"
 
 //= require jquery3
 //= require jquery_ujs

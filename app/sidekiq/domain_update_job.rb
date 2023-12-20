@@ -10,7 +10,7 @@ class DomainUpdateJob
     @feeds = Feed.all
     @feeds.each do |feed|
       # create folder
-      system("sudo chmod 777 /etc/bind/feed")
+      # system("sudo chmod 777 /etc/bind/feed")
       #FileUtils.chmod(0777, "/etc/bind/feed")
 
       # Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
@@ -25,14 +25,14 @@ class DomainUpdateJob
       @count = @blacklist_data.split("\n").count
       if File.exist?(file)
         # update file using system command
-        system("sudo chmod 777 #{file}")
+        # system("sudo chmod 777 #{file}")
         #FileUtils.chmod(0777, file)
 
         File.open(file, "w") do |f|
           f.write(@blacklist_data)
         end
       else
-        system("sudo chmod 777 #{file}")
+        # system("sudo chmod 777 #{file}")
         #FileUtils.chmod(0777, file)
 
         # create file

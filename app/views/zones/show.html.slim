@@ -10,16 +10,17 @@
 /             | No desciption
 
 /             .main-content
-.container-feed-title
-  .category-title
-    .d-flex
-      .me-auto.p-2
-        h4 = @zone.name
-        -if @zone.description.present?
-          p.column-data = @zone.description
-        -else
-          .desc
-            | No desciption
+.main-content.p-4 
+
+  h2.fw-bold 
+    = link_to "Zones ", zones_path, class: "text-decoration-none text-dark" 
+    | > 
+    = @zone.name
+  -if @zone.description.present?
+    p.column-data = @zone.description
+  -else
+    .desc
+      | No desciption
 
 br
 .container 

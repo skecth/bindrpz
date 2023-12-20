@@ -1,5 +1,3 @@
-= button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-danger"
-
 .row.row-cols-1.row-cols-md-3.g-3
 	.col 
 		.card.border-light.mb-3.shadow
@@ -35,6 +33,17 @@
 						- @zones.each do |zone|
 							tr
 								td = zone.name
+	
+	.col data-controller="chart" 
+		.card.border-light.mb-3.shadow
+			h4.card-header Feed
+			// pie chart to show number of feeds in each category
+			= pie_chart @feeds.joins(:category).group("categories.name").count, library: { legend: { position: 'right' } }
+
+
+
+
+
 
 								
 

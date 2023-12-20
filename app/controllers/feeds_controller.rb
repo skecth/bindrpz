@@ -2,6 +2,7 @@ class FeedsController < ApplicationController
   require 'net/http'
   require 'uri'
   include Pagy::Backend
+  before_action :authenticate_admin!, except: %i[ index]
   before_action :set_feed, only: %i[ show edit update destroy ]
 
   # GET /feeds or /feeds.json
@@ -146,13 +147,13 @@ class FeedsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def feed_params
-      params.require(:feed).permit(:url, 
-                                   :source, 
-                                   :blacklist_type, 
-                                   :feed_name,
-                                   :feed_path,
-                                   :category_id, 
-                                   :number_of_domain)
+      params.require(:feed).permit(:url, :source, :blacklist_type, :feed_name, :feed_path, :category_id, :number_of_domain)
+    end
+
+    def authenticate_admin!
+      unless current_user.admin?
+        redirect_to feeds_path, notice: "You are not authorized to access this page."
+      end
     end
    
 end

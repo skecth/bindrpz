@@ -21,4 +21,6 @@ Things you may want to cover:
 
 * Deployment instructions
 
-* ...
+* Create a folder 'feed' in the /etc/bind directory
+
+* Transfer the owner of the 'feed' folder using sudo chown 
