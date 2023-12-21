@@ -25,11 +25,10 @@ html
                   a = link_to authenticated_root_path, class: "nav-link px-0 align-middle"
                     i.fs-10.bi-house.pe-2
                     span.ms-1.d-none.d-sm-inline Home
-                - if current_user.admin?
-                  li
-                    a = link_to categories_path, class: "nav-link px-0 align-middle"
-                      i.fs-10.bi-c-square.pe-2
-                      span.ms-1.d-none.d-sm-inline Category
+                li
+                  a = link_to categories_path, class: "nav-link px-0 align-middle"
+                    i.fs-10.bi-c-square.pe-2
+                    span.ms-1.d-none.d-sm-inline Category
                 li 
                   a = link_to feeds_path, class: "nav-link px-0 align-middle"
                     i.fs-10.bi-dropbox.pe-2 
@@ -38,13 +37,22 @@ html
                   a = link_to zones_path, class: "nav-link px-0 align-middle"
                     i.fs-10.bi-layers.pe-2
                     span.ms-1.d-none.d-sm-inline Zone
-                - if current_user.admin?
-                  li 
-                    a = link_to accounts_path, class: "nav-link px-0 align-middle"
-                      i.fs-10.bi-people.pe-2
-                      span.ms-1.d-none.d-sm-inline Accounts
 
               hr 
+              / - if user_signed_in?
+              /   ul.nav.nav-pills.flex-column.mb-sm-auto.mb-0.align-items-center.align-items-sm-start#menu 
+              /     li.nav-item
+              /       a = link_to new_zone_path, class: "nav-link px-0 align-middle"
+              /         i.fs-10.bi-plus-circle.pe-2
+              /         span.ms-1.d-none.d-sm-inline New zone
+              /     li.nav-item
+              /       a = link_to new_feed_path, class: "nav-link px-0 align-middle"
+              /         i.fs-10.bi-plus-circle.pe-2
+              /         span.ms-1.d-none.d-sm-inline New feed
+              /     li.nav-item
+              /       a = link_to new_category_path, class: "nav-link px-0 align-middle"
+              /         i.fs-10.bi-plus-circle.pe-2
+              /         span.ms-1.d-none.d-sm-inline New category
               div.dropdown.pb-4
                 a.d-flex.align-items-center.float-end.text-decoration-none.dropdown-toggle#dropdownUser1 data-bs-toggle="dropdown" aria-expanded="false" 
                   i.fs-10.bi-person-fill.pe-2

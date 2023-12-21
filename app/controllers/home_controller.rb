@@ -6,7 +6,7 @@ class HomeController < ApplicationController
     end
 
     def index
-        @zones= current_user.zones
+        @zones= Zone.all
         @categories = Category.all
         @feeds = Feed.all
     end
