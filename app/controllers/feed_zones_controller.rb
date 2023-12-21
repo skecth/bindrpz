@@ -125,7 +125,7 @@ end
                                     zone_name: zone_name )
         end
       end
-      redirect_to zone_path(zone.id)
+     redirect_to zone_path(zone.id)
     end
     
   end

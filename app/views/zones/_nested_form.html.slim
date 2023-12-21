@@ -10,7 +10,7 @@
         = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
       input#zone_id.form-select[data-feed-path-select-target="zone" type="hidden" name="zone_id" value="#{@zone_id}"]
     div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
-      = f.input :selected_action, as: :select, collection: [['CNAME rpz-drop', 'CNAME rpz-drop.'], ['CNAME .', 'CNAME .'], ['CNAME rpz-passthru', 'CNAME rpz-passthru.'], ['CNAME *.', 'CNAME *.'], ['CNAME rpz-tcp-only', 'CNAME rpz-tcp-only.'], ['CNAME', 'CNAME']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'
+      = f.input :selected_action, as: :select, collection: [['CNAME rpz-drop', 'CNAME rpz-drop.'], ['CNAME .', 'CNAME .'], ['CNAME rpz-passthru.', 'CNAME rpz-passthru.'], ['CNAME *.', 'CNAME *.'], ['CNAME rpz-tcp-only', 'CNAME rpz-tcp-only.'], ['CNAME', 'CNAME']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'
       = f.input :destination,  placeholder: "Domain or IP Address", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
     .col
       button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm" style="margin-top: 10px") 
