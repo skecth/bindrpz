@@ -60,6 +60,7 @@ class CustomBlacklistsController < ApplicationController
 
   # PATCH/PUT /custom_blacklists/1 or /custom_blacklists/1.json
   def update
+    zone_id = params[:custom_blacklist][:zone_id]
     respond_to do |format|
       if @custom_blacklist.update(custom_blacklist_params) && update_files
         format.html { redirect_to zone_url(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully updated." }
@@ -68,6 +69,7 @@ class CustomBlacklistsController < ApplicationController
       else
         format.html { render :edit, status: :unprocessable_entity }
         format.json { render json: @custom_blacklist.errors, status: :unprocessable_entity }
+        format.turbo_stream { render partial: "custom_blacklists/form_update", status: :unprocessable_entity }
       end
     end
    
