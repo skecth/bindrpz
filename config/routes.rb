@@ -5,11 +5,16 @@ Rails.application.routes.draw do
   devise_scope :user do
     authenticated :user do
       root 'home#index', as: :authenticated_root
+      get 'users/accounts', to: "admin/users#accounts", as: :accounts
     end
   
     unauthenticated do
       root 'users/sessions#new', as: :unauthenticated_root
     end
+  end
+  namespace :admin do
+    resources :users, only: [:new, :create]
+
   end
 
 
