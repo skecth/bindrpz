@@ -25,6 +25,23 @@ class ZonesController < ApplicationController
   def new
     @zone = Zone.new
   end
+  def zone_edit
+    @zone = Zone.find(params[:id])
+  end
+
+  def zone_update
+   @zone = Zone.find(params[:id])
+   respond_to do |format|
+    if @zone.update(zone_params)
+      format.html { redirect_to zones_path, notice: "zone was successfully updated." }
+      format.json { render :show, status: :ok, location: @zone }
+    else
+      format.html { render :edit, status: :unprocessable_entity }
+      format.json { render json: @zone.errors, status: :unprocessable_entity }
+    end
+  end
+  end
+ 
 
   # GET /zones/1/edit
   def edit

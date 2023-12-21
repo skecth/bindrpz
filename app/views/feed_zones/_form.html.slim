@@ -7,23 +7,28 @@
         li= message
 
   .mb-3
-    -@zone.feed_zones.each do |fz|
-      -c_id = fz.category_id
-      -@save_c_id<<c_id
-    -@categories_with_feeds = Category.where.not(id: @save_c_id).where(id: @feed_category)
+    -if @zone
+      -@zone.feed_zones.each do |fz|
+        -c_id = fz.category_id
+        -@save_c_id<<c_id
+      -@categories_with_feeds = Category.where.not(id: @save_c_id).where(id: @feed_category)
 
-  h4 Listed Feed -azim
-  = form.hidden_field :zone_id, value: @zone.id
+    h4 Listed Feed
+    = form.hidden_field :zone_id, value: @zone.id
 
-  table.table
-    tbody
-    - @categories_with_feeds.each do |category|
-      tr
-        td
-          div[data-controller="showhide" data-showhide-show-if-value="CNAME "]
-            = check_box_tag 'category_ids[]', category.id
-            = category.name
-            = form.select "feed_#{category.id}_selected_action", options_for_select([["Action", nil],["NXDOMAIN"], [ "DROP"], ["PASSTHRU"], ["NODATA"],["CNAME"]]), {}, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
-            = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
+    table.table
+      -if @categories_with_feeds.present?
+        tbody
+        - @categories_with_feeds.each do |category|
+          tr
+            td
+              div[data-controller="showhide" data-showhide-show-if-value="CNAME "]
+                = check_box_tag 'category_ids[]', category.id
+                = category.name
+                = form.select "feed_#{category.id}_selected_action", options_for_select([["Action", nil],["CNAME rpz-drop."], ["CNAME ."], ["CNAME rpz-passthru."],["CNAME"], ["CNAME *."],["CNAME rpz-tcp-only"]]), {}, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
+                = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
+      -else
+        h5 style="color:red;"= "Category and Feed does not exist"
+  = form.submit 'Submit',  class: "btn btn-new btn-sm"
 
-  = form.submit 'Submit'
+
