@@ -21,10 +21,7 @@ class CustomBlacklist < ApplicationRecord
   with_options if: :bulk? do
     validates :file, presence: true
     validate :file_format
-    validate :customize
   end
-
-
 
   def check_domain
     if blacklist_type == "Domain"
@@ -43,11 +40,9 @@ class CustomBlacklist < ApplicationRecord
     # the file extension should be csv
     if file.present? && !file.file.extension.downcase.in?(%w(csv))
       errors.add(:file, "Invalid file format. Only CSV is allowed.")
-      return 
     # file size
   	elsif file.present? && file.file.size > 1.megabytes
       errors.add(:file, "size exceeds 1MB.")
-      return
     # only first column has value
     elsif file.present? 
       CSV.foreach(file.path) do |row|
@@ -56,22 +51,12 @@ class CustomBlacklist < ApplicationRecord
           break
         	end
       end
-      return
     end
-    return true
-    puts "file format is true"
-  end
-
-  def customize
-    # if file_format is true, validate check_list
-    if file_format == true
+    
+    if errors.blank?
       check_list
-    else
-      return 
     end
   end
-
-
 
   #check files attached
   def file_attached?
@@ -84,15 +69,16 @@ class CustomBlacklist < ApplicationRecord
 
   # check list in the csv file according to the blacklist type
   def check_list
-  	if blacklist_type == "Domain"
+    if blacklist_type == "Domain"
       if file.present?
         CSV.foreach(file.path) do |row|
           # check for all rows if it is a valid domain and only first column has value
           if row[0].present? && !row[0].match(/[A-Za-z0-9.-]+\.[A-Za-z]{2,}/)
             errors.add(:file, "Invalid domain format for bulk.")
-          	puts row[0] + " is not a valid domain"
+            puts row[0] + " is not a valid domain"
             # break the loop
             break
+            return
           end
         end
       end
@@ -101,10 +87,11 @@ class CustomBlacklist < ApplicationRecord
         CSV.foreach(file.path) do |row|
           # check for all rows if it is a valid IP
           if row[0].present? && !row[0].match(/\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/)
-          	# if not valid, add error once
+            # if not valid, add error once
             errors.add(:file, "Invalid IP format.")
             # break the loop
             break
+            return
           end
         end
       end
