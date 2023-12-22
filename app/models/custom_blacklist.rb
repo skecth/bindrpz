@@ -21,10 +21,10 @@ class CustomBlacklist < ApplicationRecord
   with_options if: :bulk? do
     validates :file, presence: true
     validate :file_format
-    # validate :check_list
-    validate :check_list
-
+    validate :customize
   end
+
+
 
   def check_domain
     if blacklist_type == "Domain"
@@ -38,25 +38,40 @@ class CustomBlacklist < ApplicationRecord
     end
   end
 
+
   def file_format
+    # the file extension should be csv
     if file.present? && !file.file.extension.downcase.in?(%w(csv))
       errors.add(:file, "Invalid file format. Only CSV is allowed.")
-    end
-
-  	if file.present? && file.file.size > 1.megabytes
-      errors.add(:file, "File size exceeds 1MB.")
-    end
-
+      return 
+    # file size
+  	elsif file.present? && file.file.size > 1.megabytes
+      errors.add(:file, "size exceeds 1MB.")
+      return
     # only first column has value
-    if file.present?
+    elsif file.present? 
       CSV.foreach(file.path) do |row|
         if row[1].present?
           errors.add(:file, "Invalid file format. Only first column should have value.")
           break
         	end
       end
+      return
+    end
+    return true
+    puts "file format is true"
+  end
+
+  def customize
+    # if file_format is true, validate check_list
+    if file_format == true
+      check_list
+    else
+      return 
     end
   end
+
+
 
   #check files attached
   def file_attached?
