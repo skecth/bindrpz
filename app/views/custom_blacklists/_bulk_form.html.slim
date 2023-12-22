@@ -1,6 +1,7 @@
 = simple_form_for(@custom_blacklist) do |f|
   = f.error_notification
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+  
 
   .form-inputs
     = f.input :category_id, collection: Category.all
