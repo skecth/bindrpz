@@ -49,17 +49,17 @@ html
                 a.d-flex.align-items-center.float-end.text-decoration-none.dropdown-toggle#dropdownUser1 data-bs-toggle="dropdown" aria-expanded="false" 
                   i.fs-10.bi-person-fill.pe-2
                   span.d-none.d-sm-inline.mx-1 = current_user.username
-                ul.dropdown-menu.dropdown-menu-dark.text-small.shadow
+                ul.dropdown-menu.dropdown-menu-light.text-small.shadow
+                  / li 
+                  /   a.dropdown-item href="#" New project...
+                  / li 
+                  /   a.dropdown-item href="#" Settings
+                  / li 
+                  /   a.dropdown-item href="#" Profile
+                  / li 
+                  /   hr.dropdown-divider
                   li 
-                    a.dropdown-item href="#" New project...
-                  li 
-                    a.dropdown-item href="#" Settings
-                  li 
-                    a.dropdown-item href="#" Profile
-                  li 
-                    hr.dropdown-divider
-                  li 
-                    a.dropdown-item = button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-danger"
+                    a.dropdown-item = button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-danger dropdown-item"
         .col.py-3
           - if notice
             = render 'layouts/alerts'
