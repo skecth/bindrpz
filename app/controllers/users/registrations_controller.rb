@@ -21,7 +21,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   private
     def user_params
-      params.require(:user).permit(:username, :email,:password,:password_confirmation)
+      params.require(:user).permit(:username, :email, :password,:password_confirmation)
     end
 
     def account_update_params
@@ -32,7 +32,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       if current_user.nil? 
         redirect_to unauthenticated_root_path
       elsif
-        current_user.kind != "admin"
+        current_user.role != "admin"
         redirect_to unauthenticated_root_path
       end
     end

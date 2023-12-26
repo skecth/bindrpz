@@ -16,7 +16,9 @@ class DeviseCreateUsers < ActiveRecord::Migration[7.0]
 
       ## Custom fields
       t.string :username
-      t.integer :kind, default: 0
+      t.integer :role, default: 0
+      # created_by is the user who created the account
+      t.integer :created_by
 
       ## Trackable
       # t.integer  :sign_in_count, default: 0, null: false
