@@ -5,7 +5,7 @@ class ZonesController < ApplicationController
 
   # GET /zones or /zones.json
   def index
-    @zones = Zone.all
+    @zones = current_user.zones
   end
 
   # GET /zones/1 or /zones/1.json
@@ -23,7 +23,7 @@ class ZonesController < ApplicationController
 
   # GET /zones/new
   def new
-    @zone = Zone.new
+    @zone = current_user.zones.build
   end
   def zone_edit
     @zone = Zone.find(params[:id])
@@ -164,8 +164,9 @@ class ZonesController < ApplicationController
     # Only allow a list of trusted parameters through.
     def zone_params
       params.require(:zone).permit(:name,
-                                   :zone_path,
-                                   :description,
+                                    :zone_path,
+                                    :description,
+                                    :user_id,
                                    feed_zones_attributes: [:id, :feed_id, :destination,:file_path,:selected_action,:_destroy]
       )          
     end
