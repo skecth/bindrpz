@@ -61,7 +61,7 @@ html
                   li 
                     a.dropdown-item = button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-danger"
         .col.py-3
-          / - if notice
-          /   = render 'layouts/alerts'
+          - if notice
+            = render 'layouts/alerts'
           = yield
           = turbo_frame_tag "remote_modal", target: "_top"

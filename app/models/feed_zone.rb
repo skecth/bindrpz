@@ -8,9 +8,8 @@ class FeedZone < ApplicationRecord
     validates :feed_id, uniqueness: { scope: :zone_id }
      # validates :destination, presence: { message: "Please choose the feed" }, allow_blank: false
  
-    validate :check_action    
+    validate :check_action
 
-    puts "feed zone"
 
    
     def check_action

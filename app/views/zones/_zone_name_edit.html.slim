@@ -1,0 +1,10 @@
+= simple_form_for(@zone, url: zone_update_path, method: :post) do |f|
+  = f.error_notification
+  = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
+
+  .form-inputs
+    = f.input :name, disabled: true, label: "Zone Name"
+    = f.input :description, placeholder: "Zone Description"
+
+  .form-actions
+    = f.button :submit, class: "btn btn-new btn-sm"

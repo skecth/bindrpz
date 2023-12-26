@@ -51,6 +51,9 @@ Rails.application.routes.draw do
 
   #test
   get 'zone/feed_zone/new/:id', to: "feed_zones#new", as: :newFeedZone
+  post 'zone/feed_zone/new/:id', to: "feed_zones#create", as: :createFeedZone
+  get 'zone/:id/edit', to: "zones#zone_edit", as: :zone_edit
+  post 'zone/:id/edit', to: "zones#zone_update", as: :zone_update
   delete 'bulk_destroy', to: "feed_zones#delete_all", as: :delete_all
   # get 'single_form' => 'feeds#new', as: :single_form
   post '/include', to: 'feed_zones#include', as: 'include'

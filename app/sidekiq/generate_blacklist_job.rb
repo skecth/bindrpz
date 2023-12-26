@@ -18,12 +18,18 @@ class GenerateBlacklistJob
         blacklist_rule = "#{domain}.#{rule}. #{action} #{destination}; \n"
         lines = File.readlines(blacklist_file)
 
+        # find line that contains the domain and delete it
+        lines.reject! { |line| line.include?(domain) }
+        Rails.logger.info "Removed #{domain} from #{blacklist_file}"
+
+
         unless lines.include?(blacklist_rule)
-          File.open(blacklist_file, 'a') do |file|
-            file.write(blacklist_rule)
-          end
+          lines << blacklist_rule
+          File.write(blacklist_file, lines.join)
         end
         Rails.logger.info "Added #{blacklist_rule} to #{blacklist_file}"
+
+
 
       end
     end

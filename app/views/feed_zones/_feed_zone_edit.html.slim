@@ -4,6 +4,7 @@
 
   .form-inputs
     -if @feed_zone.persisted?
+      strong = @feed_name
       = f.input :zone_id, input_html: { value: @feed_zone.zone_id }, as: :hidden
       = f.input :feed_id, input_html: { value: @feed_zone.feed_id }, as: :hidden
       = f.input :category_id, input_html: { value: @feed_zone.category_id }, as: :hidden
