@@ -16,12 +16,13 @@ class Admin::UsersController < ApplicationController
   end
 
   def accounts
-    @users = User.all
+    # users that are created by the current user and current user
+    @users = User.where(created_by: current_user.id).or(User.where(id: current_user.id))
   end
 
   private
   def user_params
-    params.require(:user).permit(:email, :password, :password_confirmation, :kind, :username)
+    params.require(:user).permit(:email, :password, :password_confirmation, :role, :username, :created_by)
   end
 
 end

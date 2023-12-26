@@ -4,11 +4,11 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
   
-  enum kind: [:user, :admin]
+  enum role: [:user, :admin]
   has_many :zones, dependent: :destroy
   validates :username, presence: true
   validates :email, presence: true, uniqueness: true
-  validates :kind, presence: true
+  validates :role, presence: true
   validates :password, presence: true, length: { minimum: 6 }, on: :create
   validates :password_confirmation, presence: true, length: { minimum: 6 }, on: :create
 

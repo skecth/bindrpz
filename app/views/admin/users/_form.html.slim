@@ -6,6 +6,7 @@
     = f.input :email, required: true, autofocus: true, input_html: { autocomplete: "email" }, label: false, placeholder: "Email"
     = f.input :password, required: true, input_html: { autocomplete: "new-password" }, label: false, placeholder: "Password"
     = f.input :password_confirmation, required: true, input_html: { autocomplete: "new-password" }, label: false, placeholder: "Password confirmation"
-    = f.input :kind, collection: User.kinds.keys, prompt: "Select a role", required: true, label: false, placeholder: "Role"
+    = f.input :role, collection: User.roles.keys, prompt: "Select a role", required: true, label: false, placeholder: "Role"
+    = f.input :created_by, input_html: { value: current_user.id }, as: :hidden
   .form-actions
     = f.button :submit, "Sign up", class: "btn btn-sm btn-outline-dark px-5"
