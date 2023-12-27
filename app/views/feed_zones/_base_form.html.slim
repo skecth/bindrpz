@@ -44,12 +44,8 @@
                 td= button_to 'Disable', exclude_path(path: f.file_path, id: f.id), method: :post, disabled: true, class: "btn btn-light btn-sm"
               td = link_to edit_feed_zone_path(f), class: "btn btn-new btn-sm",data: { turbo_frame: "remote_modal" } do
                   i.bi.bi-pencil title="Edit"
-              td = link_to f, data: { turbo_method: :delete } ,  class: "btn btn-danger btn-sm" do
+              td = link_to f, data: { turbo_confirm: "Are you sure?",turbo_method: :delete } ,  class: "btn btn-danger btn-sm" do
                   i.bi.bi-trash title="Delete"
 
-
-              /        td = button_to zone, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
-              / i.bi.bi-trash3 title="Delete"
-          
 
   /
