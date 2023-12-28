@@ -12,6 +12,3 @@ import "chartkick/chart.js"
 //= require datatables
 
 
-setTimeout(function() {
-  $('.toast').fadeOut('slow');
-}, 5000);

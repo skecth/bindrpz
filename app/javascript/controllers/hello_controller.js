@@ -2,6 +2,11 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   connect() {
-    this.element.textContent = "Hello World!"
+    console.log("hello toast ");
+    // hide the toast after 3 seconds
+    setTimeout(function() {
+      $('.toast').toast('hide');
+    }, 3000);
+    
   }
 }
