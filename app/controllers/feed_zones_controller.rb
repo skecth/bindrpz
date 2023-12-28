@@ -23,11 +23,6 @@ class FeedZonesController < ApplicationController
     @categories = Category.all
     @zone = Zone.find(params[:id])
     @save_c_id =[]
-    # @zone.feed_zones.each do |fz|
-    #   c_id = fz.category_id
-    #   @save_c_id<<c_id
-    # end
-
     @feed_category = Category.includes(:feeds).where.not(feeds: { id: nil }).distinct
 
     
@@ -94,7 +89,6 @@ end
     @feedZone = FeedZone.all
     feed_id =params[:feed_id]
     zone=Zone.find_by(id: params[:feed_zone][:zone_id])
-    zone_name = zone.name
     puts "zone id: #{zone.id}"
     if params[:category_ids].present?
       puts "category id exist"
@@ -106,26 +100,39 @@ end
         selected_destination = params[:feed_zone]["feed_#{category_id}_destination"]
         cat_id.feeds.each do |feed|
           feed_id = feed.id
+          existing_feed_zone = FeedZone.find_by(zone_id: zone.id, feed_id: feed_id, category_id: category_id)
+          next if existing_feed_zone.present? # Skip if a FeedZone already exists for this feed in the same zone
           feed_name = feed.feed_name
-          feed_path = "etc/bind/#{zone_name}/#{feed_name}.rpzfeed"
-          puts "destination: #{selected_destination}"
-          puts "action: #{selected_action}"
-          puts "feed_name: #{feed_name}"
-          puts "feed_path: #{feed_path}"
-          puts "category: #{category_id}"
+          feed_path = "etc/bind/#{zone.name}/#{feed_name}.rpzfeed"
+
+          # puts "destination: #{selected_destination}"
+          # puts "action: #{selected_action}"
+          # puts "feed_name: #{feed_name}"
+          # puts "feed_path: #{feed_path}"
+          # puts "category: #{category_id}"
           puts "feed_id: #{feed_id}"
-          puts "zone name: #{zone_name}"
 
           @feed_zone = FeedZone.create(zone_id: zone.id,
                                     selected_action: selected_action, 
                                     destination: selected_destination,
                                     file_path: feed_path,
                                     category_id: category_id,
-                                    feed_id: feed_id,
-                                    zone_name: zone_name )
+                                    feed_id: feed.id,
+                                    zone_name: zone.name )
         end
       end
-     redirect_to zone_path(zone.id)
+      respond_to do |format|
+        if @feed_zone.save
+          format.html { redirect_to zone_path(zone.id), notice: "Category was successfully created." }
+          format.json { render :show, status: :created, location: @feed_zone }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
+          format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: :unprocessable_entity }
+
+  
+        end
+      end
     end
     
   end
