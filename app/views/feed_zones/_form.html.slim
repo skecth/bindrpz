@@ -1,25 +1,19 @@
 = form_with(model: @feed_zone, url: createFeedZone_path, method: :post) do |form|
   - if @feed_zone.errors.any?
-    #error_explanation
-    h2= "#{pluralize(@feed_zone.errors.count, 'error')} prohibited this record from being saved:"
-    ul
-      - @feed_zone.errors.full_messages.each do |message|
-        li= message
-
+    div style="color: red;"
+      h2= pluralize(@feed_zone.errors.count, 'error')
+      ul
+        - @feed_zone.errors.full_messages.each do |message|
+          li= message
+   
+  -@zone = Zone.find(params[:id])
   .mb-3
-    -if @zone
-      -@zone.feed_zones.each do |fz|
-        -c_id = fz.category_id
-        -@save_c_id<<c_id
-      -@categories_with_feeds = Category.where.not(id: @save_c_id).where(id: @feed_category)
-
-    h4 Listed Feed
+    h4 Listed Category
     = form.hidden_field :zone_id, value: @zone.id
-
-    table.table
-      -if @categories_with_feeds.present?
+    - if @categories.present?
+      table.table
         tbody
-        - @categories_with_feeds.each do |category|
+        - @categories.each do |category|
           tr
             td
               div[data-controller="showhide" data-showhide-show-if-value="CNAME "]
@@ -27,8 +21,6 @@
                 = category.name
                 = form.select "feed_#{category.id}_selected_action", options_for_select([["Action", nil],["CNAME rpz-drop."], ["CNAME ."], ["CNAME rpz-passthru."],["CNAME"], ["CNAME *."],["CNAME rpz-tcp-only"]]), {}, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
                 = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
-      -else
-        h5 style="color:red;"= "Category and Feed does not exist"
   = form.submit 'Submit',  class: "btn btn-new btn-sm"
 
 
