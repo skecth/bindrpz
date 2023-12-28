@@ -2,3 +2,30 @@
     background-color:#3b5a6f;
     border-radius: 5px;
  }
+ 
+ .toast{
+    // float center;
+    width: auto;
+    padding: 10px;
+    border-radius: 4px;
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    position: absolute;
+    // in front on navbar
+    z-index: 1;
+    // position center at top
+    top: 5%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #1b57a1;
+    color: white;
+
+ }
+
+.fadeOut {
+    // animation move to top
+    animation-name: fadeOut;
+    animation-duration: 4s;
+    animation-fill-mode: forwards;
+}

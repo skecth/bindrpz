@@ -10,3 +10,8 @@ import "chartkick/chart.js"
 //= require turbolinks
 //= require jquery
 //= require datatables
+
+
+setTimeout(function() {
+  $('.toast').fadeOut('slow');
+}, 5000);
