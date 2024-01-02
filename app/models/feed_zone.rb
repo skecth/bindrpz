@@ -11,29 +11,16 @@ class FeedZone < ApplicationRecord
     
 
   
-    def check_action(categories_params)
-      categories_params.each do |category_id, category_data|
-        selected_action = category_data[:selected_action]
-        destination = category_data[:destination]
-    
-        next if selected_action != "CNAME" || destination.blank?
-    
-        unless valid_destination?(destination)
-          errors.add(:destination, "Invalid format for category ID #{category_id}")
+    def check_action
+      if  selected_action == "CNAME"
+        if destination.nil? || !(
+            destination.match(/\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/) ||
+            destination.match(/^([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}$/) ||
+            destination.match(/\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/)
+          )
+            errors.add(:destination, "Invalid IP format.")
         end
       end
-    end
-    
-    private
-    
-    def valid_destination?(destination)
-      # Your destination validation logic here
-      # Example regex checks for IP or domain format
-      ip_regex = /\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/
-      domain_regex = /^([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}$/
-    
-      ip_regex.match(destination) || domain_regex.match(destination)
-    end
-    
+    end 
 
 end
