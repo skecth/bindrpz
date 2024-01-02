@@ -44,6 +44,7 @@ class CustomBlacklistsController < ApplicationController
         puts @custom_blacklist.errors.full_messages
       end
     end
+    
 
     respond_to do |format|
       if @custom_blacklist.save

@@ -14,13 +14,15 @@
       table.table
         tbody
         - @categories.each do |category|
-          tr
-            td
-              div[data-controller="showhide" data-showhide-show-if-value="CNAME "]
-                = check_box_tag 'category_ids[]', category.id
-                = category.name
-                = form.select "feed_#{category.id}_selected_action", options_for_select([["Action", nil],["CNAME rpz-drop."], ["CNAME ."], ["CNAME rpz-passthru."],["CNAME"], ["CNAME *."],["CNAME rpz-tcp-only"]]), {}, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
-                = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
+          -if category.feeds.any?
+            tr
+              td
+                div[data-controller="showhide" data-showhide-show-if-value="CNAME "]
+                  = check_box_tag 'category_ids[]', category.id
+                  = category.name
+                  = form.select "feed_#{category.id}_selected_action", options_for_select([["Action", nil],["CNAME rpz-drop."], ["CNAME ."], ["CNAME rpz-passthru."],["CNAME"], ["CNAME *."],["CNAME rpz-tcp-only"]]), {}, class: 'form-select', data: {showhide_target: "input", action: "change->showhide#toggle"}
+                  = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
   = form.submit 'Submit',  class: "btn btn-new btn-sm"
+
 
 

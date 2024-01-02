@@ -99,18 +99,17 @@ end
         selected_action = params[:feed_zone]["feed_#{category_id}_selected_action"]
         selected_destination = params[:feed_zone]["feed_#{category_id}_destination"]
         cat_id.feeds.each do |feed|
-          feed_id = feed.id
           existing_feed_zone = FeedZone.find_by(zone_id: zone.id, feed_id: feed_id, category_id: category_id)
           next if existing_feed_zone.present? # Skip if a FeedZone already exists for this feed in the same zone
           feed_name = feed.feed_name
-          feed_path = "etc/bind/#{zone.name}/#{feed_name}.rpzfeed"
+          feed_path = "/etc/bind/#{zone.name}/#{feed.feed_name}.rpzfeed"
 
-          # puts "destination: #{selected_destination}"
-          # puts "action: #{selected_action}"
-          # puts "feed_name: #{feed_name}"
-          # puts "feed_path: #{feed_path}"
-          # puts "category: #{category_id}"
-          puts "feed_id: #{feed_id}"
+          puts "destination: #{selected_destination}"
+          puts "action: #{selected_action}"
+          puts "feed_name: #{feed.feed_name}"
+          puts "feed_path: #{feed_path}"
+          puts "category: #{category_id}"
+          puts "feed_id: #{feed.id}"
 
           @feed_zone = FeedZone.create(zone_id: zone.id,
                                     selected_action: selected_action, 
@@ -125,6 +124,8 @@ end
         if @feed_zone.save
           format.html { redirect_to zone_path(zone.id), notice: "Category was successfully created." }
           format.json { render :show, status: :created, location: @feed_zone }
+          generate_rpz
+          include_feed_zone_in_zone_path(feed_path)
         else
           format.html { render :new, status: :unprocessable_entity }
           format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
@@ -137,7 +138,6 @@ end
     
   end
 
- 
   def include
     filepath = params[:path]
     id = params[:id]
@@ -324,6 +324,26 @@ end
         end
       else
         Rails.logger.error "No FeedZone found with file_path: #{filepath}"
+      end
+    end
+    def include_feed_zone_in_zone_path(file_path)
+      @zone = Zone.find(params[:id])
+      @feed_zones = FeedZone.all.where(zone_id: @zone.id, enable_disable_status: true)
+      @feed_zones.each do |feed_zone|
+        file_path = feed_zone.file_path
+        include_feed_zone(file_path)
+      end
+    end
+    def include_feed_zone(file_path)
+      #add $INCLUDE of every file_path in zone_path
+      rpz_rule = "$INCLUDE #{file_path};\n"
+      lines = File.readlines(@zone.zone_path).map(&:strip)
+    
+      unless lines.include?(rpz_rule.strip)
+        File.open(@zone.zone_path, 'a') do |file|
+          file.write(rpz_rule)
+        end
+        Rails.logger.info "Added #{rpz_rule} to #{@zone.zone_path}"
       end
     end
 end

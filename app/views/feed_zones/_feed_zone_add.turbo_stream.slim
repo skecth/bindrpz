@@ -1,4 +1,4 @@
 = turbo_stream.update "remote_modal_body" do
-  - if @feed_zone.errors.any?
+  - if @feed_zone && @feed_zone.errors.any?
     == render "form", feed_zone: @feed_zone
  

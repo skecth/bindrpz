@@ -20,7 +20,7 @@
           th ZONE
           th DESCRIPTION
           th LAST UPDATE
-          th style="width: 1%"
+          th style="width: 3%"
           th style="width: 1%"
           th style="width: 1%"
         
@@ -28,10 +28,12 @@
         - @zones.each do |zone|
           tr
             td = link_to zone.name, zone, class: "text-decoration-none text-dark"
-            td = zone.description
+            -if zone.description.present?
+              td = zone.description
+            -else
+              td = "No description"
             td = zone.updated_at.strftime("%d %b %Y %H:%M:%S")
-            td = link_to zone, class: "btn btn-secondary btn-sm" do 
-              i.bi.bi-gear-fill title="Configure Zone"
+            td = link_to "Configure Zone", zone, class: "btn btn-secondary btn-sm" 
             td = link_to zone_edit_path(zone.id), class: "btn btn-new btn-sm", data: {turbo_frame: "remote_modal"} do 
               i.bi.bi-pencil title="Edit Zone"
             / td = link_to edit_zone_path(zone), data: { turbo_frame: "remote_modal" }, class: "btn btn-secondary btn-sm" do 

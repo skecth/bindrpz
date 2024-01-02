@@ -13,13 +13,14 @@
   
   h4 Listed Feed
   .table-responsive-lg
-    table.table.column-data 
+    table.table.column-data
       thead 
         tr 
           th Category
           th Feed Name
           th Action
           th Destination
+          th Created
           th(colspan="2") Action
           th
           th
@@ -34,6 +35,7 @@
                 td= f.destination
               -else
                 td= "N/A"
+              td= f.created_at.strftime("%d %b %Y %H:%M:%S")
               -if f.enable_disable_status
                 /If enabled, show the 'Enable' button as disabled 
                 td= button_to 'Enable', include_path(path: f.file_path, id: f.id), method: :post,class: "btn btn-light btn-sm", disabled: true

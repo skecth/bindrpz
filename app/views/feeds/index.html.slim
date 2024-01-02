@@ -4,7 +4,7 @@
       h2.fw-bold Feeds
     - if user_signed_in? && current_user.admin?
       .p-2 
-        = button_to 'Update Feeds', bulk_create_path, method: :post, class: "btn btn-sm px-3 py-2 btn-new", data: {turbo_confirm: "Are you sure?"}
+        = button_to 'Update Feeds', bulk_create_path, method: :post, class: "btn btn-sm px-3 py-2 btn-warning", data: {turbo_confirm: "Are you sure?"}
       .p-2
         = link_to 'New Feed', new_feed_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-sm px-3 py-2 btn-new"
 
