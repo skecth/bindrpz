@@ -56,10 +56,10 @@ html
                   /   a.dropdown-item href="#" Settings
                   / li 
                   /   a.dropdown-item href="#" Profile
-                  / li 
-                  /   hr.dropdown-divider
                   li 
-                    a.dropdown-item = button_to "Sign out", destroy_user_session_path, method: :delete, class: "text-danger dropdown-item"
+                    a.dropdown-item = link_to "Edit account", edit_user_registration_path, class: "text-dark dropdown-item"
+                  li 
+                    a.dropdown-item = link_to "Sign out", destroy_user_session_path, class: "text-danger dropdown-item", data: { turbo_method: :delete }
         .col.py-3
           - if notice
             = render 'layouts/alerts'
