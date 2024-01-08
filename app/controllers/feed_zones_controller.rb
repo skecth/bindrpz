@@ -82,7 +82,7 @@ end
   end
 
   # POST /feed_zones or /feed_zones.json
-  def create
+    def create
     # @feed_zone = FeedZone.new(feed_zone_params)
     @categories = Category.all
     # @zone = Zone.find(params[:id]) 
@@ -99,11 +99,12 @@ end
         selected_action = params[:feed_zone]["feed_#{category_id}_selected_action"]
         selected_destination = params[:feed_zone]["feed_#{category_id}_destination"]
         cat_id.feeds.each do |feed|
-          existing_feed_zone = FeedZone.find_by(zone_id: zone.id, feed_id: feed_id, category_id: category_id)
+          existing_feed_zone = FeedZone.find_by(zone_id: zone.id, feed_id: feed.id)
+          puts "existing: #{existing_feed_zone}"
           next if existing_feed_zone.present? # Skip if a FeedZone already exists for this feed in the same zone
           feed_name = feed.feed_name
           feed_path = "/etc/bind/#{zone.name}/#{feed.feed_name}.rpzfeed"
-
+      
           puts "destination: #{selected_destination}"
           puts "action: #{selected_action}"
           puts "feed_name: #{feed.feed_name}"
@@ -121,21 +122,22 @@ end
         end
       end
       respond_to do |format|
-        if @feed_zone.save
-          format.html { redirect_to zone_path(zone.id), notice: "Category was successfully created." }
-          format.json { render :show, status: :created, location: @feed_zone }
-          generate_rpz
-          include_feed_zone_in_zone_path(feed_path)
+        if @feed_zone.present? 
+          if @feed_zone.save
+            format.html { redirect_to zone_path(zone.id), notice: "Category was successfully created." }
+            format.json { render :show, status: :created, location: @feed_zone }
+            generate_rpz
+            include_feed_zone_in_zone_path(feed_path)
+          else
+            format.html { render :new, status: :unprocessable_entity }
+            format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
+            format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: :unprocessable_entity }
+          end
         else
-          format.html { render :new, status: :unprocessable_entity }
-          format.json { render json: @feed_zone.errors, status: :unprocessable_entity }
-          format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: :unprocessable_entity }
-
-  
+          format.html { redirect_to zone_path(zone.id), notice: "Feed is already exist in #{zone.name}" }
         end
       end
     end
-    
   end
 
   def include
