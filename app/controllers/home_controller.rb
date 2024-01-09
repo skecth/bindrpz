@@ -9,6 +9,8 @@ class HomeController < ApplicationController
         @zones= current_user.zones
         @categories = Category.all
         @feeds = Feed.all
+        @custom_blacklist = CustomBlacklist.all
+        @users = User.all
     end
 
 end

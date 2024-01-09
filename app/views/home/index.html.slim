@@ -1,28 +1,37 @@
-.row.row-cols-1.row-cols-md-3.g-3
+.page-header.d-print-none 
+	.container-x1 	
+		.row.g-2.align-items-center 
+			.col 
+				div.page-pretittle.h3 style="font-family: 'Arial', sans-serif;"
+					| Welcome back, 
+					span.page-title style="font-family: 'Arial', sans-serif;"
+						= @current_user.username
+						
+br/
+.row.row-cols-1.row-cols-md-4.g-4
 	.col 
-		.card.border-light.mb-3.shadow
-			h4.card-header Category
-			//make it one line
-			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @categories.count
-			.card-body.p-1
-				table.table.table-striped.table-borderless
-					tbody
-						- @categories.each do |category|
-							tr
-								td = category.name
+		.card 
+			.card-body 
+				.d-flex.align-items-center 	
+					.subheader 
+						| Category
+						.h1.mb-3 
+							=@categories.count
 	.col
 		.card.border-light.mb-3.shadow
-			h4.card-header Feed
+			h4.card-header Feed for today
 			span.badge.bg-secondary.position-absolute.top-0.end-0.mt-2.me-2.p-2 = @feeds.count
 			.card-body.p-1
 				table.table.table-striped.table-borderless
 					tbody
-						- @feeds.each do |feed|
-							tr
-								td = feed.feed_name
-								td.text-end.text-nowrap
-									span.badge.bg-light.text-dark = feed.number_of_domain
-					
+						- @feeds.each_with_index do |feed, index|
+							-if index < 5
+								tr
+									td = feed.feed_name
+							-else
+								-if index == 5
+									tr
+										td = link_to "More....", feeds_path,style: "color: black; text-decoration: none;"
 	.col
 		.card.border-light.mb-3.shadow
 			h4.card-header Zone
@@ -30,15 +39,31 @@
 			.card-body.p-1
 				table.table.table-striped.table-borderless
 					tbody
-						- @zones.each do |zone|
-							tr
-								td = zone.name
-	
+						- @zones.each_with_index do |zone,index|
+							-if index < 5
+								tr 
+									td = zone.name
+							-else	
+								-if index == 5
+									tr 
+										td = link_to "More...", zones_path, style: "color: black; text-decoration: none;"
+
+	-if @current_user.role="admin"
+		.col 
+			.card 
+				.card-body 
+					.d-flex.align-items-center 	
+						.subheader 
+							| User
+							.h1.mb-3 
+								=@users.count
+br/	
+.row.row-cols-1.row-cols-md-1.g-1
 	.col data-controller="chart" 
 		.card.border-light.mb-3.shadow
 			h4.card-header Feed
 			// pie chart to show number of feeds in each category
-			= pie_chart @feeds.joins(:category).group("categories.name").count, library: { legend: { position: 'right' } }
+			= line_chart Feed.group_by_day(:created_at).count
 
 
 
