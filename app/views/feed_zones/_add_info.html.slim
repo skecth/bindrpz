@@ -1,0 +1,23 @@
+.card 
+    .card-body 
+        .overflow-auto
+            .custom-font-size
+                | 1. NXDOMAIN
+                br/
+                | When a DNS query matches a rule with NXDomain action, the DNS server responds as if the queried domain does not exist, even if it actually does. This can be used to block access to specific domains.
+                br/
+                | 2. NODATA 
+                br/
+                | Similar to NXDomain, but instead of responding with an error indicating non-existence, the DNS server replies with no data. This is often used to block specific subdomains while allowing the parent domain to exist.
+                br/
+                |3. DROP 
+                br/
+                |The DNS server drops the query, providing no response. This is an extreme measure to completely block access to specific domains.
+                br/
+                |4. PASSTHRU
+                br/
+                | The DNS server allows the query to pass through without any modification. This is useful when certain domains need to be excluded from RPZ policies.
+                br/
+                |5. Local-Data 
+                br/
+                | This Policy Action allows the operator to define any desired outcome. As an example a CNAME RR (or A/AAAA RR) could be used to send the user to a web page describing what action had been taken, to make a commercial offer or, well, anything else imaginable.

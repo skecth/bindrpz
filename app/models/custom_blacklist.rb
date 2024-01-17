@@ -1,7 +1,18 @@
 class CustomBlacklist < ApplicationRecord
   enum blacklist_type: [:Domain, :IP]
   mount_uploader :file, AttachmentUploader
+
   enum kind: [:single, :bulk]
+  enum action: {
+      NXDOMAIN: "CNAME .",
+      NODATA: "CNAME *.",
+      PASSTHRU: "CNAME rpz-passthru.",
+      DROP: "CNAME rpz-drop.",
+      "TCP-ONLY": "CNAME rpz-tcp-only.",
+      CNAME: "CNAME",
+      A: "A",
+      AAA: "AAA"
+    }
   belongs_to :zone
   belongs_to :category
 

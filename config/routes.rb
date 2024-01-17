@@ -24,11 +24,17 @@ Rails.application.routes.draw do
   
   resources :categories
   resources :feeds 
-  resources :zones
+  resources :zones do
+    resources :feed_zones, only: :index
+    resources :custom_blacklists, only: :index
+
+    # get 'custom_blacklist', to: 'custom_blacklists#index', as: :zone_custom_blacklist
+
+  end
+  
   get 'home/index'
   mount Sidekiq::Web =>'/sidekiq'
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
+  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.htm
   get "/search", to: 'domains#search', as: :search
   get "domain/bulk", to: "domains#update_bulk",as: :update_bulk
   get 'new', to: "rpzdata#create", as: :create
@@ -48,7 +54,7 @@ Rails.application.routes.draw do
   post '/add/:id', to: "feed_zones#feed_upload_check", as: :new_feed_check
   get 'zone/manage_zone/:id', to: "feed_zones#index",as: :index_feedZone
   post 'bulk_create' => 'feeds#bulk_create', as: :bulk_create
-
+  get "/info" => "feed_zones#info", as: :action_info
   #test
   get 'zone/feed_zone/new/:id', to: "feed_zones#new", as: :newFeedZone
   post 'zone/feed_zone/new/:id', to: "feed_zones#create", as: :createFeedZone
@@ -58,5 +64,5 @@ Rails.application.routes.draw do
   # get 'single_form' => 'feeds#new', as: :single_form
   post '/include', to: 'feed_zones#include', as: 'include'
   post '/exclude', to: 'feed_zones#exclude', as: 'exclude'
-
+  get '/zones/:id/custom_blacklist', to: "zones#show", as: :custom_blacklist_index
 end

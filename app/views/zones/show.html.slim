@@ -1,15 +1,3 @@
-/ .container_zone
-/   .d-flex 
-/     .p-2.flex-grow-1
-/       .name
-/         h2 = @zone.name
-/         -if @zone.description.present?
-/           =@zone.description
-/         -else
-/           .desc
-/             | No desciption
-
-/             .main-content
 .main-content.p-4 
 
   h2.fw-bold 
@@ -70,20 +58,11 @@ br
             / .box 
             h4 0
 
+div[data-controller="tabs"]
+    .nav.nav-tabs#nav-tab[role="tablist"]
+    button.nav-link.active#nav-home-tab(type="button" role="tab" aria-controls="nav-home" aria-selected="true" data-bs-toggle="tab" data-bs-target="#nav-home")
+        = link_to "Policy", zone_feed_zones_path(@zone), "aria-selected": "true", remote: true, data: { tabs_target: "input",action: "click->tabs#handleClick"  }
 
-nav 
-  .nav.nav-tabs#nav-tab role="tablist"
-      button.nav-link.active#nav-home-tab data-bs-toggle="tab" data-bs-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true" Policy
-      / button.nav-link#nav-custom-tab data-bs-toggle="tab" data-bs-target="#nav-custom" type="button" role="tab" aria-controls="nav-custom" aria-selected="true" Custom
-      button.nav-link#nav-profile-tab data-bs-toggle="tab" data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile" aria-selected="false" Feed
-      button.nav-link#nav-contact-tab data-bs-toggle="tab" data-bs-target="#nav-contact" type="button" role="tab" aria-controls="nav-contact" aria-selected="false" Whitelist
-.tab-content#nav-tabContent
-    .tab-pane.fade.show.active#nav-home role="tabpanel" aria-labelledby="nav-home-tab"
-      == render "zones/list_blacklist"
-    / .tab-pane.fade.show#nav-custom role="tabpanel" aria-labelledby="nav-custom-tab"
-    /   == render "custom_blacklists/base_form"
-    /feed_zone
-    .tab-pane.fade#nav-profile role="tabpanel" aria-labelledby="nav-profile-tab"
-      == render "feed_zones/base_form"
-    .tab-pane.fade#nav-contact role="tabpanel" aria-labelledby="nav-contact-tab"
-
+    .tab-content#nav-tabContent 
+        span[data-tabs-target="output"]
+        

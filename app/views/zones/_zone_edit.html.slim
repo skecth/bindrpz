@@ -16,8 +16,7 @@
       - f.fields_for :feed_zones do |feed_zones|
         == render "zones/nested_form", f: feed_zones
     div[data-nested-form-target="target"]
-    button(type="button" data-action="nested-form#add" class="btn btn-outline-secondary btn-sm" style="margin-top: 10px")
-      i.bi.bi-plus-lg
+    button(type="button" data-action="nested-form#add" class="btn btn-primary btn-sm" style="margin-top: 10px") Add 
 
   .form-actions
     = f.button :submit, 'Add Feed', class: "btn btn-new btn-sm", style: "margin-top: 10px"

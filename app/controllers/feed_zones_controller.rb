@@ -7,13 +7,14 @@ class FeedZonesController < ApplicationController
   def index
     @feed_zones = FeedZone.all
     @zones = Zone.all
-    @zone = Zone.find(params[:id])
+    @zone = Zone.find(params[:zone_id])
+    puts "zone: #{@zone}"
   end
 
   # GET /feed_zones/1 or /feed_zones/1.json
   def show
     @feed_zones = FeedZone.all
-    @zones = Zone.all
+    @zone = Zone.find(params[:id])
     @id = FeedZone.find(params[:id])
   end
 
@@ -124,7 +125,7 @@ end
       respond_to do |format|
         if @feed_zone.present? 
           if @feed_zone.save
-            format.html { redirect_to zone_path(zone.id), notice: "Category was successfully created." }
+            format.html { redirect_to zone_feed_zones_path(zone.id), notice: "Category was successfully created." }
             format.json { render :show, status: :created, location: @feed_zone }
             generate_rpz
             include_feed_zone_in_zone_path(feed_path)
@@ -134,11 +135,13 @@ end
             format.turbo_stream { render partial: "feed_zones/feed_zone_add", status: :unprocessable_entity }
           end
         else
-          format.html { redirect_to zone_path(zone.id), notice: "Feed is already exist in #{zone.name}" }
+          format.html { redirect_to zone_feed_zones_path(zone.id), notice: "Feed is already exist in #{zone.name}" }
         end
       end
     end
   end
+
+
 
   def include
     filepath = params[:path]
@@ -166,7 +169,7 @@ end
   def update
     respond_to do |format|
       if @feed_zone.update(feed_zone_params)
-        format.html { redirect_to zone_path(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
+        format.html { redirect_to zone_feed_zones_path(@feed_zone.zone_id), notice: "Feed zone was successfully updated." }
         format.json { render :show, status: :ok, location: @feed_zone }
         generate_rpz
       else
@@ -207,7 +210,7 @@ end
     end
     @id.destroy
     respond_to do |format|
-      format.html { redirect_to zone_url(@id.zone_id), notice: "Feed zone was successfully destroyed." }
+      format.html { redirect_to zone_feed_zones_path(@id.zone_id), notice: "Feed zone was successfully destroyed." }
       format.json { head :no_content }
     end
   end

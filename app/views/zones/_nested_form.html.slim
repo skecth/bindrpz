@@ -10,10 +10,10 @@
         = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
       input#name[data-feed-path-select-target="zone" name="zone_id" type="hidden" value="#{@zone_name}"]
     div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
-      = f.input :selected_action, as: :select, collection: [['CNAME rpz-drop', 'CNAME rpz-drop.'], ['CNAME .', 'CNAME .'], ['CNAME rpz-passthru.', 'CNAME rpz-passthru.'], ['CNAME *.', 'CNAME *.'], ['CNAME rpz-tcp-only', 'CNAME rpz-tcp-only.'], ['CNAME', 'CNAME']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'
+      = f.input :selected_action, as: :select, collection: FeedZone.selected_actions.map { |value, key| [value, key] }, class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" },style: "margin-bottom: 0;"},label: false,include_blank: 'Select Action'
+      .form-text 
+        a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
       = f.input :destination,  placeholder: "Domain or IP Address", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
-    .col
-      button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm" style="margin-top: 10px") 
-        i.bi.bi-trash3-fill
+      button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Delete
 
   = f.hidden_field :_destroy

@@ -39,3 +39,23 @@
     color: gray;
     margin-bottom: 0;
 }
+.navbar-nav .nav-link.active {
+    color: #333333 !important; /* Change the text color */
+    border-bottom: 2px solid #333333; /* Change the underline color and style */
+  }
+.btn-view{
+    background-color: #5adbb5;
+}
+.custom-font-size {
+    font-size: 12px; /* Replace with your desired font size */
+  }
+  .overflow-auto {
+    overflow: auto;
+    max-height: 200px; /* Set a max height for the scrollbar */
+  }
+  .expand{
+    transition: transform .2s;
+  }
+  .expand{
+    transform: scale(2.5);
+  }

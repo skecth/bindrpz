@@ -20,30 +20,31 @@
 
   // show all custom blaclist that belongs to a zone
   br
-  .table-responsive-lg
-    table.table.column-data#dttb data-controller="datatables"
-      thead
-        tr
-          th Category
-          th Blacklist
-          th Resource Record
-          th Destination
-          th Created
-          th
-          th
-      tbody
-        - @custom_blacklists.each do |custom_blacklist|
+  .card.border-0 
+    .table-responsive-lg
+      table.table.column-data#dttb data-controller="datatables"
+        thead
           tr
-            // find the category name based on the category_id from category table
-            td = custom_blacklist.category.name
-            td = custom_blacklist.domain
-            td = custom_blacklist.action
-            - if custom_blacklist.destination.present?
-              td = custom_blacklist.destination
-            - else
-              td = "N/A"
-            td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
-            td = link_to edit_custom_blacklist_path(custom_blacklist, zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-new btn-sm" do
-                i.bi.bi-pencil title="Edit"
-            td = link_to custom_blacklist, data: {turbo_method: :delete, confirm: "Are you sure"}, class: "btn btn-danger btn-sm" do
-                i.bi.bi-trash title="Delete"
+            th Category
+            th Blacklist
+            th Resource Record
+            th Destination
+            th Created
+            th
+            th
+        tbody
+          - @custom_blacklists.each do |custom_blacklist|
+            tr
+              // find the category name based on the category_id from category table
+              td = custom_blacklist.category.name
+              td = custom_blacklist.domain
+              td = custom_blacklist.action
+              - if custom_blacklist.destination.present?
+                td = custom_blacklist.destination
+              - else
+                td = "N/A"
+              td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
+              td = link_to edit_custom_blacklist_path(custom_blacklist, zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-new btn-sm" do
+                  i.bi.bi-pencil title="Edit"
+              td = link_to custom_blacklist, data: {turbo_method: :delete, confirm: "Are you sure"}, class: "btn btn-danger btn-sm" do
+                  i.bi.bi-trash title="Delete"

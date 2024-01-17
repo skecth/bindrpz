@@ -9,4 +9,4 @@
     = f.input :role, collection: User.roles.keys, prompt: "Select a role", required: true, label: false, placeholder: "Role"
     = f.input :created_by, input_html: { value: current_user.id }, as: :hidden
   .form-actions
-    = f.button :submit, "Sign up", class: "btn btn-sm btn-outline-dark px-5"
+    = f.button :submit, "Sign up", class: "btn btn-new btn-sm "

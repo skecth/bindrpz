@@ -1,11 +1,41 @@
-p style="color: green" = notice
+=render 'zones/navbar'
+.container.bg-white.pt-3
+  .dropdown.d-md-flex.justify-content-end
+    a.btn.btn-new.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+      | Add Blacklist
+    ul.dropdown-menu aria-labelledby="dropdownMenuLink"
+      li
+        a = link_to new_custom_blacklist_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
+          |  Single blacklist
+      li
+        a = link_to new_bulk_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
+          |  Bulk blacklist
 
-h1 Custom blacklists
-
-#custom_blacklists
-  - @custom_blacklists.each do |custom_blacklist|
-    == render custom_blacklist
-    p
-      = link_to "Show this custom blacklist", custom_blacklist
-
-= link_to "New custom blacklist", new_custom_blacklist_path
+  // show all custom blaclist that belongs to a zone
+  br
+  .card.border-0 
+    .table-responsive-lg
+      table.table.column-data#dttb data-controller="datatables"
+        thead
+          tr
+            th Category
+            th Blacklist
+            th Resource Record
+            th Destination
+            th Created
+            th
+            th
+        tbody
+          - @custom_blacklists.each do |custom_blacklist|
+            tr
+              // find the category name based on the category_id from category table
+              td = custom_blacklist.category.name
+              td = custom_blacklist.domain
+              td = custom_blacklist.action
+              - if custom_blacklist.destination.present?
+                td = custom_blacklist.destination
+              - else
+                td = "N/A"
+              td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
+              td = link_to "Edit", edit_custom_blacklist_path(custom_blacklist, zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-new btn-sm" 
+              td = link_to "Delete", custom_blacklist, data: {turbo_method: :delete, confirm: "Are you sure"}, class: "btn btn-danger btn-sm"

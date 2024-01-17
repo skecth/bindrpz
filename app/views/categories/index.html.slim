@@ -23,11 +23,10 @@
           tr
             td = cat.name
             td = cat.created_at.strftime("%d %b %Y %H:%M:%S")
-            td = link_to cat, class: "btn btn-new btn-sm" do 
-              i.bi.bi-eye title="View"
+            td = link_to "View", cat, class: "btn btn-new btn-sm" 
             - if user_signed_in? && current_user.admin?
-              td = button_to cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete do 
-                i.bi.bi-trash3 title="Delete"
+              td = button_to "Delete", cat, class: "btn btn-danger btn-sm",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete 
+        
 
           
 

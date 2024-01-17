@@ -1,0 +1,20 @@
+.main-content.p-4 
+  h2.fw-bold 
+    = link_to "Zone", zones_path, class: "text-decoration-none text-dark" 
+    | > 
+    = @zone.name
+  -if @zone.description.present?
+    p.column-data = @zone.description
+  -else
+    .desc
+      | No desciption
+  br/
+nav
+  nav.navbar.navbar-expand-lg.bg-body-tertiary
+    .container-fluid
+      .collapse.navbar-collapse#navbarSupportedContent
+        ul.navbar-nav.me-auto.mb-2.mb-lg-0
+          li.nav-item(style="color: blue;")
+            = link_to "Policy", zone_custom_blacklists_path, class: "nav-link #{'active' if current_page?(zone_custom_blacklists_path)}"
+          li.nav-item
+            = link_to "Feed Zone", zone_feed_zones_path, class: "nav-link #{'active' if current_page?(zone_feed_zones_path)}"

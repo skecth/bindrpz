@@ -2,15 +2,17 @@
   = f.error_notification
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
   
-
+  =render "custom_blacklists/add_info"
   .form-inputs
     = f.input :category_id, collection: Category.all
     = f.input :blacklist_type, collection: CustomBlacklist.blacklist_types.keys, label: 'Blacklist Type' 
     = f.input :file, as: :file, input_html: { accept: ".csv", max: 10.kilobyte }
-    div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
-      = f.input :action, as: :select, collection: [['CNAME rpz-drop', 'CNAME rpz-drop.'], ['CNAME .', 'CNAME .'], ['CNAME rpz-passthru', 'CNAME rpz-passthru.'], ['CNAME *.', 'CNAME *.'], ['CNAME rpz-tcp-only', 'CNAME rpz-tcp-only.'], ['CNAME', 'CNAME']], class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'
+    div[data-controller="showhide"]
+      = f.input :action, as: :select, collection: CustomBlacklist.actions.map { |value, key| [value, key] }, class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" }},label: false,include_blank: 'Select Action'    
+      .form-text#basic-addon4 
+        a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
       = f.input :destination, input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }, placeholder: "Destination", label: false
-    = f.hidden_field :kind, value: kind
+      = f.hidden_field :kind, value: kind
     // hidden field for zone_id
     = f.hidden_field :zone_id, value: params[:zone_id]
 

@@ -128,7 +128,7 @@ class ZonesController < ApplicationController
   
     respond_to do |format|
       if @zone.update(zone_params)
-        format.html { redirect_to zone_path, notice: "Zone was successfully updated." }
+        format.html { redirect_to zone_feed_zones_path(@zone.id), notice: "Zone was successfully updated." }
         format.json { render :show, status: :ok, location: @zone }
         generate_rpz
         include_feed_zone_in_zone_path(file_path)
@@ -180,7 +180,6 @@ class ZonesController < ApplicationController
         include_feed_zone(file_path)
       end
     end
-    
     def include_feed_zone(file_path)
       #add $INCLUDE of every file_path in zone_path
       rpz_rule = "$INCLUDE #{file_path};\n"
@@ -193,6 +192,10 @@ class ZonesController < ApplicationController
         Rails.logger.info "Added #{rpz_rule} to #{@zone.zone_path}"
       end
     end
+
+    
+   
+    
 
     def generate_zones(zones)
       config = ""
