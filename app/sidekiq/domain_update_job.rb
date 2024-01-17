@@ -20,7 +20,9 @@ class DomainUpdateJob
       @blacklist_data = @blacklist_data.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/#.*$/, '')
       # if the line has space, then split it 
       @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
-      @blacklist_data = @blacklist_data.gsub(/^www\./, '')
+      # remove the last dot at the end of the line
+      @blacklist_data = @blacklist_data.gsub(/\.$/, '')
+      # @blacklist_data = @blacklist_data.gsub(/^www\./, '')
       @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
       @count = @blacklist_data.split("\n").count
       if File.exist?(file)

@@ -30,3 +30,6 @@ application.register("remote-modal", RemoteModalController)
 
 import ShowhideController from "./showhide_controller"
 application.register("showhide", ShowhideController)
+
+import FeedDatatableController from "./feed_datatable_controller"
+application.register("feed_datatable", FeedDatatableController)

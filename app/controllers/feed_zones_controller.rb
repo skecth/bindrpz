@@ -194,14 +194,14 @@ end
     #delete file_path
     file_path = @id.file_path
     #ExcludeJob.perform_async(file_path)
-    rpz_rule = "$INCLUDE #{file_path}; \n"
+    rpz_rule = "$INCLUDE #{file_path};\n"
     lines = File.readlines(@id.zone.zone_path)
     if lines.include?(rpz_rule)
       lines.delete(rpz_rule)
       File.open(@id.zone.zone_path, 'w') do |file|
         file.write(lines.join)
       end
-      Rails.logger.info "Removed #{rpz_rule}"
+      Rails.logger.debug "Removed #{rpz_rule}"
     end
 
     if File.exist?(file_path)

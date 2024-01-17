@@ -1,90 +1,23 @@
-/ / /css=>domain_index.scss
+.main-content.p-4
+  .d-flex 
+    .me-auto.p-2 
+      h3.fw-bold = @feed.feed_name
+  
+  / hr
+  / .table-responsive-lg
+  /   table.table.column-data#details_feed data-controller="feed_datatable" data-id="#{params[:id]}"
+  /     thead
+  /       tr 
+  /         th Domain
 
-/ hr.hr
-/ .container-fluid
-/   .row.flex-nowrap
-/     =render "feeds/sidebar"
-/     .col.py-3
-/       .container
-/         .row-fluid
-/           .container-feed-delete
-/             .d-flex 
-/               .me-auto.p-2
-/                 .feed-name
-/                   =@name
-/               .p-2
-/                 .dropdown(style="margin-left: 10px;")
-/                   button.btn.btn-secondary.dropdown-toggle-partial.ft(type="button" data-bs-toggle="dropdown" aria-expanded="false")
-/                     | Domain Update
-/                     i.bi.bi-plus-square
-/                   ul.dropdown-menu
-/                     li
-/                       = link_to "Bulk Add Blacklist", new_domain_path(status: 'bulk', id: @feed.id), class: "dropdown-item", style: "font-size: 14px;"
-/                     li
-/                       = link_to "Create Blacklist", new_domain_path(status: 'blacklist', id: @feed.id), class: "dropdown-item", style: "font-size: 14px"
-/               .p-2
-/                 = button_to "Delete", @feed, class: "btn btn-danger", form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete 
-
-/         div[data-controller="datatables"]
-/         table.table#dttb
-/           .d-flex.flex-row-reverse
-            
-/             thead.table-dark
-/               tr.column-data
-/                 th(scope="col") Line Count
-/                 th(scope="col") Blacklist Domain
-/                 th(scope="col") Destination
-/                 th(scope="col") Category
-/                 th(scope="col") Created at
-/                 th(scope="col") Action
-        
-/             tbody
-/               - @feed.domains.each do |d|
-/                 tr.column-data
-/                   td = d.line_count
-/                   -if d.URL.present?
-/                     td = link_to "#{d.URL}", d.URL
-/                   -elsif d.list_domain.split("\n").count<=1
-/                     td = d.list_domain
-/                   td = d.action
-/                   -if d.category.present?
-/                     td = d.category.name
-/                   -else
-/                     td = "No Category"
-/                   td = d.created_at
-/                   td 
-/                     .dropdown 
-/                       button.btn.btn-secondary.btn-new.dropdown-toggle.column-data(type="button" data-bs-toggle="dropdown" aria-expanded="false") Action 
-/                       ul.dropdown-menu 
-/                         - if d.status == "bulk"
-/                           li = button_to "Update List", instant_update_path(d, feed_id: @feed.id), class: "dropdown-item"
-/                           li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item",data: { turbo_frame: "remote_modal" }
-/                           li = button_to "Destroy", d,class: "dropdown-item" ,form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
-/                         - else
-/                           li = link_to "Edit", edit_domain_path(d, feed_id: @feed.id), class: "dropdown-item",data: { turbo_frame: "remote_modal" }
-/                           li = button_to "Destroy", d, class: "dropdown-item",form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+  hr
+  .table-responsive-lg
+    table.table.column-data#details_feed
+      thead
+        tr 
+          th Domain  
+      tbody 
+        -@blacklist_data.each do |blacklist|
+          tr
+            td = blacklist
+    == pagy_nav(@pagy) if @pagy.pages > 1
