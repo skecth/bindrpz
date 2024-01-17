@@ -3,23 +3,35 @@ import { Controller } from "@hotwired/stimulus"
 // Connects to data-controller="showhide"
 export default class extends Controller {
   static targets = ["input", "output"]
-  static values = { showIf: String } //PASSTHRU
+  static values = { showIf: String } 
 
   connect() {
     this.toggle()
   }
 
   toggle() {
-    const inputValue = this.inputTarget.value;
-    const showIfValues = ['CNAME']; // Array of values to match against
-  
+    const inputValue = this.inputTarget.value; // 'this.element' refers to the DOM element associated with the controller
+    console.log(`Selected Value: ${inputValue}`);
+    
+    const showIfValues = ['CNAME', 'A', 'AAA']; // Array of values to match against
+    
     if (showIfValues.includes(inputValue)) {
       this.outputTarget.hidden = false;
+      if (inputValue === 'CNAME') {
+        this.outputTarget.placeholder = "Domain";
+      } else if (inputValue === 'A') {
+        this.outputTarget.placeholder = "IPv4";
+      } else if (inputValue === 'AAA') {
+        this.outputTarget.placeholder = "IPv6";
+      }
     } else {
       this.outputTarget.hidden = true;
       this.outputTarget.value = "";
+      console.log("No match");
     }
   }
+}
+    
   // submitForm(event) {
   //   event.preventDefault(); // Prevent the default form submission
 
@@ -46,7 +58,3 @@ export default class extends Controller {
   //       // You can add logic to display an error message to the user
   //     }
   //   }
-  }
- 
-
-  

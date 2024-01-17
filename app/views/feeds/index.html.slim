@@ -27,11 +27,10 @@
             td = feed.source
             td = feed.category.name 
             td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
-            td = link_to feed.url, target: "_blank", rel: "noopener noreferrer", class: "btn btn-new btn-sm" do 
-              i.bi.bi-eye title="View"
+            td = link_to "View", feed.url, target: "_blank", rel: "noopener noreferrer", class: "btn btn-new btn-sm" 
             - if user_signed_in? && current_user.admin?
-              td = button_to feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" do 
-                i.bi.bi-trash3 title="Delete"
+              td = button_to "Delete", feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" 
+                
             
 
 

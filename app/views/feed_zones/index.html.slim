@@ -1,23 +1,52 @@
-=render "zones/zone_title"
-div[data-controller="datatables"]
-  table.table#dttb
-    thead.table-dark
-      tr.column-data
-        th(scope="col") Category
-        th(scope="col") URL
-        th(scope="col") Feed Name
-        th(scope="col") Action
-        th(scope="col") Destination
-        th(scope="col") Created at
-      
-    tbody 
-      - @feed_zones.each do |f|
-        tr
-          td= f.feed.category.name
-          td= f.feed.url
-          td= f.feed.feed_name 
-          td= f.selected_action 
-          td= f.destination
-          td= f.created_at
+=render 'zones/navbar'
+.container.bg-white.pt-3
+  .dropdown.d-md-flex.justify-content-end
+    a.btn.btn-new.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+      | Add Feed
+    ul.dropdown-menu aria-labelledby="dropdownMenuLink"
+      li  
+        a= link_to edit_zone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
+          | By Feed
+      li  
+        a = link_to newFeedZone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
+          |  By Category
 
-    
+  
+  br
+  .card.border-0 
+    .table-responsive-lg
+        table.table.column-data#dttb data-controller="datatables"
+          thead 
+            tr 
+              th Category
+              th Feed Name
+              th Resources Record
+              th Destination
+              th Created
+              th Action
+              th
+              th
+              th
+          tbody
+            - @feed_zones.order(:id).each do |f|
+              
+                tr
+                  td= f.feed.category.name
+                  td= f.feed.feed_name 
+                  td= f.selected_action
+                  -if f.destination.present?
+                    td= f.destination
+                  -else
+                    td= "N/A"
+                  td= f.created_at.strftime("%d %b %Y %H:%M:%S")
+                  -if f.enable_disable_status
+                    /If enabled, show the 'Enable' button as disabled 
+                    td= button_to 'Enable', include_path(path: f.file_path, id: f.id), method: :post,class: "btn btn-light btn-sm", disabled: true
+                    td= button_to 'Disable', exclude_path(path: f.file_path, id: f.id), method: :post, class: "btn btn-light btn-sm"
+                  -else 
+                    /If disabled, show the 'Disable' button -->
+                    td= button_to 'Enable', include_path(path: f.file_path, id: f.id), method: :post, class: "btn btn-light btn-sm"
+                    td= button_to 'Disable', exclude_path(path: f.file_path, id: f.id), method: :post, disabled: true, class: "btn btn-light btn-sm"
+                  td = link_to "Edit", edit_feed_zone_path(f), class: "btn btn-new btn-sm",data: { turbo_frame: "remote_modal" }     
+                  td = link_to "Delete",f, data: { turbo_confirm: "Are you sure?",turbo_method: :delete } ,  class: "btn btn-danger btn-sm" 
+                     

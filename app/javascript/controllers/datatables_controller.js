@@ -12,6 +12,7 @@ export default class extends Controller {
         table.DataTable({
           language: {
             search: "",
+            paging: true,
             searchPlaceholder: "Search...",
             dom: 'rfltip',
             bSort: true
@@ -28,6 +29,5 @@ export default class extends Controller {
         table.destroy();
       }
     });
-       
-  }
-}
+    
+  }}

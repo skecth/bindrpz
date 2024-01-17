@@ -1,0 +1,16 @@
+div data-popover-target="info"
+
+   h5 NXDOMAIN (Non-Existent Domain):
+   h5 This action indicates that the queried domain does not exist. The DNS resolver responds with a "NXDOMAIN" response code to indicate that the domain name is not registered or does not have any associated DNS records.
+    br/
+   h5 NODATA:
+   h5 This action indicates that there is no data (no resource records) for the queried domain. While "NXDOMAIN" means the domain itself doesn't exist, "NODATA" means that the domain exists, but there are no records associated with it.
+    br/
+   h5 PASSTHRU:
+   h5 This action instructs the DNS resolver to pass the query through without modifying the response. In other words, the DNS resolver will forward the query to the authoritative DNS server and return the response it receives without any alterations.
+    br/
+   h5 DROP:
+   h5 This action indicates that the DNS resolver should drop the query and not forward it to the authoritative DNS server. Essentially, the DNS resolver refuses to process the query.
+    br/
+   h5 TCP-Only:
+   h5 This action instructs the DNS resolver to only use TCP (Transmission Control Protocol) for communication when querying the authoritative DNS server. DNS typically uses both UDP and TCP, but in certain cases (e.g., large responses), TCP-only mode may be enforced.
