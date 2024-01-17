@@ -13,9 +13,16 @@ class FeedsController < ApplicationController
 
   # GET /feeds/1 or /feeds/1.json
   def show
-
     # # @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
     @feeds =Feed.all    
+    @feed = Feed.find(params[:id])
+    # read the file 50 lines at a time
+    @pagy, @blacklist_data = pagy_array(File.read(@feed.feed_path).split("\n"), items_extra: true)
+    
+    # @blacklist_data = File.read(@feed.feed_path).split("\n")
+    
+
+
     # domain = Domain.all
     # @feeds = Feed.all
     # @feed = Feed.find(params[:id])
@@ -124,7 +131,9 @@ class FeedsController < ApplicationController
       @blacklist_data = @blacklist_data.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/#.*$/, '')
       # if the line has space, then split it 
       @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
-      @blacklist_data = @blacklist_data.gsub(/^www\./, '')
+      # remove . at the end of the line
+      @blacklist_data = @blacklist_data.gsub(/\.$/, '')
+      # @blacklist_data = @blacklist_data.gsub(/^www\./, '')
       @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
       file.puts @blacklist_data
       # close file

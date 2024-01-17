@@ -16,6 +16,7 @@
           th FEED
           th SOURCE
           th CATEGORY
+          th NUMBER OF DOMAINS
           th LAST UPDATE
           th
           - if user_signed_in? && current_user.admin?
@@ -23,11 +24,13 @@
       tbody.feed_body
         - @feeds.each do |feed|
           tr
-            td = feed.feed_name
+            td = feed.feed_name 
             td = feed.source
             td = feed.category.name 
+            td = feed.number_of_domain
             td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
-            td = link_to "View", feed.url, target: "_blank", rel: "noopener noreferrer", class: "btn btn-new btn-sm" 
+            td = link_to feed, class: "btn btn-new btn-sm" do
+              i.bi.bi-eye title="View" 
             - if user_signed_in? && current_user.admin?
               td = button_to "Delete", feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" 
                 
