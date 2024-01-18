@@ -13,37 +13,9 @@ class FeedsController < ApplicationController
 
   # GET /feeds/1 or /feeds/1.json
   def show
-    # # @name = "#{@feed.host}.#{@feed.domain}" #pass the variable to view
     @feeds =Feed.all    
     @feed = Feed.find(params[:id])
-    # read the file 50 lines at a time
-    @pagy, @blacklist_data = pagy_array(File.read(@feed.feed_path).split("\n"), items_extra: true)
-    
-    # @blacklist_data = File.read(@feed.feed_path).split("\n")
-    
-
-
-    # domain = Domain.all
-    # @feeds = Feed.all
-    # @feed = Feed.find(params[:id])
-    # @domains = @feed.domains
-    # # limit the number of domains to 10 per page using Pagy
-    # # @pagy, @domains = pagy(@feed.domains, items: 50)
-    # @urls = @feed.domains.pluck(:URL).uniq
-
-    # # count the number of list_domain in each feed
-    # @feed.domains.each do |domain|
-    #   @c = domain.list_domain
-    # end
-    # #remove unwanted symbol
-    # if @c.present?
-    #   list_domain = @c.split("\n")
-    #   @num = list_domain.count
-    #   @content = list_domain
-    #   @pagy,@content = pagy_array(@content.to_a,items: 100)
-    # else
-    #   puts "No domain list"
-    # end
+    @pagy, @blacklist_data = pagy_array(File.read(@feed.feed_path).split("\n").reject{|line| line.start_with?('#')}, items: 20)
   end
 
 
@@ -128,6 +100,9 @@ class FeedsController < ApplicationController
       file = File.new("/etc/bind/feed/#{feed.feed_name}.txt", "w")
       file.puts "# Last updated: #{Time.now.strftime("%d %b %Y %H:%M:%S")}"
       @blacklist_data = Net::HTTP.get(URI.parse(feed.url)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^#|^$/}.join("\n")
+      if feed.AdGuard?
+        @blacklist_data = @blacklist_data.split("\n").reject{|line| line.start_with?('@@')}.join("\n")
+      end
       @blacklist_data = @blacklist_data.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/#.*$/, '')
       # if the line has space, then split it 
       @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
