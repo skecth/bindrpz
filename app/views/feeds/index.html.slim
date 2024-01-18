@@ -4,7 +4,7 @@
       h2.fw-bold Feeds
     - if user_signed_in? && current_user.admin?
       .p-2 
-        = button_to 'Update Feeds', bulk_create_path, method: :post, class: "btn btn-sm px-3 py-2 btn-warning", data: {turbo_confirm: "Are you sure?"}
+        = button_to 'Update Feeds', bulk_create_path, method: :post, class: "btn btn-sm px-3 py-2 btn-warning", data: {turbo_confirm: "Are you sure? This action will take time to complete."}
       .p-2
         = link_to 'New Feed', new_feed_path, data: { turbo_frame: "remote_modal" }, class: "btn btn-sm px-3 py-2 btn-new"
 
@@ -29,8 +29,7 @@
             td = feed.category.name 
             td = feed.number_of_domain
             td = feed.updated_at.strftime("%d %b %Y %H:%M:%S")
-            td = link_to feed, class: "btn btn-new btn-sm" do
-              i.bi.bi-eye title="View" 
+            td = link_to "View", feed, class: "btn btn-new btn-sm" 
             - if user_signed_in? && current_user.admin?
               td = button_to "Delete", feed, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm" 
                 

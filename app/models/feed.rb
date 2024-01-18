@@ -1,7 +1,7 @@
 class Feed < ApplicationRecord
 	has_many :feed_zones
 	belongs_to :category
-	enum blacklist_type: [:Domain, :IP, :Host, :DNSMASQ]
+	enum blacklist_type: [:Domain, :IP, :Host, :DNSMASQ, :AdGuard]
 
 	validates :source, presence: true
 	validates :blacklist_type, presence: true
@@ -28,6 +28,7 @@ class Feed < ApplicationRecord
 	      domain_pattern = Regexp.new(/^[A-Za-z0-9.-]+\.[A-Za-z]{2,}$/) # regex for domain
 	      ip_pattern = Regexp.new(/\b(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\b/) # regex for ip
 	      dnsmasq_pattern = Regexp.new(/server=\/(.*?)\//) # regex for dnsmasq
+				adguard_pattern = Regexp.new(/\|\|([A-Za-z0-9.-]+\.[A-Za-z]{2,})\^/) # regex for adguard
   
 	      Net::HTTP.get_response(URI.parse(@feed.url)) do |res|
 	        # check 100 lines only for performance
@@ -35,7 +36,6 @@ class Feed < ApplicationRecord
 	          next if line.start_with?('#') || line.strip.empty? || line.start_with?('!') || line =~ /^:|^ff|^fe|^255|^$/ || line.include?('localhost')
 	          case @feed.blacklist_type
 	          when "Host"
-	            # @data. << line.split('#')[0].strip if line.match(host_pattern) && !line.nil?
 	            @data << line.split('#')[0].strip if line.match(host_pattern) && !line.nil?
 	          when "DNSMASQ"
 	            @data << line if line.match(dnsmasq_pattern) && !line.nil?
@@ -43,6 +43,9 @@ class Feed < ApplicationRecord
 	            @data << line if line.match(ip_pattern) && !line.nil? && !line.match(/[a-zA-Z]/)
 	          when "Domain"
 	            @data << line if line.match(domain_pattern) && !line.nil?
+						when "AdGuard"
+							@data << line if line.match(adguard_pattern) && !line.nil?
+							Rails.logger.debug "#{line}"
 	          end      
 	        end
 	      end
