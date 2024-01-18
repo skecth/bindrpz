@@ -1,5 +1,6 @@
 require 'fileutils'
-class UpdateFeedzoneJob < ApplicationJob
+class UpdateFeedzoneJob
+  include Sidekiq::Job
   queue_as :default
 
   def perform(*args)
@@ -11,8 +12,11 @@ class UpdateFeedzoneJob < ApplicationJob
 
       feed_zones_for_zone.each do |feed_zone|
         file_paths = feed_zone.feed.feed_path.split(',').map(&:strip)
+        Rails.logger.info "file_paths: #{file_paths}"
         action = feed_zone.selected_action.split(',').map(&:strip).reject(&:empty?)
+        Rails.logger.info "action: #{action}"
         destination = feed_zone.destination.split(',').map(&:strip).reject(&:empty?)
+        Rails.logger.info "destination: #{destination}"
         feed_rules = []
         feed_path = feed_zone.file_path
         
@@ -32,7 +36,9 @@ class UpdateFeedzoneJob < ApplicationJob
           if File.exist?(feed_path) && File.exist?(file_path)
             # Read the file
             existing_domains = File.read(feed_path, encoding: 'UTF-8').split("\n")
+            Rails.logger.info "existing_domains: #{existing_domains}"
             new_domains = File.read(file_path, encoding: 'UTF-8').split("\n")
+            Rails.logger.info "new_domains: #{new_domains}"
 
             domain_names = new_domains - existing_domains
 
@@ -41,10 +47,13 @@ class UpdateFeedzoneJob < ApplicationJob
               #add condition of the domain is ip
               if domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\z/
                 ip = domain_name.split('.').reverse.join('.')
+                Rails.logger.info "ip: #{ip}"
                 domain_name = "32.#{ip}"
               elsif domain_name =~ /\A\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\/\d{1,2}\z/
                 parts = domain_name.split('/')
+                Rails.logger.info "parts: #{parts}"
                 ip_parts = parts[0].split('.').reverse
+                Rails.logger.info "ip_parts: #{ip_parts}"
                 domain_name = parts[1] + '.' + ip_parts.join('.')
               end
 

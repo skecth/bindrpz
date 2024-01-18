@@ -113,6 +113,8 @@ class FeedsController < ApplicationController
       file.puts @blacklist_data
       # close file
       file.close
+      # update last updated time
+      feed.update(updated_at: Time.now.strftime("%d %b %Y %H:%M:%S"))
     end
     # reload bind9
     # system("sudo systemctl reload bind9")
