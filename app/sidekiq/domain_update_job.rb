@@ -24,7 +24,13 @@ class DomainUpdateJob
       @count = @blacklist_data.split("\n").count
       if File.exist?(file)
         File.open(file, "w") do |f|
-          f.write(@blacklist_data)
+          # check if the file have the same content as the new data
+          if File.read(file) == @blacklist_data
+            # if the file have the same content as the new data, then do nothing
+          else
+            # if the file does not have the same content as the new data, then write to file            
+            f.write(@blacklist_data)
+          end
         end
       else
         # create file
