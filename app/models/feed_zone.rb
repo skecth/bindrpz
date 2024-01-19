@@ -6,17 +6,10 @@ class FeedZone < ApplicationRecord
     #check if feed_id is already exist in specific zone
     # validates :feed_id, uniqueness: { scope: :zone_id }
     #  validates :destination, presence: { message: "Please choose the feed" }, allow_blank: false
-    enum selected_action: {
-      NXDOMAIN: "CNAME .",
-      NODATA: "CNAME *.",
-      PASSTHRU: "CNAME rpz-passthru.",
-      DROP: "CNAME rpz-drop.",
-      "TCP-ONLY": "CNAME rpz-tcp-only.",
-      CNAME: "CNAME",
-      A: "A",
-      AAA: "AAA"
-    }
+    # enum selected_action: [:NXDOMAIN, :NODATA, :PASSTHRU, :DROP, :CNAME, :A, :AAA]
+  
     validate :check_action
+
   
     
     def check_action

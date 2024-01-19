@@ -7,7 +7,7 @@
     = f.input :blacklist_type, collection: CustomBlacklist.blacklist_types.keys, label: "Blacklist Type"
     = f.input :domain, placeholder: "Domain Name / IP Address", label: "Domain Name / IP Address" 
     div[data-controller="showhide"]
-      = f.input :action, as: :select, collection: CustomBlacklist.actions.map { |value, key| [value, key] }, class: 'form-select', input_html: { data: { showhide_target: "input", action: "change->showhide#toggle" }}, include_blank: 'Select Action'
+      = f.input :action, as: :select,collection: CustomBlacklist.action_lists, class: 'form-select', input_html: { data: { showhide_target: "input", action: "change->showhide#toggle" }}, include_blank: 'Select Action'
       .form-text.mt-0
         a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank" style="margin-top: 2px;"] What is Action?
       = f.input :destination, input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }, placeholder: "Destination", label: false

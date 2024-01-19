@@ -15,23 +15,36 @@ export default class extends Controller {
     //show feed id
     const selectedFeedId = this.feedIdTarget.value;
     const zoneName =this.zoneTarget.value;
+    console.log(`selected: ${selectedFeedId}`)
     console.log(zoneName);
     // Make an AJAX request to fetch the details of the selected feed
-    fetch(`/feeds/${selectedFeedId}.json`) // Assuming the endpoint is /feeds/:id.json
+    const jsonArray = `/feeds/${selectedFeedId}.json`
+    fetch(jsonArray) // Assuming the endpoint is /feeds/:id.json
       .then(response => {
         if (!response.ok) {
           throw new Error(`Network response was not ok: ${response.status}`);
         }
         return response.json();
       })
-      .then(feed => {
+      .then(feedData => {
         // Use the fetched feed data here
-        console.log(`ID: ${feed.id}`);
-        console.log(`Feed Name: ${feed.feed_name}`)
-        const feedPath = `/etc/bind/${zoneName}/${feed.feed_name}.rpzfeed`
+        const lastObject = feedData[feedData.length - 1];
+
+    // Check if the last object has "id" and "feed_name" properties
+    if (lastObject && lastObject.hasOwnProperty('id') && lastObject.hasOwnProperty('feed_name')) {
+      // Extract "id" and "feed_name"
+      const id = lastObject.id;
+      const feedName = lastObject.feed_name;
+
+      // Log the values
+      console.log(`ID: ${id}`);
+      console.log(`Feed Name: ${feedName}`);
+      const feedPath = `/etc/bind/${zoneName}/${feedName}.rpzfeed`
         console.log(feedPath)
         this.outputTarget.value =feedPath;
-
+    } else {
+      console.log("The last object does not have 'id' and 'feed_name' properties.");
+    }
 
         // Update the UI with the feed details (e.g., populate other fields)
         // Example: this.updateUI(feed);

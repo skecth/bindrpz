@@ -1,16 +1,14 @@
 .nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
   .row  
     div[data-controller="feed-path-select" data-action="change->feed-path-select#handleChange"]
-      -@zone.feed_zones.each do |fz|
-        -@f_id = fz.feed_id
-        -@saved_feed_id << @f_id
-      -@available_feeds = Feed.where.not(id: @saved_feed_id)
-      - if @available_feeds.present?
-        = f.input :feed_id,as: :select,collection: @available_feeds,label_method: :feed_name,value_method: :id,include_blank: 'Select Feed',input_html: { class: 'form-select',data: {feed_path_select_target: "feedId",action: "change->feed_path_select#handleChange"}},label: false
-        = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
+      = f.input :feed_id,as: :select,collection:  @feed_id_available.map{|feed| [feed.feed_name, feed.id]},include_blank: 'Select Feed',input_html: { class: 'form-select',data: {feed_path_select_target: "feedId",action: "change->feed_path_select#handleChange"}},label: false
+      = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
       input#name[data-feed-path-select-target="zone" name="zone_id" type="hidden" value="#{@zone_name}"]
     div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
-      = f.input :selected_action, as: :select, collection: FeedZone.selected_actions.map { |value, key| [value, key] }, class: 'form-select', input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" },style: "margin-bottom: 0;"},label: false,include_blank: 'Select Action'
+      = f.input :selected_action, as: :select, collection: CustomBlacklist.action_lists,
+      class: 'form-select',
+      input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" },
+      style: "margin-bottom: 0;"}, label: false, include_blank: 'Select Action'
       .form-text 
         a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
       = f.input :destination,  placeholder: "Domain or IP Address", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
