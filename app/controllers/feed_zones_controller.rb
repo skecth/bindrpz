@@ -2,7 +2,6 @@ require 'fileutils'
 
 class FeedZonesController < ApplicationController
   before_action :set_feed_zone, only: %i[ show edit update destroy]
-
   # GET /feed_zones or /feed_zones.json
   def index
     @feed_zones = FeedZone.all
@@ -24,7 +23,13 @@ class FeedZonesController < ApplicationController
     @categories = Category.all
     @zone = Zone.find(params[:id])
     @save_c_id =[]
+    @cat = @zone.feed_zones
+     
     @feed_category = Category.includes(:feeds).where.not(feeds: { id: nil }).distinct
+    @cat.each do |cat|
+     puts cat.category_id
+    end
+    puts "feed: #{@cat}"
 
     
 
@@ -104,14 +109,14 @@ end
           puts "existing: #{existing_feed_zone}"
           next if existing_feed_zone.present? # Skip if a FeedZone already exists for this feed in the same zone
           feed_name = feed.feed_name
+          puts "feed name: #{feed_name}"
           feed_path = "/etc/bind/#{zone.name}/#{feed.feed_name}.rpzfeed"
-      
-          puts "destination: #{selected_destination}"
-          puts "action: #{selected_action}"
-          puts "feed_name: #{feed.feed_name}"
-          puts "feed_path: #{feed_path}"
-          puts "category: #{category_id}"
-          puts "feed_id: #{feed.id}"
+          # puts "destination: #{selected_destination}"
+          # puts "action: #{selected_action}"
+          # puts "feed_name: #{feed.feed_name}"
+          # puts "feed_path: #{feed_path}"
+          # puts "category: #{category_id}"
+          # puts "feed_id: #{feed.id}"
 
           @feed_zone = FeedZone.create(zone_id: zone.id,
                                     selected_action: selected_action, 
@@ -151,7 +156,7 @@ end
     #IncludeJob.perform_async(filepath)
     #add def include_job
     include_job(filepath)
-    redirect_to zone_path(filepath)
+    redirect_to zone_feed_zones_path(filepath)
   end
 
   def exclude
@@ -162,7 +167,7 @@ end
     #ExcludeJob.perform_async(filepath) 
     #add def exclude_job
     exclude_job(filepath)
-    redirect_to zone_path(@feed_zone.zone_id)
+    redirect_to zone_feed_zones_path(@feed_zone.zone_id)
   end
  
   # PATCH/PUT /feed_zones/1 or /feed_zones/1.json
@@ -191,10 +196,15 @@ end
   # DELETE /feed_zones/1 or /feed_zones/1.json
   def destroy
     @id = FeedZone.find(params[:id])
+    puts "id: #{@id}"
     #delete file_path
     file_path = @id.file_path
+    puts "file path: #{file_path}"
     #ExcludeJob.perform_async(file_path)
     rpz_rule = "$INCLUDE #{file_path};\n"
+    zone = @id.zone
+    zone_path = zone.zone_path
+    puts "zone file: #{zone_path}"
     lines = File.readlines(@id.zone.zone_path)
     if lines.include?(rpz_rule)
       lines.delete(rpz_rule)
@@ -224,6 +234,13 @@ end
     # Only allow a list of trusted parameters through.
     def feed_zone_params
       params.require(:feed_zone).permit(:selected_action, :destination, :zone_id, :file_path, :category_id, :feed_id, :zone_name)
+    end
+
+    def rpz_action(action)
+      if action == "NXDOMAIN"
+        return "CNAME ."
+      end
+      action
     end
 
     #def to generate feedzone

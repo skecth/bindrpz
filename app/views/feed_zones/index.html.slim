@@ -33,7 +33,7 @@
                 tr
                   td= f.feed.category.name
                   td= f.feed.feed_name 
-                  td= f.selected_action
+                  td= change_action(f.selected_action)
                   -if f.destination.present?
                     td= f.destination
                   -else

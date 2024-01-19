@@ -15,7 +15,6 @@ class ZonesController < ApplicationController
     @feed_zones = FeedZone.all.where(zone_id: @zone.id) 
     puts "feed zone: #{@feed_zones.count}"
     @feed_zones = @zone.feed_zones
-    @zone = Zone.find(params[:id])
     # puts @feed_zones
     @custom_blacklists = CustomBlacklist.all.where(zone_id: @zone.id)
 
@@ -48,28 +47,19 @@ class ZonesController < ApplicationController
     @category = Category.all
     @zone =  Zone.find(params[:id])
     @zone_name = @zone.name
+    @feeds = Feed.all
     puts "zone: #{@zone_name}"
     @saved_feed_id = []
-    # Filter available Feed records to exclude saved feed_ids
-   # Assuming @zone represents a Zone object and has associated FeedZone records
-    puts "feed zone in zone: #{@zone.feed_zones}"
     @zone.feed_zones.each do |fz|
       @f_id = fz.feed_id
       @saved_feed_id << @f_id
-
     end
-    puts @saved_feed_id
-   
-    @available_feeds = Feed.where.not(id: @saved_feed_id)
-    @available_feeds.each do |f|
-      puts f.id
-    end
-    # puts "feed zone id #{@f_id}"
-
-
-
+    @available_feed_ids = Feed.where.not(id: @saved_feed_id).pluck(:id)
+    @feed_id_available = Feed.where(id: @available_feed_ids)
 
   end
+    # puts "feed zone id #{@f_id}"
+
 
   # POST /zones or /zones.json
   def create

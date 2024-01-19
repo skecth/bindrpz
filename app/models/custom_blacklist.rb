@@ -1,18 +1,9 @@
 class CustomBlacklist < ApplicationRecord
   enum blacklist_type: [:Domain, :IP]
+  enum kind: [:single, :bulk]
   mount_uploader :file, AttachmentUploader
 
-  enum kind: [:single, :bulk]
-  enum action: {
-      NXDOMAIN: "CNAME .",
-      NODATA: "CNAME *.",
-      PASSTHRU: "CNAME rpz-passthru.",
-      DROP: "CNAME rpz-drop.",
-      "TCP-ONLY": "CNAME rpz-tcp-only.",
-      CNAME: "CNAME",
-      A: "A",
-      AAA: "AAA"
-    }
+
   belongs_to :zone
   belongs_to :category
 
@@ -32,6 +23,19 @@ class CustomBlacklist < ApplicationRecord
   with_options if: :bulk? do
     validates :file, presence: true
     validate :file_format
+  end
+
+  def self.action_lists
+    {
+       "NXDOMAIN" => "CNAME .",
+       "NODATA" => "CNAME *.",
+       "PASSTHRU" => "CNAME rpz-passthru.",
+       "DROP" => "CNAME rpz-drop.",
+       "TCP-ONLY" => "CNAME rpz-tcp-only.",
+       "CNAME" => "CNAME",
+       "A" => "A",
+       "AAA" => "AAA"
+    }
   end
 
   def check_domain

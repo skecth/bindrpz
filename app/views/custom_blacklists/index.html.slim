@@ -31,7 +31,7 @@
               // find the category name based on the category_id from category table
               td = custom_blacklist.category.name
               td = custom_blacklist.domain
-              td = custom_blacklist.action
+              td = change_action(custom_blacklist.action)
               - if custom_blacklist.destination.present?
                 td = custom_blacklist.destination
               - else

@@ -49,7 +49,7 @@ class CustomBlacklistsController < ApplicationController
 
     respond_to do |format|
       if @custom_blacklist.save
-        format.html { redirect_to zone_custom_blacklists(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully created." }
+        format.html { redirect_to zone_custom_blacklists_path(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully created." }
         format.json { render :show, status: :created, location: @custom_blacklist }
         GenerateBlacklistJob.perform_async
       else
@@ -66,7 +66,7 @@ class CustomBlacklistsController < ApplicationController
     zone_id = params[:custom_blacklist][:zone_id]
     respond_to do |format|
       if @custom_blacklist.update(custom_blacklist_params) && update_files
-        format.html { redirect_to zone_custom_blacklists(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully updated." }
+        format.html { redirect_to zone_custom_blacklists_path(@custom_blacklist.zone_id), notice: "Custom blacklist was successfully updated." }
         format.json { render :show, status: :ok, location: @custom_blacklist }
         GenerateBlacklistJob.perform_async
       else
