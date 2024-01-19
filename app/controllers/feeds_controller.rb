@@ -87,38 +87,12 @@ class FeedsController < ApplicationController
   end
 
   def bulk_create
-    # create files in /etc/bind/rpz folder for each feed
-    system("sudo chmod 777 /etc/bind")
-    @feeds = Feed.all
-    # create /etc/bind/rpz folder if it does not exist
-    Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
-    
-    @feeds.each do |feed|
-      # give permission to create file
-      system("sudo chmod 777 /etc/bind/feed")
-      # create file
-      file = File.new("/etc/bind/feed/#{feed.feed_name}.txt", "w")
-      file.puts "# Last updated: #{Time.now.strftime("%d %b %Y %H:%M:%S")}"
-      @blacklist_data = Net::HTTP.get(URI.parse(feed.url)).split("\n").select{|line| line[0] != '#' && line != '' && line[0] != '!'}.reject{|line| line =~ /^:|^ff|^fe|^255|^#|^$/}.join("\n")
-      if feed.AdGuard?
-        @blacklist_data = @blacklist_data.split("\n").reject{|line| line.start_with?('@@')}.join("\n")
-      end
-      @blacklist_data = @blacklist_data.gsub(/^(\b0\.0\.0\.0\s+|127.0.0.1)|^server=\/|\/$|[\|\^]|\t/, '').gsub(/#.*$/, '')
-      # if the line has space, then split it 
-      @blacklist_data = @blacklist_data.split("\n").map{|line| line.split(' ')}.flatten.join("\n")
-      # remove . at the end of the line
-      @blacklist_data = @blacklist_data.gsub(/\.$/, '')
-      # @blacklist_data = @blacklist_data.gsub(/^www\./, '')
-      @blacklist_data = @blacklist_data.split("\n").map(&:strip).uniq.join("\n")  #remove duplicate  
-      file.puts @blacklist_data
-      # close file
-      file.close
+    if Sidekiq::Workers.new.size > 0 
+      redirect_to feeds_url, notice: "Automatic update is running. Please wait for a while until it finishes."
+    else
+      DomainUpdateJob.perform_async
+       redirect_to feeds_url, notice: "Update is running. Please wait for a while and reload the page."
     end
-    # reload bind9
-    # system("sudo systemctl reload bind9")
-    # redirect to feeds page
-    redirect_to feeds_url, notice: "Feeds were successfully created."
-    puts "Feeds were successfully created."
   end
 
 
