@@ -3,7 +3,6 @@ class DomainUpdateJob
   require "nokogiri"
   require "uri"
   include Sidekiq::Job
-  sidekiq_options queue: "default"
 
   def perform(*args)
     @feeds = Feed.all
