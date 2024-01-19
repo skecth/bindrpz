@@ -6,7 +6,7 @@ domain_update_job:
 
 
 update_feedzone_job:
-  cron: "*/2 * * * *" 
+  cron: "*/6 * * * *" 
   name: "Update Feedzone Job"
   class: "UpdateFeedzoneJob"
   queue: default

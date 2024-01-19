@@ -1,9 +1,8 @@
-class DomainUpdateJob
+class DomainUpdateJob < ApplicationJob
+  queue_as :default
   require "httparty"
   require "nokogiri"
   require "uri"
-  include Sidekiq::Job
-  sidekiq_options queue: "default"
 
   def perform(*args)
     @feeds = Feed.all
