@@ -2,7 +2,7 @@ class DomainUpdateJob
   require "httparty"
   require "nokogiri"
   require "uri"
-  include Sidekiq::Worker
+  include Sidekiq::Job
   sidekiq_options queue: "default"
 
   def perform(*args)
