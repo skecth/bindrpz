@@ -1,12 +1,11 @@
-require "httparty"
-require "nokogiri"
-require "uri"
-
 class DomainUpdateJob
+  require "httparty"
+  require "nokogiri"
+  require "uri"
   include Sidekiq::Worker
   sidekiq_options queue: "default"
 
-  def perform
+  def perform(*args)
     @feeds = Feed.all
     @feeds.each do |feed|
       file = "/etc/bind/feed/#{feed.feed_name}.txt"
@@ -50,4 +49,5 @@ class DomainUpdateJob
     #
   end
 end
+
 
