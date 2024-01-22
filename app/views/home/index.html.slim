@@ -34,20 +34,20 @@
 		.col-xl-7.col-lg-6.mt-3
 			.flex-fill.w-100.card
 				.card-header
-					h4.mb-1.header-title System Summary
+					.card-header-title.font-size-lg.text-capitalize.font-weight-normal System Summary
 				.card-body.py-0
 					.table-responsive 
 						table.table.table-centered.table-nowrap.table-hover.mb-0
 							tbody
 								tr style="height:53px;"
-									td 2
+									td 1
 									td Top Category in FeedZone
 									-if @top_category_in_feed_zone.present?
 										td = @top_category_in_feed_zone.name
 									-else
 										td Not available
 								tr style="height:53px;"
-									td 3
+									td 2
 									td Top Category in CustomBlacklist
 									- if @top_category_in_custom_blacklist.present?
 										td =@top_category_in_custom_blacklist.name
@@ -66,9 +66,9 @@
 						table.table.table-centered.table-nowrap.table-hover.mb-0
 							thead
 								tr 
-									td Zone Name 
-									td style="width: 50%" Feed Zone Activity
-									td Custom Blacklist Activity
+									th Zone Name 
+									th Feed Zone Activity
+									th Custom Blacklist Activity
 							tbody
 								-@zones.each do |zone|
 									tr 
