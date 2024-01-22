@@ -6,17 +6,20 @@
           ul 
               -@zone.errors.full_messages.each do |msg|
                   li = msg
+ 
+  / -@feeds = Feed.all
+  -saved_feed_ids = @zone.feed_zones.pluck(:feed_id)
 
+  -@feed_id_available = Feed.where.not(id: saved_feed_ids)
   .form-inputs
     = f.input :name, placeholder: "Demo_Zone", readonly: true
-    
     template[data-nested-form-target="template"]
       = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
         == render "zones/nested_form", f: feed_zones
       - f.fields_for :feed_zones do |feed_zones|
         == render "zones/nested_form", f: feed_zones
     div[data-nested-form-target="target"]
-    button(type="button" data-action="nested-form#add" class="btn btn-primary btn-sm" style="margin-top: 10px") Add 
 
-  .form-actions
-    = f.button :submit, 'Add Feed', class: "btn btn-new btn-sm", style: "margin-top: 10px"
+    = f.button :submit, 'Add Feed', class: "btn btn-new btn-sm me-2", style: "margin-top: 10px"
+    button.btn.btn-primary.btn-sm type="button" data-action="nested-form#add"  style="margin-top: 10px" 
+      i.bi.bi-plus

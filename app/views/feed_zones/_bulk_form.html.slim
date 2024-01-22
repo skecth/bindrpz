@@ -2,7 +2,7 @@
  
 
   .mb-3
-    = form.hidden_field :zone_id, value: @zone.id
+    = form.hidden_field :zone_id, value: zone_id,input_html: {value: zone_id}
   h4 Listed Feed
 
   div[data-controller="checkbox-select-all"]

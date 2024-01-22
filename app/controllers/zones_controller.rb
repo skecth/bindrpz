@@ -26,6 +26,7 @@ class ZonesController < ApplicationController
   end
   def zone_edit
     @zone = Zone.find(params[:id])
+    @feeds= Feed.all
   end
 
   def zone_update
@@ -49,14 +50,11 @@ class ZonesController < ApplicationController
     @zone_name = @zone.name
     @feeds = Feed.all
     puts "zone: #{@zone_name}"
-    @saved_feed_id = []
-    @zone.feed_zones.each do |fz|
-      @f_id = fz.feed_id
-      @saved_feed_id << @f_id
-    end
-    @available_feed_ids = Feed.where.not(id: @saved_feed_id).pluck(:id)
-    @feed_id_available = Feed.where(id: @available_feed_ids)
+    saved_feed_ids = @zone.feed_zones.pluck(:feed_id)
 
+    # Find the corresponding Feed records not in the saved_feed_ids array
+    @feed_id_available = Feed.where.not(id: saved_feed_ids)
+    
   end
     # puts "feed zone id #{@f_id}"
 
@@ -100,19 +98,20 @@ class ZonesController < ApplicationController
   # PATCH/PUT /zones/1 or /zones/1.json
   def update
     feed_zones_attributes = params[:zone][:feed_zones_attributes] # Ensure the correct nesting
-    puts "feed_zones_attributes: #{feed_zones_attributes}"
-    file_path = feed_zones_attributes.values.first['file_path']
-   
-    existing_feed_ids = []
-
-    # Loop through the feed_zones_attributes to filter out duplicate feed_ids
-    feed_zones_attributes.each do |_key, attributes|
-      feed_id = attributes['feed_id']
-      unless existing_feed_ids.include?(feed_id)
-        existing_feed_ids << feed_id
-      else
-        # Remove the duplicate feed_id from the params
-        feed_zones_attributes.delete(_key)
+    if feed_zones_attributes.nil?
+      flash[:notice] = "No feed zone selected."
+    else
+      file_path = feed_zones_attributes.values.first['file_path']
+      existing_feed_ids = []
+      # Loop through the feed_zones_attributes to filter out duplicate feed_ids
+      feed_zones_attributes.each do |_key, attributes|
+        feed_id = attributes['feed_id']
+        unless existing_feed_ids.include?(feed_id)
+          existing_feed_ids << feed_id
+        else
+          # Remove the duplicate feed_id from the params
+          feed_zones_attributes.delete(_key)
+        end
       end
     end
   

@@ -4,8 +4,8 @@ class CustomBlacklistsController < ApplicationController
 
   # GET /custom_blacklists or /custom_blacklists.json
   def index
-    @custom_blacklists = CustomBlacklist.all
     @zone = Zone.find(params[:zone_id])
+    @custom_blacklists = @zone.custom_blacklists
   end
 
   # GET /custom_blacklists/1 or /custom_blacklists/1.json
@@ -55,6 +55,7 @@ class CustomBlacklistsController < ApplicationController
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @custom_blacklist.errors, status: :unprocessable_entity }
+        @zone = Zone.find(params[:custom_blacklist][:zone_id])
         format.turbo_stream { render partial: "custom_blacklists/form_update", status: :unprocessable_entity }
 
       end

@@ -13,16 +13,16 @@ export default class extends Controller {
     const inputValue = this.inputTarget.value; // 'this.element' refers to the DOM element associated with the controller
     console.log(`Selected Value: ${inputValue}`);
     
-    const showIfValues = ['CNAME', 'A', 'AAA']; // Array of values to match against
+    const showIfValues = ['CNAME', 'A', 'AAAA']; // Array of values to match against
     
     if (showIfValues.includes(inputValue)) {
       this.outputTarget.hidden = false;
       if (inputValue === 'CNAME') {
-        this.outputTarget.placeholder = "Domain";
+        this.outputTarget.placeholder = "Domain only. (eg: virus.my)";
       } else if (inputValue === 'A') {
-        this.outputTarget.placeholder = "IPv4";
-      } else if (inputValue === 'AAA') {
-        this.outputTarget.placeholder = "IPv6";
+        this.outputTarget.placeholder = "IPv4 only. (eg: 1.1.1.1)";
+      } else if (inputValue === 'AAAA') {
+        this.outputTarget.placeholder = "IPv6 only. (eg: 1.1.1.1.1.1)";
       }
     } else {
       this.outputTarget.hidden = true;

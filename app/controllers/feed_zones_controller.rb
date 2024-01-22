@@ -4,9 +4,11 @@ class FeedZonesController < ApplicationController
   before_action :set_feed_zone, only: %i[ show edit update destroy]
   # GET /feed_zones or /feed_zones.json
   def index
-    @feed_zones = FeedZone.all
+    
     @zones = Zone.all
     @zone = Zone.find(params[:zone_id])
+    @feed_zones = @zone.feed_zones
+    puts "Feed zonesdfsfsdf: #{@feed_zones}"
     puts "zone: #{@zone}"
   end
 
