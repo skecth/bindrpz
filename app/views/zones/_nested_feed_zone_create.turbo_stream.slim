@@ -1,4 +1,3 @@
 = turbo_stream.update "remote_modal_body" do
   - if @zone.errors.any?
-    == render "zones/zone_edit", f: @zone
- 
+    = render partial: "zones/zone_edit", locals: { f: @zone }

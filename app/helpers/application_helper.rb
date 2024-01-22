@@ -16,8 +16,8 @@ module ApplicationHelper
             return "CNAME"
         elsif action == "A"
             return "A"
-        elsif action == "AAA"
-            return "AAA"
+        elsif action == "AAAA"
+            return "AAAA"
         else
             return "no action"
         end

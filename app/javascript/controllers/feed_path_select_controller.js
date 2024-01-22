@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="feed-path-select"
 export default class extends Controller {
-  static targets = ['feedId', 'output', 'zone']
+  static targets = ['feedId', 'zone']
   feedPaths = {}
 
 

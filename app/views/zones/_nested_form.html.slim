@@ -1,17 +1,20 @@
 .nested-form-wrapper(data-new-record="<%= f.object.new_record? %>")
   .row  
     div[data-controller="feed-path-select" data-action="change->feed-path-select#handleChange"]
-      = f.input :feed_id,as: :select,collection:  @feed_id_available.map{|feed| [feed.feed_name, feed.id]},include_blank: 'Select Feed',input_html: { class: 'form-select',data: {feed_path_select_target: "feedId",action: "change->feed_path_select#handleChange"}},label: false
-      = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
+      = f.input :feed_id,as: :select,collection:  @feed_id_available.map{|feed| [feed.feed_name, feed.id]},include_blank: 'Select Feed',input_html: { class: 'form-select ms-1',data: {feed_path_select_target: "feedId",action: "change->feed_path_select#handleChange"}},label: false
       input#name[data-feed-path-select-target="zone" name="zone_id" type="hidden" value="#{@zone_name}"]
     div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
       = f.input :selected_action, as: :select, collection: CustomBlacklist.action_lists,
       class: 'form-select',
       input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" },
       style: "margin-bottom: 0;"}, label: false, include_blank: 'Select Action'
-      .form-text 
-        a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
-      = f.input :destination,  placeholder: "Domain or IP Address", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
-      button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Delete
+     
+      .d-flex 
+        .p-2.w-100
+          = f.input :destination,  placeholder: "Domain or IP Address", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
+        .p-1.flex-shrink-1.mt-2
+          button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Delete
+      = f.input :file_path, input_html: { value: "", data: { feed_path_select_target: "output" } },as: :hidden
+      / button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Delete
 
   = f.hidden_field :_destroy
