@@ -20,8 +20,10 @@ class HomeController < ApplicationController
         @feed_used_count = FeedZone.where.not(feed_id: nil).count
         @cateogry_used = FeedZone.where.not(category_id: nil).count
         @cateogry_used_in_custom = CustomBlacklist.where.not(category_id: nil).count
+
         @total = @cateogry_used_in_custom +  @cateogry_used.to_i
-        
+        puts "total: #{@cateogry_used_in_custom}"
+
         @top_category_in_feed = nil
         max_feed_count = 0
         @categories.each do |category|

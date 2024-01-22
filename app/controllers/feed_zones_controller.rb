@@ -28,11 +28,8 @@ class FeedZonesController < ApplicationController
     @cat = @zone.feed_zones
      
     @feed_category = Category.includes(:feeds).where.not(feeds: { id: nil }).distinct
-    @cat.each do |cat|
-     puts cat.category_id
-    end
-    puts "feed: #{@cat}"
-
+    @category = FeedZone.distinct.pluck(:category_id)
+   
     
 
 end

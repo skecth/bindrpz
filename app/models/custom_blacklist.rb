@@ -69,7 +69,7 @@ class CustomBlacklist < ApplicationRecord
     # only first column has value
     elsif file.present? 
       CSV.foreach(file.path) do |row|
-        if row[1].present?
+        if row !=row[0].present?
           errors.add(:file, "Invalid file format. Only first column should have value.")
           break
         	end

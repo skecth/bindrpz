@@ -90,8 +90,8 @@ class FeedsController < ApplicationController
     if Sidekiq::Workers.new.size > 0 
       redirect_to feeds_url, notice: "Automatic update is running. Please wait for a while until it finishes."
     else
-      DomainUpdateJob.perform_async
-       redirect_to feeds_url, notice: "Update is running. Please wait for a while and reload the page."
+      DomainUpdateJob.perform_now
+       redirect_to feeds_url, notice: "Update is running. Please wait for a while."
     end
   end
 

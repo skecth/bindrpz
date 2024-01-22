@@ -53,19 +53,14 @@
 										td =@top_category_in_custom_blacklist.name
 									-else
 										td Not available
-								tr style="height:53px;"
-									td 4
-									td Category Used 
-									td #{@total}/#{@categories.count}
-								tr style="height:53px;"  
-									td 5
-									td Feed Used
-									td #{@feed_used_count}/#{@feeds.count}
+
+							class=	
 								
 	.row 
 		.col-xl-12.col-lg-12.mt-3
 			.card
-				.card-header Zone's Activity
+				.card-header 
+					.card-header-title.font-size-lg.text-capitalize.font-weight-normal Zone's Activity
 				.card-body
 					.table-responsive 
 						table.table.table-centered.table-nowrap.table-hover.mb-0
