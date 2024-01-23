@@ -51,8 +51,8 @@ class CustomBlacklist < ApplicationRecord
       end
     elsif action == "AAAA"
       if destination.nil? || !(
-        destination.match(/\A(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/)
-      )
+        destination.match(/\A(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\z/)
+        )
         errors.add(:destination, "IPv6 only.")
       end
     end

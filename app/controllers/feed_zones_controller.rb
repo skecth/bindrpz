@@ -28,8 +28,24 @@ class FeedZonesController < ApplicationController
     @cat = @zone.feed_zones
      
     @feed_category = Category.includes(:feeds).where.not(feeds: { id: nil }).distinct
-    @category = FeedZone.distinct.pluck(:category_id)
+    # puts "aasdas#{@feed_category}"
+    # @feed_category.each do |category|
+    #  puts "category: #{category.id}"
+    # end
+    # @category = FeedZone.distinct.pluck(:category_id)
    
+    # @saved_category_ids = @zone.feed_zones.pluck(:category_id)
+    # saved_feed_ids = @zone.feed_zones.pluck(:feed_id)
+    # @categories_available = Category.where.not(id: @saved_category_ids)
+    
+    # @categories.each do |category|
+    #   category.feeds.each do |feed|
+    #     @saved_id = feed.id
+
+    #     puts @saved_id
+    #   end
+    # end
+    
     
 
 end

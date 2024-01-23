@@ -3,6 +3,6 @@ class Category < ApplicationRecord
     has_many :feed_zones
     has_many :custom_blacklists
     accepts_nested_attributes_for :feed_zones, allow_destroy: true, reject_if: :all_blank
-    validates :name, presence: true, uniqueness: true    
+    validates :name, presence: true, uniqueness: { case_sensitive: false }
     
 end

@@ -12,14 +12,20 @@
 
   -@feed_id_available = Feed.where.not(id: saved_feed_ids)
   .form-inputs
-    = f.input :name, placeholder: "Demo_Zone", readonly: true
-    template[data-nested-form-target="template"]
-      = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
-        == render "zones/nested_form", f: feed_zones
-      - f.fields_for :feed_zones do |feed_zones|
-        == render "zones/nested_form", f: feed_zones
-    div[data-nested-form-target="target"]
+    -if @feed_id_available.present?
+      = f.input :name, placeholder: "Demo_Zone", readonly: true
+      template[data-nested-form-target="template"]
+        = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
+          == render "zones/nested_form", f: feed_zones
+        - f.fields_for :feed_zones do |feed_zones|
+          == render "zones/nested_form", f: feed_zones
+      div[data-nested-form-target="target"]
 
-    = f.button :submit, 'Add Feed', class: "btn btn-new btn-sm me-2", style: "margin-top: 10px"
-    button.btn.btn-primary.btn-sm type="button" data-action="nested-form#add"  style="margin-top: 10px" 
-      i.bi.bi-plus
+      button.btn.btn-info.btn-sm type="button" data-action="nested-form#add"  style="margin-top: 10px; font-style: normal;" 
+        i.bi.bi-plus Add More
+    -else
+      h5 All feeds have been added.
+
+  .form-submit
+    = f.button :submit, 'Add Feed', class: "btn btn-new btn-sm me-2", style: "margin-left: 83%"
+

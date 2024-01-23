@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 
 // Connects to data-controller="feed-path-select"
 export default class extends Controller {
-  static targets = ['feedId', 'zone']
+  static targets = ['feedId','output', 'zone']
   feedPaths = {}
 
 
@@ -40,8 +40,8 @@ export default class extends Controller {
       console.log(`ID: ${id}`);
       console.log(`Feed Name: ${feedName}`);
       const feedPath = `/etc/bind/${zoneName}/${feedName}.rpzfeed`
-        console.log(feedPath)
-        this.outputTarget.value =feedPath;
+      console.log(feedPath)
+      this.outputTarget.value =feedPath;
     } else {
       console.log("The last object does not have 'id' and 'feed_name' properties.");
     }

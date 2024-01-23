@@ -47,6 +47,7 @@ class ZonesController < ApplicationController
   def edit
     @category = Category.all
     @zone =  Zone.find(params[:id])
+
     @zone_name = @zone.name
     @feeds = Feed.all
     puts "zone: #{@zone_name}"

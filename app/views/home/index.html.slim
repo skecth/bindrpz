@@ -1,60 +1,39 @@
 .container-fluid 
 	.row 
-		.col-xl-5.col-lg-6 
+		.col-xl-12.col-lg-12.mt-3 
 			.row.mt-3
-				.col-sm-6
+				.col-sm-3
 					.card.widget-flat.shadow-sm.bg-body-tertiary.rounded 
 						.card-body
 							.float-end
 								i.bi.bi-slash-circle.new(style="font-size: 2.75rem; color: red")
 							h5.text-muted.fw-normal.mt-0 Total Blacklist 
 							h3.mt-3.mb-3 =  @total_blacklist
-				.col-sm-6
+				.col-sm-3
 					.card.widget-flat.shadow-sm.bg-body-tertiary.rounded 
 						.card-body
 							.float-end
 								i.bi.bi-folder.new(style="font-size: 2.75rem; color: blue")
-							h5.text-muted.fw-normal.mt-0 Total Category
-							h3.mt-3.mb-3 = @categories.count
-			.row.mt-3
-				.col-sm-6
+							h5.text-muted.fw-normal.mt-0 Total Feeds
+							h3.mt-3.mb-3 =@feeds.count
+				.col-sm-3
 					.card.widget-flat.shadow-sm.bg-body-tertiary.rounded 
 						.card-body
 							.float-end
 								i.bi.bi-diagram-2(style="font-size: 2.75rem; color: green")
-							h5.text-muted.fw-normal.mt-0 Total Zone
+							h5.text-muted.fw-normal.mt-0 Zone Created
 							h3.mt-3.mb-3 = @zones.count
-				.col-sm-6
+				.col-sm-3
 					.card.widget-flat.shadow-sm.bg-body-tertiary.rounded 
 						.card-body
 							.float-end
 								i.bi.bi-arrow-down-square(style="font-size: 2.75rem; color: black")
-							h5.text-muted.fw-normal.mt-0 Total Feed
-							h3.mt-3.mb-3 = @feeds.count
-		.col-xl-7.col-lg-6.mt-3
-			.flex-fill.w-100.card
-				.card-header
-					.card-header-title.font-size-lg.text-capitalize.font-weight-normal System Summary
-				.card-body.py-0
-					.table-responsive 
-						table.table.table-centered.table-nowrap.table-hover.mb-0
-							tbody
-								tr style="height:53px;"
-									td 1
-									td Top Category in FeedZone
-									-if @top_category_in_feed_zone.present?
-										td = @top_category_in_feed_zone.name
-									-else
-										td Not available
-								tr style="height:53px;"
-									td 2
-									td Top Category in CustomBlacklist
-									- if @top_category_in_custom_blacklist.present?
-										td =@top_category_in_custom_blacklist.name
-									-else
-										td Not available
-
-							class=	
+							h5.text-muted.fw-normal.mt-0 Total Categories
+							h3.mt-3.mb-3 = @categories.count
+							
+			
+				
+		
 								
 	.row 
 		.col-xl-12.col-lg-12.mt-3
@@ -62,12 +41,12 @@
 				.card-header 
 					.card-header-title.font-size-lg.text-capitalize.font-weight-normal Zone's Activity
 				.card-body
-					.table-responsive 
-						table.table.table-centered.table-nowrap.table-hover.mb-0
+					.table-responsive-lg
+						table.table.column-data#dttb data-controller="datatables"
 							thead
 								tr 
 									th Zone Name 
-									th Feed Zone Activity
+									th style="width: 50%" Feed Zone Activity
 									th Custom Blacklist Activity
 							tbody
 								-@zones.each do |zone|
@@ -77,8 +56,7 @@
 										td = area_chart [{ name: zone.name, data: zone.custom_blacklists.group_by_minute(:created_at).count}], legend: false, library: { chartArea: { width: '30%', height: '30%' } }
 
 					
-
-
+	    
 
 
 / -if current_user.admin?
