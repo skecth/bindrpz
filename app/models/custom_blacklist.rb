@@ -12,17 +12,21 @@ class CustomBlacklist < ApplicationRecord
   validates :blacklist_type, presence: true
   validates :action, presence: true
   validates :domain, presence: true
+  validate :check_action
 
 
 
   with_options if: :single? do 
     validates :domain, presence: true
     validate :check_domain
+
   end
 
   with_options if: :bulk? do
     validates :file, presence: true
     validate :file_format
+    validate :check_domain
+
   end
 
   def self.action_lists
@@ -34,9 +38,28 @@ class CustomBlacklist < ApplicationRecord
        "TCP-ONLY" => "CNAME rpz-tcp-only.",
        "CNAME" => "CNAME",
        "A" => "A",
-       "AAA" => "AAA"
+       "AAAA" => "AAAA"
     }
   end
+  def check_action
+    if action == "CNAME"
+      if destination.nil? || !(
+        destination.match(/^([a-zA-Z0-9-]+\.){1,}[a-zA-Z]{2,}$/) 
+      )
+        errors.add(:destination, "Domain name only.")
+      end
+    elsif action == "A"
+      if destination.nil? || !(destination.match(/\A(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\z/))
+        errors.add(:destination, "IPv4 only.")
+      end
+    elsif action == "AAAA"
+      if destination.nil? || !(
+        destination.match(/\A(?:[0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}\z/)
+        )
+        errors.add(:destination, "IPv6 only.")
+      end
+    end
+  end 
 
   def check_domain
     if blacklist_type == "Domain"
