@@ -95,7 +95,7 @@ class FeedsController < ApplicationController
       redirect_to feeds_url, notice: "Automatic update is running. Please wait for a while until it finishes."
     else
       DomainUpdateJob.perform_now
-       redirect_to feeds_url, notice: "Update is running. Please wait for a while."
+       redirect_to feeds_url, notice: "Feeds have been successfuly updated."
     end
   end
 
