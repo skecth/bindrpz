@@ -1,12 +1,41 @@
 .container_title {
-    font-family: "Open Sans";
-    font-size: 32px;
-    font-weight: 700;
+	font-family: "Open Sans";
+	font-size: 32px;
+	font-weight: 700;
 }
 .container_desc{
-    font-family: "Open Sans";
-    font-size: 18px;
+	font-family: "Open Sans";
+	font-size: 18px;
 }
 .container_button{
-    margin-top: 25px;
+	margin-top: 25px;
+}
+
+.pagy-bootstrap-nav{
+	display: flex;
+	float: right;
+}
+
+
+
+.page-link{
+	font-size: 13px;
+	font-weight: 500;
+	background-color: white;
+	padding: 4px 7px;
+	border-width: 0px;
+	border-radius: 3px;
+	color: #34383d;
+	text-decoration: none;
+	float: left;
+}
+
+.page-item.active .page-link {
+	background-color: #1d60b0;
+	color: white;
+}
+
+.page-item.disabled .page-link {
+	color: darkgray;
+	background-color: white;
 }

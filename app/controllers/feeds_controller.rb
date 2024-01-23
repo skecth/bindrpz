@@ -2,7 +2,7 @@ class FeedsController < ApplicationController
   require 'net/http'
   require 'uri'
   include Pagy::Backend
-  before_action :authenticate_admin!, except: %i[ index]
+  before_action :authenticate_admin!, except: %i[ index show]
   before_action :set_feed, only: %i[ show edit update destroy ]
 
   # GET /feeds or /feeds.json
@@ -79,10 +79,14 @@ class FeedsController < ApplicationController
   # DELETE /feeds/1 or /feeds/1.json
   def destroy
     @feed = Feed.find(params[:id])
-    @feed.destroy
     respond_to do |format|
-      format.html { redirect_to feeds_url, notice: "Feed was successfully destroyed." }
-      format.json { head :no_content }
+      if @feed.destroy
+        format.html { redirect_to feeds_url, notice: "Feed was successfully destroyed." }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to feeds_url, notice: "Feed can't be destroyed. There are some zones used the feed." }
+        format.json { head :no_content }
+      end
     end
   end
 

@@ -1,5 +1,5 @@
 class Feed < ApplicationRecord
-	has_many :feed_zones
+	has_many :feed_zones, dependent: :restrict_with_error
 	belongs_to :category
 	enum blacklist_type: [:Domain, :IP, :Host, :DNSMASQ, :AdGuard]
 
