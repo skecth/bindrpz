@@ -16,7 +16,7 @@
       = f.input :destination, input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } }, placeholder: "Destination", label: false
     = f.hidden_field :kind, value: kind
     // hidden field for zone_id
-    = f.input :zone_id, value: zone_id,input_html: {value: zone_id}
+    = f.hidden_field :zone_id, value: zone_id,input_html: {value: zone_id}
 
   .form-actions
     = f.button :submit, class: "btn btn-new btn-sm"

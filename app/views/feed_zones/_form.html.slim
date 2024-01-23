@@ -20,12 +20,14 @@
                 div[data-controller="showhide" data-showhide-show-if-value="CNAME ."]
                   = check_box_tag 'category_ids[]', category.id
                   = category.name
-                  = form.select "feed_#{category.id}_selected_action",
-                  options_for_select(CustomBlacklist.action_lists),
-                  { include_blank: 'Select Action' },
-                  class: "form-control rounded",
-                  data: { showhide_target: "input", action: "change->showhide#toggle"}
-                  .form-text#basic-addon4 
-                    a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
+                  .mb-3
+                    .input-group
+                      = form.select "feed_#{category.id}_selected_action",
+                      options_for_select(CustomBlacklist.action_lists),
+                      { include_blank: 'Select Action' },
+                      class: "form-control rounded",
+                      data: { showhide_target: "input", action: "change->showhide#toggle"}
+                    .form-text#basic-addon4 
+                      a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
                   = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
   = form.submit 'Submit',  class: "btn btn-new btn-sm"

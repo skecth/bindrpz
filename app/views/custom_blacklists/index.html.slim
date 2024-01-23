@@ -38,4 +38,4 @@
                 td = "N/A"
               td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
               td = link_to "Edit", edit_custom_blacklist_path(custom_blacklist, zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-new btn-sm" 
-              td = link_to "Delete", custom_blacklist, data: {turbo_method: :delete, confirm: "Are you sure"}, class: "btn btn-danger btn-sm"
+              td = button_to "Delete", custom_blacklist, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm"    
