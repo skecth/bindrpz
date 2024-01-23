@@ -25,6 +25,7 @@ class CategoriesController < ApplicationController
   # POST /categories or /categories.json
   def create
     @category = Category.new(category_params)
+    @category.name.upcase!
 
     respond_to do |format|
       if @category.save
@@ -53,11 +54,14 @@ class CategoriesController < ApplicationController
 
   # DELETE /categories/1 or /categories/1.json
   def destroy
-    @category.destroy
-
     respond_to do |format|
-      format.html { redirect_to categories_url, notice: "Category was successfully destroyed." }
-      format.json { head :no_content }
+      if @category.destroy 
+        format.html { redirect_to categories_url, notice: "Category was successfully destroyed." }
+        format.json { head :no_content }
+      else
+        format.html { redirect_to categories_url, notice: "Category can't be destroyed. There are some zones used the feed in this category." }
+        format.json { head :no_content }
+      end
     end
   end
 

@@ -25,11 +25,10 @@ html
                   a = link_to authenticated_root_path, class: "nav-link px-0 align-middle"
                     i.fs-10.bi-house.pe-2
                     span.ms-1.d-none.d-sm-inline Home
-                - if current_user.admin?
-                  li
-                    a = link_to categories_path, class: "nav-link px-0 align-middle"
-                      i.fs-10.bi-c-square.pe-2
-                      span.ms-1.d-none.d-sm-inline Category
+                li
+                  a = link_to categories_path, class: "nav-link px-0 align-middle"
+                    i.fs-10.bi-c-square.pe-2
+                    span.ms-1.d-none.d-sm-inline Category
                 li 
                   a = link_to feeds_path, class: "nav-link px-0 align-middle"
                     i.fs-10.bi-dropbox.pe-2 
