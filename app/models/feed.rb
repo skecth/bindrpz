@@ -2,7 +2,8 @@ class Feed < ApplicationRecord
 	has_many :feed_zones, dependent: :restrict_with_error
 	belongs_to :category
 	enum blacklist_type: [:Domain, :IP, :Host, :DNSMASQ, :AdGuard]
-
+	
+	before_validation :generate_feed_name, on: :create
 	validates :source, presence: true
 	validates :blacklist_type, presence: true
 	validates :feed_path, presence: true
@@ -12,7 +13,8 @@ class Feed < ApplicationRecord
 	validate :validate_link, on: :create
 
 	def validate_link
-		@feed = self
+		if self.url.present?
+			@feed = self
 	    # check if link is valid
 	    uri = URI.parse(@feed.url)
 	    http = Net::HTTP.new(uri.host, uri.port)
@@ -56,6 +58,13 @@ class Feed < ApplicationRecord
 				end
 	
 	    end
+		end
+	end
+
+	def generate_feed_name
+		self.feed_name = "#{self.category.name}_#{self.source}" if category.present? && source.present?
+		self.feed_name.upcase! if self.feed_name.present?
+		self.feed_path = "/etc/bind/feed/#{self.feed_name.upcase!}.txt" if self.feed_name.present?
 	end
 	
 

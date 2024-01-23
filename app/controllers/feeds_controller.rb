@@ -40,16 +40,7 @@ class FeedsController < ApplicationController
 
   def create
     @feed = Feed.new(feed_params)
-
-    feed_name= @feed.feed_name = "#{@feed.category.name}_#{@feed.source}"
-    # @feed.feed_name.upcase!
-
-    system("sudo chmod 777 /etc/bind")
-    # create /etc/bind/rpz folder if it does not exist
-    Dir.mkdir("/etc/bind/feed") unless File.exist?("/etc/bind/feed")
-    @feed.feed_path = "/etc/bind/feed/#{feed_name.upcase!}.txt"
-  
-
+    
     respond_to do |format|
       if @feed.save
         format.html { redirect_to feeds_path, notice: "Feed was successfully created." }
@@ -109,7 +100,7 @@ class FeedsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def feed_params
-      params.require(:feed).permit(:url, :source, :blacklist_type, :feed_name, :feed_path, :category_id, :number_of_domain)
+      params.require(:feed).permit(:url, :source, :blacklist_type, :category_id, :number_of_domain)
     end
 
     def authenticate_admin!
