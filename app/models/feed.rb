@@ -64,7 +64,7 @@ class Feed < ApplicationRecord
 	def generate_feed_name
 		self.feed_name = "#{self.category.name}_#{self.source}" if category.present? && source.present?
 		self.feed_name.upcase! if self.feed_name.present?
-		self.feed_path = "/etc/bind/feed/#{self.feed_name.upcase!}.txt" if self.feed_name.present?
+		self.feed_path = "/etc/bind/feed/#{self.feed_name}.txt"
 	end
 	
 
