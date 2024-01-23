@@ -5,8 +5,8 @@ class CustomBlacklistsController < ApplicationController
 
   # GET /custom_blacklists or /custom_blacklists.json
   def index
-    @custom_blacklists = CustomBlacklist.all
     @zone = Zone.find(params[:zone_id])
+    @custom_blacklists = @zone.custom_blacklists
   end
 
   # GET /custom_blacklists/1 or /custom_blacklists/1.json
