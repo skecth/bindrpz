@@ -4,7 +4,7 @@ class FeedZonesController < ApplicationController
   before_action :set_feed_zone, only: %i[ show edit update destroy]
   # GET /feed_zones or /feed_zones.json
   def index
-    
+    @feed_zone = FeedZone.new
     @zones = Zone.all
     @zone = Zone.find(params[:zone_id])
     @feed_zones = @zone.feed_zones
@@ -28,59 +28,22 @@ class FeedZonesController < ApplicationController
     @cat = @zone.feed_zones
      
     @feed_category = Category.includes(:feeds).where.not(feeds: { id: nil }).distinct
-    # puts "aasdas#{@feed_category}"
-    # @feed_category.each do |category|
-    #  puts "category: #{category.id}"
-    # end
-    # @category = FeedZone.distinct.pluck(:category_id)
-   
-    # @saved_category_ids = @zone.feed_zones.pluck(:category_id)
-    # saved_feed_ids = @zone.feed_zones.pluck(:feed_id)
-    # @categories_available = Category.where.not(id: @saved_category_ids)
-    
-    # @categories.each do |category|
-    #   category.feeds.each do |feed|
-    #     @saved_id = feed.id
-
-    #     puts @saved_id
-    #   end
-    # end
-    
-    
-
-end
+  end
+  def delete_all
+    zone = Zone.find(params[:id])
+    if params[:feed_zone_ids].present?
+      puts "feed zone id exist" 
+      FeedZone.destroy(params[:feed_zone_ids])
+      respond_to do |format|
+        format.html { redirect_to zone_feed_zones_path(zone) }
+        format.json { head :no_content }
+      end
+    else
+      puts "not exist"
+    end
+  end
   
 
-
-  # def feed_upload_check
-  #   @zones = Zone.all
-  #   @categories = Category.all
-  #   @categoryFeed = @categories.select { |cat| cat.feeds.any? }
-  #   @zone = Zone.find(params[:id]) 
-  #   @feedZone = FeedZone.all
-
-  #   if params[:feed_ids].present?
-  #     puts "Feed ids present"
-  #     params[:feed_ids].each do |feed_id|
-  #       feedID = Feed.find(feed_id)
-  #       categoryID = feedID.category_id
-  #       category = Category.find(feedID.category_id)
-
-  #       file_zone = "/etc/bind/#{@zone.name}/#{category.name}.rpzfeed"
-  #       # Get the selected action and destination for this feed
-  #       selected_action = params["feed_#{feed_id}_selected_action"]
-  #       feedDestination = params["feed_#{feed_id}_destination"]
-
-  #       if feed_zone.nil?
-  #         @feedZone = FeedZone.create(zone_id: @zone.id, feed_id: feed_id, selected_action: selected_action, destination: feedDestination, file_path: file_zone, category_id: categoryID)
-  #       else
-  #         flash[:alert] ="Feed already exist"
-  #       end
-  #     end
-  #     GenerateRpzJob.perform_async
-  #     redirect_to zone_path(@zone)
-  #   end
-  # end
 
 
   
@@ -199,14 +162,7 @@ end
       end
     end
   end
-  
-  def delete_all
-    if params[:feed_zone_ids].present?
-      puts "Exist"
-    else
-      puts "Not exist"
-    end
-  end
+
 
   # DELETE /feed_zones/1 or /feed_zones/1.json
   def destroy

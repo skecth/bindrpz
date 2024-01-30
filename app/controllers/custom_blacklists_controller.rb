@@ -5,6 +5,7 @@ class CustomBlacklistsController < ApplicationController
 
   # GET /custom_blacklists or /custom_blacklists.json
   def index
+    @custom_blacklist = CustomBlacklist.new
     @zone = Zone.find(params[:zone_id])
     @custom_blacklists = @zone.custom_blacklists
   end
@@ -69,6 +70,21 @@ class CustomBlacklistsController < ApplicationController
         @zone = Zone.find(params[:custom_blacklist][:zone_id])
         format.turbo_stream { render partial: "custom_blacklists/form_update", status: :unprocessable_entity }
       end
+    end
+  end
+
+  def delete_all
+    zone = Zone.find(params[:id])
+    if params[:custom_blacklist_ids].present?
+
+      puts "custom blacklist id exist" 
+      CustomBlacklist.destroy(params[:custom_blacklist_ids])
+      respond_to do |format|
+        format.html { redirect_to zone_custom_blacklists_path(zone.id), notice: "Custom blacklists has been delete " }
+        format.json { head :no_content }
+      end
+    else
+      puts "not exist"
     end
   end
 
