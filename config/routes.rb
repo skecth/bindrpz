@@ -20,7 +20,12 @@ Rails.application.routes.draw do
 
   get 'custom_blacklists/new_bulk' => 'custom_blacklists#new_bulk', as: :new_bulk
   resources :custom_blacklists
-  resources :feed_zones
+  resources :feed_zones do
+    collection do
+      delete 'delete_all'
+    end
+  end
+
   
   resources :categories
   resources :feeds 
@@ -60,9 +65,11 @@ Rails.application.routes.draw do
   post 'zone/feed_zone/new/:id', to: "feed_zones#create", as: :createFeedZone
   get 'zone/:id/edit', to: "zones#zone_edit", as: :zone_edit
   post 'zone/:id/edit', to: "zones#zone_update", as: :zone_update
-  delete 'bulk_destroy', to: "feed_zones#delete_all", as: :delete_all
+  # delete 'bulk_destroy', to: "feed_zones#delete_all", as: :delete_all
   # get 'single_form' => 'feeds#new', as: :single_form
   post '/include', to: 'feed_zones#include', as: 'include'
   post '/exclude', to: 'feed_zones#exclude', as: 'exclude'
   get '/zones/:id/custom_blacklist', to: "zones#show", as: :custom_blacklist_index
+  delete '/zones/:id/feed_zone', to: "feed_zones#delete_all", as: :delete_feed_zone_all
+  delete '/zones/:id/custom_blacklist', to: "custom_blacklists#delete_all", as: :delete_custom_blacklist_all
 end

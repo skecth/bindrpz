@@ -4,35 +4,30 @@ export default class extends Controller {
   static targets = ["parent", "child"];
 
   connect() {
-    console.log("print input")
-
-    // // Initialize the state of child checkboxes based on parent checkboxes
-    // this.childTargets.forEach(child => {
-    //   const parentId = child.dataset.parentId;
-    //   child.checked = this.parentTargets[parentId].checked;
-    // });
-    console.log("print input")
-
+    // set all to false on page refresh
+    this.childTargets.map(x => x.checked = false)
+    this.parentTarget.checked = false
+    console.log("ini checkbox all.")
   }
 
-  toggleChildren(event) {
-    const parentId = event.target.dataset.parentId;
-    const isChecked = event.target.checked;
-    console.log("checkbox click")
-    // Check/uncheck child checkboxes associated with the clicked parent
-    this.childTargets.forEach(child => {
-      if (child.dataset.parentId === parentId) {
-        child.checked = isChecked;
-      }
-    });
+  toggleChildren() {
+    if (this.parentTarget.checked) {
+      this.childTargets.forEach(child => {
+        child.checked = true;
+      });
+    } else {
+      this.childTargets.forEach(child => {
+        child.checked = false;
+      });
+    }
   }
-
-  toggleParent(event) {
-    const parentId = event.target.dataset.parentId;
-
-    // Check the parent checkbox if all child checkboxes are checked
-    this.parentTargets[parentId].checked = this.childTargets
-      .filter(child => child.dataset.parentId === parentId)
-      .every(child => child.checked);
+  
+  toggleParent() {
+    if (this.childTargets.some(child => !child.checked)) {
+      this.parentTarget.checked = false;
+    } else {
+      this.parentTarget.checked = true;
+    }
   }
+  
 }

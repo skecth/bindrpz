@@ -1,41 +1,49 @@
-=render 'zones/navbar'
-.container.bg-white.pt-3
-  .dropdown.d-md-flex.justify-content-end
-    a.btn.btn-new.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
-      | Add Blacklist
-    ul.dropdown-menu aria-labelledby="dropdownMenuLink"
-      li
-        a = link_to new_custom_blacklist_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
-          |  Single blacklist
-      li
-        a = link_to new_bulk_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
-          |  Bulk blacklist
+= form_with(model: @custom_blacklist, url: delete_custom_blacklist_all_path(@zone), method: :delete) do 
+  =render 'zones/navbar'
+  .container.bg-white.pt-3
+    .d-md-flex.justify-content
+      button.btn.btn-danger.btn-sm.btn-danger type="submit" data-turbo-confirm="Are you sure" data-turbo-method="delete"
+        i.bi.bi-plus-lg
+        | Delete Feed
+    .dropdown.d-md-flex.justify-content-end
+      a.btn.btn-new.btn-sm.dropdown-toggle href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false"
+        | Add Blacklist
+      ul.dropdown-menu aria-labelledby="dropdownMenuLink"
+        li
+          a = link_to new_custom_blacklist_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
+            |  Single blacklist
+        li
+          a = link_to new_bulk_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
+            |  Bulk blacklist
 
-  // show all custom blaclist that belongs to a zone
-  br
-  .card.border-0 
-    .table-responsive-lg
-      table.table.column-data#dttb data-controller="datatables"
-        thead
-          tr
-            th Category
-            th Blacklist
-            th Resource Record
-            th Destination
-            th Created
-            th
-            th
-        tbody
-          - @custom_blacklists.each do |custom_blacklist|
-            tr
-              // find the category name based on the category_id from category table
-              td = custom_blacklist.category.name
-              td = custom_blacklist.domain
-              td = change_action(custom_blacklist.action)
-              - if custom_blacklist.destination.present?
-                td = custom_blacklist.destination
-              - else
-                td = "N/A"
-              td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
-              td = link_to "Edit", edit_custom_blacklist_path(custom_blacklist, zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-new btn-sm" 
-              td = button_to "Delete", custom_blacklist, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm"    
+    // show all custom blaclist that belongs to a zone
+    br
+    .card.border-0 
+      .table-responsive-lg
+        div data-controller="checkbox-select-all"
+          table.table.column-data#dttb data-controller="datatables"
+            thead
+              tr
+                th = check_box_tag 'select_all', false, {},data: { checkbox_select_all_target: 'parent', checkbox_select_all_action: 'change->checkbox-select-all#toggleChildren'}
+                th Category
+                th Blacklist
+                th Resource Record
+                th Destination
+                th Created
+                th
+                th
+            tbody
+              - @custom_blacklists.each do |custom_blacklist|
+                tr
+                  // find the category name based on the category_id from category table
+                  td = check_box_tag 'custom_blacklist_ids[]', custom_blacklist.id, false, data: { checkbox_select_all_target: 'child', checkbox_select_all_action: 'change->checkbox-select-all#toggleParent' }
+                  td = custom_blacklist.category.name
+                  td = custom_blacklist.domain
+                  td = change_action(custom_blacklist.action)
+                  - if custom_blacklist.destination.present?
+                    td = custom_blacklist.destination
+                  - else
+                    td = "N/A"
+                  td = custom_blacklist.created_at.strftime("%d %b %Y %H:%M:%S")
+                  td = link_to "Edit", edit_custom_blacklist_path(custom_blacklist, zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "btn btn-new btn-sm" 
+                  td = button_to "Delete", custom_blacklist, form: { data: { turbo_confirm: "Are you sure?" } }, method: :delete, class: "btn btn-danger btn-sm"    
