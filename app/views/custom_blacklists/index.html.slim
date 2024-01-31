@@ -13,7 +13,7 @@
           li
             a = link_to new_bulk_path(zone_id: @zone.id), data: { turbo_frame: "remote_modal" }, class: "dropdown-item"
               |  Bulk blacklist
-      a.btn.btn-danger.btn-sm.btn-danger.ms-2 type="submit" data-turbo-confirm="Are you sure" data-turbo-method="delete"
+      button.btn.btn-danger.btn-sm.btn-danger.ms-2 type="submit" data-turbo-confirm="Are you sure" data-turbo-method="delete"
         | Delete Feed
 
     // show all custom blaclist that belongs to a zone
