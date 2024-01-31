@@ -12,7 +12,7 @@
           li  
             a = link_to newFeedZone_path(@zone),data: { turbo_frame: "remote_modal" }, class: "dropdown-item" do
               |  By Category
-      a.btn.btn-danger.btn-sm.btn-danger.ms-2 type="submit" data-turbo-confirm="Are you sure" data-turbo-method="delete"
+      button.btn.btn-danger.btn-sm.btn-danger.ms-2 type="submit" data-turbo-confirm="Are you sure" data-turbo-method="delete"
         | Delete Feed
 
     
