@@ -14,9 +14,11 @@
     "datatables.net-dt": "^1.13.6",
     "esbuild": "^0.19.2",
     "nodemon": "^3.0.1",
+    "popover": "^2.4.1",
     "postcss": "^8.4.29",
     "postcss-cli": "^10.1.0",
     "sass": "^1.66.1",
+    "stimulus": "^3.2.2",
     "stimulus-rails-nested-form": "^4.1.0"
   },
   "scripts": {
