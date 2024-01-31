@@ -16,6 +16,9 @@ application.register("datatables", DatatablesController)
 import DomainTableController from "./domain_table_controller"
 application.register("domain-table", DomainTableController)
 
+import FeedDatatableController from "./feed_datatable_controller"
+application.register("feed-datatable", FeedDatatableController)
+
 import FeedPathSelectController from "./feed_path_select_controller"
 application.register("feed-path-select", FeedPathSelectController)
 
@@ -25,11 +28,11 @@ application.register("hello", HelloController)
 import NestedFormController from "./nested_form_controller"
 application.register("nested-form", NestedFormController)
 
+import PopoverController from "./popover_controller"
+application.register("popover", PopoverController)
+
 import RemoteModalController from "./remote_modal_controller"
 application.register("remote-modal", RemoteModalController)
 
 import ShowhideController from "./showhide_controller"
 application.register("showhide", ShowhideController)
-
-import FeedDatatableController from "./feed_datatable_controller"
-application.register("feed_datatable", FeedDatatableController)
