@@ -1,4 +1,4 @@
-= simple_form_for @zone,html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' } } do |f|
+= simple_form_for @zone,html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' }, autocomplete: "off" } do |f|
   = f.error_notification
   -if @zone.errors.any?
       .alert.alert-danger 
@@ -13,7 +13,7 @@
   -@feed_id_available = Feed.where.not(id: saved_feed_ids)
   .form-inputs
     -if @feed_id_available.present?
-      = f.input :name, placeholder: "Demo_Zone", readonly: true
+      = f.hidden_field :name, placeholder: "Demo_Zone", readonly: true
       template[data-nested-form-target="template"]
         = f.fields_for :feed_zones, FeedZone.new, child_index: 'NEW_RECORD' do |feed_zones|
           == render "zones/nested_form", f: feed_zones
@@ -21,8 +21,8 @@
           == render "zones/nested_form", f: feed_zones
       div[data-nested-form-target="target"]
 
-      button.btn.btn-info.btn-sm type="button" data-action="nested-form#add"  style="margin-top: 10px; font-style: normal;" 
-        i.bi.bi-plus Add More
+      button.btn.btn-warning.btn-sm type="button" data-action="nested-form#add" 
+        | Add More
     -else
       h5 All feeds have been added.
 

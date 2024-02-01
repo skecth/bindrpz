@@ -1,4 +1,4 @@
-= form_with(model: @feed_zone, url: createFeedZone_path, method: :post) do |form|
+= form_with(model: @feed_zone, url: createFeedZone_path, method: :post, autocomplete: "off") do |form|
   - if @feed_zone.errors.any?
     div style="color: red;"
       h2= pluralize(@feed_zone.errors.count, 'error')
@@ -17,17 +17,17 @@
           -if category.feeds.any?
             tr
               td
-                div[data-controller="showhide" data-showhide-show-if-value="CNAME ."]
-                  = check_box_tag 'category_ids[]', category.id
-                  = category.name
+                div[data-controller="showhide"]
+                  table.table.table-borderless
+                    thead 
+                      tr
+                        th(style="width:20px;") = check_box_tag 'category_ids[]', category.id
+                        th = category.name
                   .mb-3
-                    .input-group
-                      = form.select "feed_#{category.id}_selected_action",
+                    = form.select "feed_#{category.id}_selected_action",
                       options_for_select(CustomBlacklist.action_lists),
                       { include_blank: 'Select Action' },
                       class: "form-control rounded",
                       data: { showhide_target: "input", action: "change->showhide#toggle"}
-                    .form-text#basic-addon4 
-                      a[href="https://www.ietf.org/archive/id/draft-vixie-dnsop-dns-rpz-00.txt" target="_blank"] What is Action?
-                  = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
+                    = form.text_field "feed_#{category.id}_destination", class: "form-control", placeholder: "Destination", data: {showhide_target: "output"}
   = form.submit 'Submit',  class: "btn btn-new btn-sm"

@@ -1,11 +1,10 @@
-= simple_form_for @zone,html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' } } do |f|
+= simple_form_for @zone, html: { data: { controller: "nested-form", nested_form_wrapper_selector_value: '.nested-form-wrapper' }, autocomplete: "off" } do |f|
   = f.error_notification
   = f.error_notification message: f.object.errors[:base].to_sentence if f.object.errors[:base].present?
 
-  .form-inputs
+  .form-inputs 
     =f.input :user_id, as: :hidden, input_html: { value: current_user.id }
     = f.input :name, placeholder: "Demo_Zone"
-
     = f.input :description, placeholder: "Description"
 
       

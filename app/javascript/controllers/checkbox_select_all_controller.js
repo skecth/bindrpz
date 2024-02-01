@@ -1,37 +1,14 @@
-import { Controller } from "@hotwired/stimulus"
+import CheckboxSelectAll from 'stimulus-checkbox-select-all'
 
-// Connects to data-controller="checkbox-select-parent"
-export default class extends Controller {
-  static targets = ["parent", "child"]
+export default class extends CheckboxSelectAll {
   connect() {
-    // set all to false on page refresh
-    console.log("test baru-1")
-    this.childTargets.map(x => x.checked = false)
-    this.parentTarget.checked = false
-    console.log("test baru-2")
+    super.connect()
+    console.log('Do what you want here.')
 
-  }
+    // Get all checked checkboxes
+    this.checked
 
-  toggleChildren() {
-    console.log("tetsing toggle childeren")
-    if (this.parentTarget.checked) {
-      console.log("parent check");
-      this.childTargets.forEach(child => {
-        child.checked = true;
-      });
-    } else {
-      this.childTargets.forEach(child => {
-        child.checked = false;
-      });
-    }
-  }
-  toggleParent() {
-    console.log("tetsing toggle childeren")
-
-    if (this.childTargets.map(x => x.checked).includes(false)) {
-      this.parentTarget.checked = false
-    } else {
-      this.parentTarget.checked = true
-    }
+    // Get all unchecked checkboxes
+    this.unchecked
   }
 }

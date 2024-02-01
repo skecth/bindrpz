@@ -47,18 +47,13 @@ class ZonesController < ApplicationController
   def edit
     @category = Category.all
     @zone =  Zone.find(params[:id])
-
+    @zone.feed_zones.build
     @zone_name = @zone.name
     @feeds = Feed.all
-    puts "zone: #{@zone_name}"
     saved_feed_ids = @zone.feed_zones.pluck(:feed_id)
-
     # Find the corresponding Feed records not in the saved_feed_ids array
     @feed_id_available = Feed.where.not(id: saved_feed_ids)
-    
   end
-    # puts "feed zone id #{@f_id}"
-
 
   # POST /zones or /zones.json
   def create
