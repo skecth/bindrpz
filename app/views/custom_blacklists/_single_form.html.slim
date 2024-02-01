@@ -1,4 +1,4 @@
-= simple_form_for(@custom_blacklist) do |f|
+= simple_form_for @custom_blacklist,html: { autocomplete: "off" } do |f|
   - if @custom_blacklist.errors.any?
     div style="color: red;"
       h2= pluralize(@custom_blacklist.errors.count, 'error')

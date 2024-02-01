@@ -9,7 +9,7 @@ class Feed < ApplicationRecord
 	validates :feed_path, presence: true
 	validates :category_id, presence: true
 	validates :url, presence: true, uniqueness: true
-	validates :feed_name, presence: true, uniqueness: true
+	# validates :feed_name, presence: true, uniqueness: true
 	validate :validate_link, on: :create
 
 	def validate_link
@@ -62,9 +62,27 @@ class Feed < ApplicationRecord
 	end
 
 	def generate_feed_name
-		self.feed_name = "#{self.category.name}_#{self.source}" if category.present? && source.present?
-		self.feed_name.upcase! if self.feed_name.present?
-		self.feed_path = "/etc/bind/feed/#{self.feed_name}.txt"
+		@before_feed_name = "#{self.category.name}_#{self.source}" if category.present? && source.present?
+		@feed_name = @before_feed_name.upcase!
+		puts "feed number: #{@feed_no}"
+		puts "feed name: #{@feed_name}"
+
+		count_of_feeds = Feed.where("feed_name LIKE ?", "#{@feed_name}%").count
+		puts "sdfsdfdsf: #{count_of_feeds}"
+		if count_of_feeds > 0
+			puts "found it"
+			@feed_no = count_of_feeds.to_i + 1
+			self.feed_name = "#{@feed_name}##{@feed_no}"
+			self.feed_path = "/etc/bind/feed/#{self.feed_name}.txt"
+
+		  else
+			puts "not found"
+			self.feed_name ="#{@feed_name}"
+			self.feed_path = "/etc/bind/feed/#{self.feed_name}.txt"
+
+		  end
+		self.source.upcase!
+	
 	end
 	
 

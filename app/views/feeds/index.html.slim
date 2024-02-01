@@ -13,6 +13,7 @@
     table.table.column-data#dttb data-controller="datatables"
       thead
         tr 
+          th = check_box_tag 'select_all', false
           th FEED
           th SOURCE
           th CATEGORY
@@ -24,6 +25,7 @@
       tbody.feed_body
         - @feeds.each do |feed|
           tr
+            td= check_box_tag 'feed_ids[]', feed.id, false
             td = feed.feed_name 
             td = feed.source
             td = feed.category.name 

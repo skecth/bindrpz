@@ -19,6 +19,7 @@
     "postcss-cli": "^10.1.0",
     "sass": "^1.66.1",
     "stimulus": "^3.2.2",
+    "stimulus-checkbox-select-all": "^5.3.0",
     "stimulus-rails-nested-form": "^4.1.0"
   },
   "scripts": {
