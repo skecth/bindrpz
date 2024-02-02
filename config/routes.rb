@@ -72,4 +72,5 @@ Rails.application.routes.draw do
   get '/zones/:id/custom_blacklist', to: "zones#show", as: :custom_blacklist_index
   delete '/zones/:id/feed_zone', to: "feed_zones#delete_all", as: :delete_feed_zone_all
   delete '/zones/:id/custom_blacklist', to: "custom_blacklists#delete_all", as: :delete_custom_blacklist_all
+  get '/search_feed', to: 'feeds#search', as: :search_feed
 end

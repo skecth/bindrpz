@@ -1,0 +1,9 @@
+.table-responsive-lg
+      table.table.column-data#details_feed
+        thead
+          tr 
+            th Domain  
+        tbody 
+          -@result.each do |result|
+            tr
+              td = result
