@@ -53,6 +53,18 @@ class FeedsController < ApplicationController
     end
   end
 
+  def search
+    @feed = Feed.find(params[:id])
+    @search_feed = params[:search_feed]
+    @blacklist_data = File.read(@feed.feed_path).split("\n").reject { |line| line.start_with?('#') }
+    @result = @blacklist_data.select { |line| line.include?(@search_feed) }
+    Rails.logger.debug(@result)
+    respond_to do |format|
+      if @result.empty?
+        format.html {redirect_to feed_path(@feed.id), notice: "No feed name was found"}
+      end
+    end
+  end
 
   # PATCH/PUT /feeds/1 or /feeds/1.json
   def update
