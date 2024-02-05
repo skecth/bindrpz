@@ -1,4 +1,4 @@
-= form_with(url: search_feed_path, method: :get) do |f|
+= form_with( url: search_feed_path, method: :get) do |f|
   .main-content.p-4
     .d-flex 
       .me-auto.p-2 
@@ -11,7 +11,7 @@
     /       tr 
     /         th Domain
 
-    = f.text_field "search_feed", placeholder: "Search", class: "form-control"
+    = f.text_field "search_feed", placeholder: "Search", class: "form-control",autocomplete: "off"
     = f.hidden_field "id", value: @feed.id
     br/
     = f.submit 'Search Feed Name',  class: "btn btn-warning"

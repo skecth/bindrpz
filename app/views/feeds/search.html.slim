@@ -3,7 +3,11 @@
         thead
           tr 
             th Domain  
-        tbody 
-          -@result.each do |result|
-            tr
-              td = result
+        tbody
+          -if @result.present?
+            -@result.each do |result|
+              tr
+                td = result
+          -else
+            tr 
+              td = "#{@search_feed} is not found"
