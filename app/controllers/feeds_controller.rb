@@ -56,9 +56,14 @@ class FeedsController < ApplicationController
   def search
     @feed = Feed.find(params[:id])
     @search_feed = params[:search_feed]
-    @blacklist_data = File.read(@feed.feed_path).split("\n").reject { |line| line.start_with?('#') }
-    @result = @blacklist_data.select { |line| line.include?(@search_feed) }
-    Rails.logger.debug(@result)
+    if @search_feed.present?
+      @data = File.read(@feed.feed_path).split("\n").reject { |line| line.start_with?('#') }
+      @blacklist_data = @data.select { |line| line.include?(@search_feed) }
+      Rails.logger.debug(@blacklist_data)
+    else
+      @blacklist_data = File.read(@feed.feed_path).split("\n").reject { |line| line.start_with?('#') }
+    end
+    render turbo_stream: turbo_stream.replace('blacklist_data', partial: 'result',locals: {blacklist_data: @blacklist_data})
   end
 
   # PATCH/PUT /feeds/1 or /feeds/1.json
