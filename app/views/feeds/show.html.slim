@@ -1,8 +1,8 @@
-= form_with( url: search_feed_path, method: :get) do |f|
+= form_with( url: search_feed_path, method: :get,local: true) do |f|
   .main-content.p-4
     .d-flex 
       .me-auto.p-2 
-        h3.fw-bold = @feed.feed_name
+        h3.fw-bold = link_to "#{@feed.feed_name}", feed_path(@feed.id),style: "text-decoration: none; color: black;font-size: "
     
     / hr
     / .table-responsive-lg
@@ -11,10 +11,12 @@
     /       tr 
     /         th Domain
 
-    = f.text_field "search_feed", placeholder: "Search", class: "form-control",autocomplete: "off"
     = f.hidden_field "id", value: @feed.id
+    .input-group.mb-3
+      = f.text_field :search_feed, placeholder: "Search", class: "form-control", autocomplete: "off", aria_label: "Search", aria_describedby: "button-addon2"
+      = f.submit 'Search',  class: "btn btn-warning",id: "button-addon2"
+
     br/
-    = f.submit 'Search Feed Name',  class: "btn btn-warning"
     hr
     .table-responsive-lg
       table.table.column-data#details_feed
@@ -22,7 +24,5 @@
           tr 
             th Domain  
         tbody 
-          -@blacklist_data.each do |blacklist|
-            tr
-              td = blacklist
+         =render "result", blacklist_data: @blacklist_data
       == pagy_bootstrap_nav(@pagy) if @pagy.pages > 1
