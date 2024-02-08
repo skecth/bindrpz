@@ -8,14 +8,15 @@
           input#name[data-feed-path-select-target="zone" name="zone_id" type="hidden" value="#{@zone_name}"]
         .col
           div[data-controller="showhide" data-showhide-show-if-value="CNAME" ]
-            = f.input :selected_action, as: :select, collection: CustomBlacklist.action_lists,
-            class: 'form-select',
-            input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" },
-            style: "margin-bottom: 0;"}, label: false, include_blank: 'Select Action'
+            .input-group.mb-3
+              = f.input :selected_action, as: :select, collection: CustomBlacklist.action_lists,
+                class: 'form-select',
+                input_html: {data: { showhide_target: "input", action: "change->showhide#toggle" },
+                style: "margin-bottom: 0;width: 170px;"}, label: false, include_blank: 'Select Action',
+                id: "inputGroupSelect", aria_label: "Select Action"
+              button.btn.btn-danger.btn-sm(type="button" data-action="nested-form#remove" style="width: 40px; height: 36px; margin-top: 5px; margin-left:8px; border-radius: 5px") 
+                i.bi.bi-x-circle
             = f.input :destination,  placeholder: "Domain or IP Address", input_html: { data: { showhide_target: "output",action: "change->showhide#toggle"  } },label: false
-          .d-flex.mb-3 
-            .ms-auto.p-2
-              button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Remove
       / button(type="button" data-action="nested-form#remove" class="btn btn-danger btn-sm") Delete
 
   = f.hidden_field :_destroy
